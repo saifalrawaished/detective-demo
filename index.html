@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Detective Demo</title>
+
+  <style>
+    :root {
+      --bg-dark: #06080d;
+      --bg-mid: #0b0d12;
+      --card: #121826;
+      --text: #e6e8ee;
+      --muted: #aab0c0;
+      --accent: #6aa7ff;
+      --line: #26304a;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(90,110,180,0.18), transparent 45%),
+        radial-gradient(circle at 85% 20%, rgba(140,140,140,0.08), transparent 45%),
+        linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-mid) 40%, var(--bg-dark) 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          rgba(255,255,255,0.015),
+          rgba(255,255,255,0.015) 1px,
+          transparent 1px,
+          transparent 2px
+        );
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header, main {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(6px);
+    }
+
+    header h1 {
+      font-size: 16px;
+      margin: 0;
+      font-weight: 650;
+    }
+
+    header .crumb {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    main {
+      padding: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .grid.cols-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid.cols-4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    @media (max-width:900px) {
+      .grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width:650px) {
+      .grid.cols-3 { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: linear-gradient(180deg, #141b2d, #0f1422);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      cursor: pointer;
+      transition: transform .08s ease, border-color .08s ease;
+      user-select: none;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: #3a4a73;
+    }
+
+    .card h2 {
+      margin: 0 0 6px 0;
+      font-size: 16px;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    .btn {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .btn:hover {
+      border-color: #3a4a73;
+    }
+
+    .btn.primary {
+      border-color: #2b5fbf;
+      color: #dce8ff;
+    }
+
+    .btn.primary:hover {
+      border-color: #3d7cff;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 14px;
+    }
+
+    @media (max-width:900px) {
+      .split { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: linear-gradient(180deg, #131a2b, #0e1321);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .panel header {
+      border-bottom: 1px solid var(--line);
+      padding: 12px 14px;
+      background: rgba(0,0,0,0.35);
+    }
+
+    .panel header h2 {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .list {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .doc {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .doc:hover {
+      border-color: #3a4a73;
+    }
+
+    .doc .title {
+      font-weight: 650;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .doc .meta {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .viewer {
+      padding: 14px;
+    }
+
+    .viewer h3 {
+      margin: 0 0 6px 0;
+      font-size: 16px;
+    }
+
+    .viewer .meta {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .viewer pre {
+      white-space: pre-wrap;
+      margin: 0;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(0,0,0,0.4);
+      line-height: 1.45;
+      font-size: 13px;
+    }
+
+    .form {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,0.35);
+      color: var(--text);
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #3d7cff;
+    }
+
+    .result {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <button class="btn" id="backBtn" style="display:none;">Back</button>
+    <div>
+      <h1>Detective Demo</h1>
+      <div class="crumb" id="crumb">Home</div>
+    </div>
+  </header>
+
+  <main id="app"></main>
+
+  <script>
+    const DATA = {
+      difficulties: [
+        { id: "easy", title: "Easy", desc: "Clear clues, few documents." },
+        { id: "med", title: "Medium", desc: "More contradictions and noise." },
+        { id: "hard", title: "Hard", desc: "Ambiguity, red herrings, dense files." }
+      ],
+      cases: [
+        {
+          id: "case_1",
+          title: "The Library Incident",
+          blurb: "A body is found in the closed reading room.",
+          documents: [
+            { id:"d1", title:"Incident Report", type:"Police", date:"2026-01-20 22:10",
+              body:`Officer: M. Kareem
+Location: Old City Library
+No sign of forced entry.
+Witness heard argument at 21:40.`},
+            { id:"d2", title:"Librarian Statement", type:"Interview", date:"2026-01-21 09:15",
+              body:`I locked the room at 21:30.
+Only two people remained inside.`},
+            { id:"d3", title:"Autopsy Summary", type:"Medical", date:"2026-01-21 14:00",
+              body:`Cause of death: poisoning.
+Time of death: approx 21:45.`}
+          ],
+          solution: { killer:"Sahar", method:"poison", key:"autopsy" }
+        }
+      ]
+    };
+
+    const state = { page: "home", difficulty: null, caseId: null, docId: null };
+    const app = document.getElementById("app");
+    const crumb = document.getElementById("crumb");
+    const backBtn = document.getElementById("backBtn");
+
+    backBtn.onclick = () => {
+      if (state.page === "case") state.page = "cases";
+      else state.page = "home";
+      render();
+    };
+
+    function render() {
+      backBtn.style.display = state.page === "home" ? "none" : "inline-block";
+
+      if (state.page === "home") {
+        crumb.textContent = "Home";
+        app.innerHTML = `
+          <div class="grid cols-3">
+            ${DATA.difficulties.map(d => `
+              <div class="card" data-id="${d.id}">
+                <h2>${d.title}</h2>
+                <p>${d.desc}</p>
+                <div class="pill">Pick difficulty</div>
+              </div>
+            `).join("")}
+          </div>`;
+        app.querySelectorAll(".card").forEach(c =>
+          c.onclick = () => { state.page="cases"; render(); }
+        );
+        return;
+      }
+
+      if (state.page === "cases") {
+        crumb.textContent = "Cases";
+        app.innerHTML = `
+          <div class="grid cols-4">
+            ${DATA.cases.map(c => `
+              <div class="card" data-id="${c.id}">
+                <h2>${c.title}</h2>
+                <p>${c.blurb}</p>
+                <div class="pill">Open case</div>
+              </div>
+            `).join("")}
+          </div>`;
+        app.querySelectorAll(".card").forEach(c =>
+          c.onclick = () => { state.page="case"; state.caseId=c.dataset.id; render(); }
+        );
+        return;
+      }
+
+      if (state.page === "case") {
+        const c = DATA.cases[0];
+        crumb.textContent = c.title;
+        const d = c.documents[0];
+        app.innerHTML = `
+          <div class="panel">
+            <div class="viewer">
+              <h3>${d.title}</h3>
+              <div class="meta">${d.type} · ${d.date}</div>
+              <pre>${d.body}</pre>
+            </div>
+          </div>`;
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>
