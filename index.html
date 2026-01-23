@@ -9,8 +9,10 @@
     :root{
       /* Paper-noir palette */
       --bg:#0b0c10;
+
       --cardTop: rgba(30,34,46,0.92);
       --cardBot: rgba(18,20,30,0.92);
+
       --panelTop: rgba(34,38,54,0.92);
       --panelBot: rgba(20,22,34,0.92);
 
@@ -23,7 +25,6 @@
 
       --good:#66d18f;
       --warn:#ffcc66;
-      --danger:#e36b6b;
 
       --paper: rgba(240,235,220,0.92);
       --ink: #201c14;
@@ -47,23 +48,30 @@
       min-height:100vh;
     }
 
-    /* ---------- BACKGROUNDS ---------- */
-    /* Use your noir office photo for the "case" space */
-    body[data-bg="case"]{
+    /* ---------- BACKGROUNDS (3 SPACES) ---------- */
+    /* Page 0: Title / Entry */
+    body[data-bg="title"]{
       background:
-        linear-gradient(rgba(0,0,0,0.20), rgba(0,0,0,0.45)),
-        url("image1.jpg") center / cover no-repeat fixed;
+        linear-gradient(rgba(0,0,0,0.42), rgba(0,0,0,0.78)),
+        url("image0.jpg") center / cover no-repeat fixed;
     }
 
-    /* Home + cases: still noir, but a bit more atmospheric */
+    /* Pages 1-2: Difficulty + Cases list (procedural/archives space) */
     body[data-bg="world"]{
       background:
-        linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.65)),
-        url("image1.jpg") center / cover no-repeat fixed;
+        linear-gradient(rgba(0,0,0,0.34), rgba(0,0,0,0.62)),
+        url("image2.jpg") center / cover no-repeat fixed;
       filter: saturate(0.95) contrast(1.03);
     }
 
-    /* Vignette + very light grain */
+    /* Page 3+: Office + Sections (investigation space) */
+    body[data-bg="case"]{
+      background:
+        linear-gradient(rgba(0,0,0,0.18), rgba(0,0,0,0.44)),
+        url("image1.jpg") center / cover no-repeat fixed;
+    }
+
+    /* Vignette + light grain */
     body::before{
       content:"";
       position:fixed;
@@ -72,8 +80,8 @@
       z-index:0;
       background:
         radial-gradient(circle at 50% 35%,
-          rgba(0,0,0,0.00) 35%,
-          rgba(0,0,0,0.55) 90%
+          rgba(0,0,0,0.00) 38%,
+          rgba(0,0,0,0.52) 92%
         ),
         repeating-linear-gradient(
           0deg,
@@ -93,7 +101,7 @@
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      background:rgba(0,0,0,0.35);
+      background:rgba(0,0,0,0.30);
       backdrop-filter: blur(8px);
     }
 
@@ -220,7 +228,7 @@
     .badge.closed{ border-color:rgba(255,204,102,0.35); color:var(--warn); }
     .badge.active{ border-color:rgba(102,209,143,0.35); color:var(--good); }
 
-    /* Locked cases: look physically locked, not interactive */
+    /* Locked cases: feel physically sealed */
     .card[data-status="closed"]{
       opacity:0.65;
       filter:saturate(0.65);
@@ -230,7 +238,6 @@
       transform:none;
       border-color:rgba(255,255,255,0.10);
       box-shadow: 0 12px 28px rgba(0,0,0,0.40);
-      background: linear-gradient(180deg, var(--cardTop), var(--cardBot));
     }
     .card[data-status="closed"]::after{
       content:"LOCKED";
@@ -248,13 +255,6 @@
       text-transform:uppercase;
     }
 
-    .split{
-      display:grid;
-      grid-template-columns: 340px 1fr;
-      gap:14px;
-    }
-    @media (max-width:900px){ .split{ grid-template-columns:1fr; } }
-
     .panel{
       background: linear-gradient(180deg, var(--panelTop), var(--panelBot));
       border:1px solid rgba(255,255,255,0.10);
@@ -266,7 +266,7 @@
     .panel .ph{
       padding:12px 14px;
       border-bottom:1px solid rgba(255,255,255,0.08);
-      background:rgba(0,0,0,0.25);
+      background:rgba(0,0,0,0.22);
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -292,7 +292,7 @@
       border-radius:10px;
       border:1px dashed rgba(201,162,77,0.55);
       color:rgba(201,162,77,0.95);
-      background:rgba(0,0,0,0.18);
+      background:rgba(0,0,0,0.14);
       font-weight:900;
       letter-spacing:1.4px;
       text-transform:uppercase;
@@ -308,6 +308,13 @@
     }
     .kv .k{ color:var(--muted); }
     .kv .v{ color:var(--text); }
+
+    .split{
+      display:grid;
+      grid-template-columns: 340px 1fr;
+      gap:14px;
+    }
+    @media (max-width:900px){ .split{ grid-template-columns:1fr; } }
 
     .list{ display:flex; flex-direction:column; gap:10px; }
     .doc{
@@ -390,7 +397,7 @@
       filter: blur(2px);
     }
 
-    /* Treat documents like paper */
+    /* Documents look like paper on a desk */
     .imgWrap{
       border:1px solid rgba(0,0,0,0.18);
       border-radius:10px;
@@ -412,6 +419,65 @@
       color:var(--muted);
       font-size:12px;
       line-height:1.35;
+    }
+
+    /* Title screen layout */
+    .titleWrap{
+      min-height: calc(100vh - 80px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 18px 0 40px;
+    }
+    .titlePanel{
+      width:min(720px, 100%);
+      background: linear-gradient(180deg, rgba(26,28,40,0.80), rgba(12,12,18,0.80));
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:16px;
+      box-shadow: 0 18px 48px rgba(0,0,0,0.60);
+      backdrop-filter: blur(8px);
+      overflow:hidden;
+    }
+    .titlePanel .ph{
+      padding:14px 16px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.22);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .titlePanel .content{
+      padding:16px;
+    }
+    .titleBig{
+      margin:0;
+      font-size:34px;
+      letter-spacing:0.6px;
+      font-weight:900;
+      line-height:1.1;
+    }
+    .titleSub{
+      margin:10px 0 0 0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.45;
+      max-width: 62ch;
+    }
+    .titleBtns{
+      margin-top:16px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .btnPrimary{
+      border-color: rgba(201,162,77,0.45);
+      background: rgba(0,0,0,0.28);
+    }
+    .btnPrimary:hover{
+      border-color: rgba(201,162,77,0.65);
+      background: rgba(0,0,0,0.36);
     }
 
     .toast{
@@ -440,13 +506,13 @@
     body[dir="rtl"] .badge{ right:auto; left:12px; }
     body[dir="rtl"] .docRow{ flex-direction: row-reverse; }
     body[dir="rtl"] .docMarks{ flex-direction: row-reverse; }
-    body[dir="rtl"] .caseHeader{ direction: rtl; }
     body[dir="rtl"] .kv{ grid-template-columns: 1fr 120px; }
     body[dir="rtl"] .kv .k{ text-align:right; }
+    body[dir="rtl"] .titleBtns{ flex-direction: row-reverse; }
   </style>
 </head>
 
-<body data-bg="world" dir="ltr">
+<body data-bg="title" dir="ltr">
   <header>
     <div class="headerLeft">
       <div>
@@ -467,19 +533,29 @@
   <script>
     /*
       Local setup (same folder as index.html):
-      image1.jpg  (noir detective office)
-      official_police_report.jpg
-      crime_scene_map.jpg
-      building_exterior.jpg
-      office_layout.jpg
-      investigation_index1.jpg
-      investigation_index2.jpg
+        image0.jpg  (Page 0: title / entry)
+        image2.jpg  (Pages 1-2: difficulty + cases list)
+        image1.jpg  (Page 3+: detective office + sections)
+
+        official_police_report.jpg
+        crime_scene_map.jpg
+        building_exterior.jpg
+        office_layout.jpg
+        investigation_index1.jpg
+        investigation_index2.jpg
     */
 
     const I18N = {
       en: {
         title: "Detective Demo",
         language: "Language",
+
+        entry: "Entry",
+        entryLine: "Archived case files. Access permitted. Proceed with care.",
+        start: "Start investigation",
+        credits: "Credits",
+        creditsLine: "Prototype interface for a single case. More files will be added.",
+
         home: "Home",
         chooseDifficulty: "Select difficulty",
         browse: "Browse",
@@ -487,6 +563,7 @@
         navigate: "Review and cross-check the file",
         back: "Back",
         homeBtn: "Home",
+
         available: "Open",
         closed: "Locked",
         open: "Review",
@@ -494,8 +571,10 @@
         notAvailable: "Sealed. Not available yet.",
         openCaseFile: "Open the case file and begin review.",
         closedToast: "Sealed. Not available yet.",
+
         detectiveOffice: "Detective Office",
         openDrawer: "Open drawer",
+
         documents: "Documents",
         viewer: "Viewer",
         items: (n) => `${n} item(s)`,
@@ -504,9 +583,11 @@
         officeBtn: "Office",
         openFull: "Open full image",
         missing: "This case is not configured yet.",
+
         pin: "Pin",
         unpin: "Unpin",
         pinnedFirst: "Pinned first",
+
         caseHeaderTitle: "Case Brief",
         caseId: "Case ID",
         status: "Status",
@@ -514,11 +595,19 @@
         opened: "Opened",
         assigned: "Assigned",
         classification: "Classification",
-        confidential: "Confidential"
+        confidential: "Confidential",
+        briefLine: "Start with the Initial Report. Mark inconsistencies. Pin anything that feels wrong."
       },
       ar: {
         title: "لعبة المحقق",
         language: "اللغة",
+
+        entry: "المدخل",
+        entryLine: "ملفات قضية مؤرشفة. تم السماح بالوصول. تابع بحذر.",
+        start: "ابدأ التحقيق",
+        credits: "الاعتمادات",
+        creditsLine: "واجهة تجريبية لقضية واحدة. ستُضاف ملفات لاحقا.",
+
         home: "الرئيسية",
         chooseDifficulty: "اختر مستوى الصعوبة",
         browse: "تصفح",
@@ -526,6 +615,7 @@
         navigate: "راجع الملفات وقارن الأدلة",
         back: "رجوع",
         homeBtn: "الرئيسية",
+
         available: "مفتوحة",
         closed: "مقفلة",
         open: "مراجعة",
@@ -533,8 +623,10 @@
         notAvailable: "مختومة. غير متاحة حاليا.",
         openCaseFile: "افتح ملف القضية وابدأ المراجعة.",
         closedToast: "مختومة. غير متاحة حاليا.",
+
         detectiveOffice: "مكتب المحقق",
         openDrawer: "افتح الدرج",
+
         documents: "المستندات",
         viewer: "المعاينة",
         items: (n) => `${n} عنصر`,
@@ -543,9 +635,11 @@
         officeBtn: "المكتب",
         openFull: "افتح الصورة كاملة",
         missing: "هذه القضية غير مفعلة بعد.",
+
         pin: "تثبيت",
         unpin: "إلغاء التثبيت",
         pinnedFirst: "المثبت أولا",
+
         caseHeaderTitle: "ملخص القضية",
         caseId: "رقم القضية",
         status: "الحالة",
@@ -553,7 +647,8 @@
         opened: "تاريخ الفتح",
         assigned: "المكلف",
         classification: "التصنيف",
-        confidential: "سري"
+        confidential: "سري",
+        briefLine: "ابدأ بالبلاغ الأولي. ضع علامات على التناقضات. ثبّت أي شيء يبدو غير منطقي."
       }
     };
 
@@ -572,7 +667,7 @@
 
     const state = {
       lang: (localStorage.getItem(storageKeyLang) === "ar") ? "ar" : "en",
-      view: "home",         // home | cases | office | section
+      view: "title",        // title | home | cases | office | section
       difficulty: null,     // easy | medium | hard
       caseId: null,         // easy_case_1 ...
       sectionId: null,      // objectives ...
@@ -626,7 +721,7 @@
       pinState[docId] = !pinState[docId];
       if (!pinState[docId]) delete pinState[docId];
       saveJSON(storageKeyPins, pinState);
-      render(); // re-sort if needed
+      render();
     }
 
     const GAME = {
@@ -755,6 +850,15 @@
       showToast._t = window.setTimeout(() => toastEl.classList.remove("show"), 1400);
     }
 
+    function goTitle(){
+      state.view = "title";
+      state.difficulty = null;
+      state.caseId = null;
+      state.sectionId = null;
+      state.docId = null;
+      render();
+    }
+
     function goHome(){
       state.view = "home";
       state.difficulty = null;
@@ -792,13 +896,14 @@
       if (state.view === "section") { state.view = "office"; state.sectionId = null; state.docId = null; render(); return; }
       if (state.view === "office") { state.view = "cases"; state.caseId = null; render(); return; }
       if (state.view === "cases") { goHome(); return; }
-      goHome();
+      if (state.view === "home") { goTitle(); return; }
+      goTitle();
     }
 
     function renderTopbar(titleRight){
       const left = `
         <div class="left">
-          ${state.view === "home" ? "" : `<button class="btn" id="backBtn">${escapeHtml(t("back"))}</button>`}
+          ${(state.view === "title") ? "" : `<button class="btn" id="backBtn">${escapeHtml(t("back"))}</button>`}
           <div style="display:flex;flex-direction:column;gap:2px;">
             <div style="font-weight:850;font-size:14px;">${escapeHtml(titleRight)}</div>
             <div style="color:var(--muted);font-size:12px;">${escapeHtml(t("navigate"))}</div>
@@ -810,7 +915,7 @@
           ${state.view === "section" ? `
             <button class="btn" id="pinnedFirstBtn">${escapeHtml(t("pinnedFirst"))}: ${state.pinnedFirst ? "ON" : "OFF"}</button>
           ` : ""}
-          ${state.view === "home" ? "" : `<button class="btn" id="homeBtn">${escapeHtml(t("homeBtn"))}</button>`}
+          ${state.view === "title" ? "" : `<button class="btn" id="homeBtn">${escapeHtml(t("homeBtn"))}</button>`}
         </div>
       `;
       return `<div class="topbar">${left}${right}</div>`;
@@ -833,12 +938,17 @@
       }
     }
 
-    function render(){
-      document.body.setAttribute("data-bg", (state.view === "home" || state.view === "cases") ? "world" : "case");
+    function setBackgroundForView(){
+      if (state.view === "title") document.body.setAttribute("data-bg", "title");
+      else if (state.view === "home" || state.view === "cases") document.body.setAttribute("data-bg", "world");
+      else document.body.setAttribute("data-bg", "case");
+    }
 
+    function setCrumb(){
       const diffObj = GAME.difficulties.find(d => d.id === state.difficulty);
       const diffName = diffObj ? txt(diffObj.title) : "";
 
+      if (state.view === "title") crumb.textContent = t("entry");
       if (state.view === "home") crumb.textContent = t("home");
       if (state.view === "cases") crumb.textContent = `${t("home")} / ${diffName}`;
       if (state.view === "office") crumb.textContent = `${t("home")} / ${diffName} / ${txt({en:"Case 1", ar:"القضية 1"})} / ${t("detectiveOffice")}`;
@@ -847,7 +957,50 @@
         const sec = c ? c.sections.find(s => s.id === state.sectionId) : null;
         crumb.textContent = `${t("home")} / ${diffName} / ${txt({en:"Case 1", ar:"القضية 1"})} / ${t("detectiveOffice")} / ${sec ? txt(sec.title) : ""}`;
       }
+    }
 
+    function render(){
+      setBackgroundForView();
+      setCrumb();
+
+      /* ---------- PAGE 0: TITLE / ENTRY ---------- */
+      if (state.view === "title"){
+        app.innerHTML = `
+          <div class="titleWrap">
+            <section class="titlePanel">
+              <div class="ph">
+                <div style="display:flex;flex-direction:column;gap:2px;">
+                  <div class="stamp"><span class="mono">${escapeHtml(t("entry"))}</span></div>
+                </div>
+                <div class="mono" style="color:var(--muted);font-size:12px;">v0.1</div>
+              </div>
+
+              <div class="content">
+                <h2 class="titleBig">${escapeHtml(t("title"))}</h2>
+                <p class="titleSub">${escapeHtml(t("entryLine"))}</p>
+
+                <div class="titleBtns">
+                  <button class="btn btnPrimary" id="startBtn">${escapeHtml(t("start"))}</button>
+                  <button class="btn" id="creditsBtn">${escapeHtml(t("credits"))}</button>
+                </div>
+
+                <div id="creditsBox" style="display:none;margin-top:12px;color:var(--muted);font-size:13px;line-height:1.5;">
+                  ${escapeHtml(t("creditsLine"))}
+                </div>
+              </div>
+            </section>
+          </div>
+        `;
+
+        document.getElementById("startBtn").addEventListener("click", goHome);
+        document.getElementById("creditsBtn").addEventListener("click", () => {
+          const box = document.getElementById("creditsBox");
+          box.style.display = (box.style.display === "none") ? "block" : "none";
+        });
+        return;
+      }
+
+      /* ---------- PAGE 1: DIFFICULTY (HOME) ---------- */
       if (state.view === "home"){
         app.innerHTML = `
           ${renderTopbar(t("chooseDifficulty"))}
@@ -861,10 +1014,12 @@
             `).join("")}
           </div>
         `;
+        wireCommonButtons();
         app.querySelectorAll(".card").forEach(el => el.addEventListener("click", () => goCases(el.dataset.diff)));
         return;
       }
 
+      /* ---------- PAGE 2: CASES LIST ---------- */
       if (state.view === "cases"){
         const list = GAME.casesByDifficulty[state.difficulty] || [];
         app.innerHTML = `
@@ -890,6 +1045,7 @@
         return;
       }
 
+      /* ---------- PAGE 3: DETECTIVE OFFICE ---------- */
       if (state.view === "office"){
         const c = GAME.caseContent[state.caseId];
         if (!c){
@@ -910,6 +1066,7 @@
 
         app.innerHTML = `
           ${renderTopbar(txt(c.officeTitle))}
+
           <div class="caseHeader">
             <section class="panel">
               <div class="ph">
@@ -934,10 +1091,7 @@
                 <span style="color:var(--muted);font-size:12px;" class="mono">${escapeHtml(txt(meta.caseId))}</span>
               </div>
               <div class="content" style="color:var(--muted);font-size:13px;line-height:1.45;">
-                ${escapeHtml(state.lang === "en"
-                  ? "Start with the Initial Report. Mark inconsistencies. Pin anything that feels wrong."
-                  : "ابدأ بالبلاغ الأولي. ضع علامات على التناقضات. ثبّت أي شيء يبدو غير منطقي."
-                )}
+                ${escapeHtml(t("briefLine"))}
               </div>
             </section>
           </div>
@@ -959,23 +1113,22 @@
         return;
       }
 
+      /* ---------- PAGE 3A+: SECTION VIEWER ---------- */
       if (state.view === "section"){
         const c = GAME.caseContent[state.caseId];
         const sec = c.sections.find(s => s.id === state.sectionId);
 
         let docs = (c.documents[state.sectionId] || []).slice();
 
-        // Sort: pinned first if enabled
         if (state.pinnedFirst){
           docs.sort((a,b) => {
             const ap = isPinned(a.id) ? 1 : 0;
             const bp = isPinned(b.id) ? 1 : 0;
             if (ap !== bp) return bp - ap;
-            return a.title?.en?.localeCompare(b.title?.en || "") || 0;
+            return (a.title?.en || "").localeCompare(b.title?.en || "");
           });
         }
 
-        // Default selection
         const selected = state.docId ? docs.find(d => d.id === state.docId) : (docs[0] || null);
         if (!state.docId && selected) state.docId = selected.id;
 
@@ -1034,7 +1187,6 @@
         wireCommonButtons();
         document.getElementById("officeBtn").addEventListener("click", back);
 
-        // Pin buttons (prevent selecting doc)
         app.querySelectorAll("[data-pin]").forEach(btn => {
           btn.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -1042,13 +1194,12 @@
           });
         });
 
-        // Doc selection
         app.querySelectorAll(".doc").forEach(el => {
           el.addEventListener("click", () => {
             state.docId = el.dataset.doc;
             markRead(state.docId);
             renderViewer(docs);
-            // refresh list styling for unread/active without full render
+
             app.querySelectorAll(".doc").forEach(dEl => {
               dEl.classList.toggle("active", dEl.dataset.doc === state.docId);
               dEl.classList.toggle("unread", !isRead(dEl.dataset.doc));
@@ -1056,9 +1207,7 @@
           });
         });
 
-        // Mark selected as read immediately
         if (state.docId) markRead(state.docId);
-
         renderViewer(docs);
 
         function renderViewer(docsList){
@@ -1072,7 +1221,6 @@
             return;
           }
 
-          // Fade transition
           body.classList.add("loading");
           window.clearTimeout(renderViewer._t);
           renderViewer._t = window.setTimeout(() => {
@@ -1095,7 +1243,6 @@
               return;
             }
 
-            // Text fallback
             const text = doc.body?.[state.lang] ?? doc.body?.en ?? "";
             body.innerHTML = `
               <h4>${escapeHtml(txt(doc.title))}</h4>
@@ -1116,6 +1263,7 @@
   </script>
 </body>
 </html>
+
 
 
 
