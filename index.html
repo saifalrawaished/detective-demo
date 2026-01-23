@@ -21,6 +21,7 @@
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Naskh Arabic", "Noto Sans Arabic", "Geeza Pro", "Tahoma", sans-serif;
     }
 
+    /* ---------- IMAGE BACKGROUNDS ---------- */
     body{
       margin:0;
       color:var(--text);
@@ -28,18 +29,21 @@
       min-height:100vh;
     }
 
+    /* Home + Cases */
     body[data-bg="world"]{
       background:
         linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.88)),
         url("image1.jpg") center / cover no-repeat fixed;
     }
 
+    /* Office + Section */
     body[data-bg="case"]{
       background:
         linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.92)),
         url("image2.jpg") center / cover no-repeat fixed;
     }
 
+    /* Vignette + grain */
     body::before{
       content:"";
       position:fixed;
@@ -285,6 +289,7 @@
     }
     .toast.show{ opacity:1; }
 
+    /* ---------- RTL SUPPORT ---------- */
     body[dir="rtl"]{ direction: rtl; }
     body[dir="rtl"] header{ direction: rtl; }
     body[dir="rtl"] .topbar{ direction: rtl; }
@@ -313,10 +318,554 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    /* full script unchanged */
+    /*
+      Local setup:
+      Put these 3 files in the same folder:
+      - index.html
+      - image1.jpg (world)
+      - image2.jpg (case)
+    */
+
+    const I18N = {
+      en: {
+        title: "Detective Demo",
+        language: "Language",
+        home: "Home",
+        chooseDifficulty: "Choose difficulty",
+        enter: "Enter",
+        casesTitle: (d) => `${cap(d)} cases`,
+        navigate: "Navigate the case files",
+        back: "Back",
+        homeBtn: "Home",
+        available: "Available",
+        closed: "Closed",
+        open: "Open",
+        locked: "Locked",
+        notAvailable: "Not available yet.",
+        openCaseFile: "Open the case file.",
+        closedToast: "Closed. Not available yet.",
+        detectiveOffice: "Detective Office",
+        openDrawer: "Open this drawer.",
+        documents: "Documents",
+        viewer: "Viewer",
+        items: (n) => `${n} item(s)`,
+        emptyForNow: "Empty for now.",
+        selectDoc: "Select a document.",
+        officeBtn: "Detective Office",
+        fileLink: "This document is a file link.",
+        openLink: "Open",
+        hint: 'To attach a PDF/image locally: set a document to type "link" with url like "evidence1.pdf" after putting the file next to index.html.'
+      },
+      ar: {
+        title: "لعبة المحقق",
+        language: "اللغة",
+        home: "الرئيسية",
+        chooseDifficulty: "اختر مستوى الصعوبة",
+        enter: "دخول",
+        casesTitle: (d) => `قضايا ${capAr(d)}`,
+        navigate: "تصفح ملفات القضية",
+        back: "رجوع",
+        homeBtn: "الرئيسية",
+        available: "متاحة",
+        closed: "مغلقة",
+        open: "فتح",
+        locked: "مقفلة",
+        notAvailable: "غير متاحة حاليا.",
+        openCaseFile: "افتح ملف القضية.",
+        closedToast: "مغلقة. غير متاحة حاليا.",
+        detectiveOffice: "مكتب المحقق",
+        openDrawer: "افتح هذا الدرج.",
+        documents: "المستندات",
+        viewer: "المعاينة",
+        items: (n) => `${n} عنصر`,
+        emptyForNow: "فارغة حاليا.",
+        selectDoc: "اختر مستندا.",
+        officeBtn: "مكتب المحقق",
+        fileLink: "هذا المستند عبارة عن رابط ملف.",
+        openLink: "فتح",
+        hint: 'لإضافة PDF أو صورة محليا: اجعل نوع المستند "link" وضع url مثل "evidence1.pdf" بعد وضع الملف بجانب index.html.'
+      }
+    };
+
+    function cap(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : ""; }
+    function capAr(d){
+      if (d === "easy") return "السهلة";
+      if (d === "medium") return "المتوسطة";
+      if (d === "hard") return "الصعبة";
+      return d || "";
+    }
+
+    const storageKey = "detective_lang";
+    const state = {
+      lang: (localStorage.getItem(storageKey) === "ar") ? "ar" : "en",
+      view: "home",         // home | cases | office | section
+      difficulty: null,     // easy | medium | hard
+      caseId: null,         // easy_case_1 ...
+      sectionId: null,      // objectives ...
+      docId: null           // obj_1 ...
+    };
+
+    function t(key, ...args){
+      const dict = I18N[state.lang];
+      const val = dict[key];
+      return (typeof val === "function") ? val(...args) : val;
+    }
+
+    const GAME = {
+      difficulties: [
+        { id: "easy", title: { en: "Easy", ar: "سهل" }, desc: { en: "Entry level cases.", ar: "قضايا للمبتدئين." } },
+        { id: "medium", title: { en: "Medium", ar: "متوسط" }, desc: { en: "More noise and contradictions.", ar: "مزيد من الضوضاء والتناقضات." } },
+        { id: "hard", title: { en: "Hard", ar: "صعب" }, desc: { en: "Dense files, ambiguity.", ar: "ملفات كثيفة وغموض." } }
+      ],
+
+      casesByDifficulty: {
+        easy: Array.from({ length: 10 }, (_, i) => ({
+          id: `easy_case_${i+1}`,
+          label: { en: `Case ${i+1}`, ar: `القضية ${i+1}` },
+          status: (i === 0) ? "active" : "closed"
+        })),
+        medium: Array.from({ length: 10 }, (_, i) => ({
+          id: `med_case_${i+1}`,
+          label: { en: `Case ${i+1}`, ar: `القضية ${i+1}` },
+          status: "closed"
+        })),
+        hard: Array.from({ length: 10 }, (_, i) => ({
+          id: `hard_case_${i+1}`,
+          label: { en: `Case ${i+1}`, ar: `القضية ${i+1}` },
+          status: "closed"
+        }))
+      },
+
+      caseContent: {
+        easy_case_1: {
+          officeTitle: { en: "Detective Office", ar: "مكتب المحقق" },
+          sections: [
+            { id: "objectives", title: { en: "Case Objectives", ar: "أهداف القضية" } },
+            { id: "initial_report", title: { en: "Initial Report", ar: "البلاغ الأولي" } },
+            { id: "first_file", title: { en: "First File", ar: "الملف الأول" } },
+            { id: "second_file", title: { en: "Second File", ar: "الملف الثاني" } },
+            { id: "additional_evidence", title: { en: "Additional evidences", ar: "أدلة إضافية" } }
+          ],
+          documents: {
+            objectives: [
+              {
+                id: "obj_1",
+                title: { en: "Objectives Sheet", ar: "ورقة الأهداف" },
+                meta:  { en: "Internal memo", ar: "مذكرة داخلية" },
+                type: "text",
+                body: {
+                  en:
+`Your job:
+1) Identify what happened.
+2) Build a consistent timeline.
+3) Decide which claims are reliable.
+4) Name the key evidence that proves your conclusion.
+
+Constraints:
+- Assume at least one statement is misleading.
+- Assume one document is incomplete.`,
+                  ar:
+`مهمتك:
+1) تحديد ما الذي حدث.
+2) بناء خط زمني متماسك.
+3) تحديد أي الادعاءات موثوقة.
+4) تحديد الدليل الأساسي الذي يثبت استنتاجك.
+
+قيود:
+- افترض أن هناك تصريحا واحدا على الأقل مضلل.
+- افترض أن هناك مستندا واحدا غير مكتمل.`
+                }
+              }
+            ],
+            initial_report: [
+              {
+                id: "ir_1",
+                title: { en: "Initial Call Summary", ar: "ملخص الاتصال الأول" },
+                meta:  { en: "Dispatch notes", ar: "ملاحظات البلاغات" },
+                type: "text",
+                body: {
+                  en:
+`Time: 21:18
+Caller: Unknown
+Message: "Someone is going to die tonight. The library. Third room."
+
+Operator notes:
+- Caller hung up immediately
+- Number hidden`,
+                  ar:
+`الوقت: 21:18
+المتصل: مجهول
+الرسالة: "شخص ما سيموت الليلة. المكتبة. الغرفة الثالثة."
+
+ملاحظات الموظف:
+- أغلق المتصل فورا
+- الرقم مخفي`
+                }
+              }
+            ],
+            first_file: [
+              {
+                id: "ff_1",
+                title: { en: "Incident Report", ar: "تقرير الحادثة" },
+                meta:  { en: "Police report", ar: "تقرير الشرطة" },
+                type: "text",
+                body: {
+                  en:
+`Officer: M. Kareem
+Location: Old City Library
+Victim: Nadir Al-Sabah
+No sign of forced entry.
+Witness heard argument at 21:40 near the archives corridor.`,
+                  ar:
+`الضابط: م. كريم
+الموقع: مكتبة المدينة القديمة
+الضحية: نادر الصباح
+لا توجد آثار كسر أو اقتحام.
+شاهد سمع جدالا الساعة 21:40 قرب ممر الأرشيف.`
+                }
+              },
+              {
+                id: "ff_2",
+                title: { en: "Autopsy Summary", ar: "ملخص التشريح" },
+                meta:  { en: "Medical examiner", ar: "الطب الشرعي" },
+                type: "text",
+                body: {
+                  en:
+`Cause of death: poisoning.
+Likely fast-acting compound.
+Estimated time of death: 21:45 to 22:05.`,
+                  ar:
+`سبب الوفاة: تسمم.
+يرجح وجود مادة سريعة المفعول.
+الوقت التقريبي للوفاة: 21:45 إلى 22:05.`
+                }
+              }
+            ],
+            second_file: [
+              {
+                id: "sf_1",
+                title: { en: "Librarian Statement", ar: "إفادة أمين المكتبة" },
+                meta:  { en: "Interview transcript", ar: "نص مقابلة" },
+                type: "text",
+                body: {
+                  en:
+`I locked the reading room at 21:30.
+I saw Amal leaving at 21:35.
+At 21:50 I smelled strong cleaning chemicals from the corridor.`,
+                  ar:
+`أقفلت غرفة القراءة الساعة 21:30.
+رأيت أمل تغادر الساعة 21:35.
+عند 21:50 شممت رائحة مواد تنظيف قوية من الممر.`
+                }
+              }
+            ],
+            additional_evidence: [
+              {
+                id: "ae_1",
+                title: { en: "Placeholder: Add your real PDF here", ar: "مكان مخصص: أضف ملف PDF هنا" },
+                meta:  { en: "Replace with your file link or local file", ar: "استبدله برابط ملفك أو ملف محلي" },
+                type: "text",
+                body: {
+                  en:
+`To attach a PDF/image locally:
+1) Put the file next to index.html
+2) Change this document to type: "link"
+3) Set url like: "evidence1.pdf"
+
+Example:
+{ type: "link", url: "evidence1.pdf" }`,
+                  ar:
+`لإضافة PDF أو صورة محليا:
+1) ضع الملف بجانب index.html
+2) غيّر نوع المستند إلى "link"
+3) ضع url مثل: "evidence1.pdf"
+
+مثال:
+{ type: "link", url: "evidence1.pdf" }`
+                }
+              }
+            ]
+          }
+        }
+      }
+    };
+
+    const rootHtml = document.getElementById("rootHtml");
+    const app = document.getElementById("app");
+    const crumb = document.getElementById("crumb");
+    const toastEl = document.getElementById("toast");
+    const titleText = document.getElementById("titleText");
+    const langLabel = document.getElementById("langLabel");
+    const langBtn = document.getElementById("langBtn");
+
+    function applyLang(){
+      const isAr = state.lang === "ar";
+      document.body.setAttribute("dir", isAr ? "rtl" : "ltr");
+      rootHtml.setAttribute("lang", isAr ? "ar" : "en");
+
+      titleText.textContent = t("title");
+      langLabel.textContent = t("language");
+      langBtn.textContent = isAr ? "EN" : "AR";
+
+      render();
+    }
+
+    langBtn.addEventListener("click", () => {
+      state.lang = (state.lang === "en") ? "ar" : "en";
+      localStorage.setItem(storageKey, state.lang);
+      applyLang();
+    });
+
+    function showToast(msg){
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      window.clearTimeout(showToast._t);
+      showToast._t = window.setTimeout(() => toastEl.classList.remove("show"), 1400);
+    }
+
+    function goHome(){
+      state.view = "home";
+      state.difficulty = null;
+      state.caseId = null;
+      state.sectionId = null;
+      state.docId = null;
+      render();
+    }
+
+    function goCases(difficulty){
+      state.view = "cases";
+      state.difficulty = difficulty;
+      state.caseId = null;
+      state.sectionId = null;
+      state.docId = null;
+      render();
+    }
+
+    function goOffice(caseId){
+      state.view = "office";
+      state.caseId = caseId;
+      state.sectionId = null;
+      state.docId = null;
+      render();
+    }
+
+    function goSection(sectionId){
+      state.view = "section";
+      state.sectionId = sectionId;
+      state.docId = null;
+      render();
+    }
+
+    function back(){
+      if (state.view === "section") { state.view = "office"; state.sectionId = null; state.docId = null; render(); return; }
+      if (state.view === "office") { state.view = "cases"; state.caseId = null; render(); return; }
+      if (state.view === "cases") { goHome(); return; }
+      goHome();
+    }
+
+    function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function txt(obj){ return obj && obj[state.lang] ? obj[state.lang] : (obj?.en ?? ""); }
+
+    function renderTopbar(titleRight){
+      const left = `
+        <div class="left">
+          ${state.view === "home" ? "" : `<button class="btn" id="backBtn">${escapeHtml(t("back"))}</button>`}
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <div style="font-weight:750;font-size:14px;">${escapeHtml(titleRight)}</div>
+            <div style="color:var(--muted);font-size:12px;">${escapeHtml(t("navigate"))}</div>
+          </div>
+        </div>
+      `;
+      const right = `
+        <div style="display:flex;gap:10px;align-items:center;">
+          ${state.view === "home" ? "" : `<button class="btn" id="homeBtn">${escapeHtml(t("homeBtn"))}</button>`}
+        </div>
+      `;
+      return `<div class="topbar">${left}${right}</div>`;
+    }
+
+    function wireCommonButtons(){
+      const backBtn = document.getElementById("backBtn");
+      if (backBtn) backBtn.addEventListener("click", back);
+      const homeBtn = document.getElementById("homeBtn");
+      if (homeBtn) homeBtn.addEventListener("click", goHome);
+    }
+
+    function render(){
+      document.body.setAttribute("data-bg", (state.view === "home" || state.view === "cases") ? "world" : "case");
+
+      if (state.view === "home") crumb.textContent = t("home");
+      if (state.view === "cases") crumb.textContent = `${t("home")} / ${txt(GAME.difficulties.find(d => d.id === state.difficulty)?.title)}`;
+      if (state.view === "office") crumb.textContent = `${t("home")} / ${txt(GAME.difficulties.find(d => d.id === state.difficulty)?.title)} / ${txt({en:"Case 1", ar:"القضية 1"})} / ${t("detectiveOffice")}`;
+      if (state.view === "section") {
+        const c = GAME.caseContent[state.caseId];
+        const sec = c ? c.sections.find(s => s.id === state.sectionId) : null;
+        crumb.textContent = `${t("home")} / ${txt(GAME.difficulties.find(d => d.id === state.difficulty)?.title)} / ${txt({en:"Case 1", ar:"القضية 1"})} / ${t("detectiveOffice")} / ${sec ? txt(sec.title) : ""}`;
+      }
+
+      if (state.view === "home"){
+        app.innerHTML = `
+          ${renderTopbar(t("chooseDifficulty"))}
+          <div class="grid cols-3">
+            ${GAME.difficulties.map(d => `
+              <div class="card" data-diff="${d.id}">
+                <h2>${escapeHtml(txt(d.title))}</h2>
+                <p>${escapeHtml(txt(d.desc))}</p>
+                <div class="pill">${escapeHtml(t("enter"))}</div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+        app.querySelectorAll(".card").forEach(el => el.addEventListener("click", () => goCases(el.dataset.diff)));
+        return;
+      }
+
+      if (state.view === "cases"){
+        const list = GAME.casesByDifficulty[state.difficulty] || [];
+        app.innerHTML = `
+          ${renderTopbar(t("casesTitle", state.difficulty))}
+          <div class="grid cols-5">
+            ${list.map(c => `
+              <div class="card" data-case="${c.id}" data-status="${c.status}">
+                <div class="badge ${c.status}">${escapeHtml(c.status === "active" ? t("available") : t("closed"))}</div>
+                <h2>${escapeHtml(txt(c.label))}</h2>
+                <p>${escapeHtml(c.status === "active" ? t("openCaseFile") : t("notAvailable"))}</p>
+                <div class="pill">${escapeHtml(c.status === "active" ? t("open") : t("locked"))}</div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+        wireCommonButtons();
+        app.querySelectorAll(".card").forEach(el => {
+          el.addEventListener("click", () => {
+            const status = el.dataset.status;
+            const caseId = el.dataset.case;
+            if (status !== "active") { showToast(t("closedToast")); return; }
+            goOffice(caseId);
+          });
+        });
+        return;
+      }
+
+      if (state.view === "office"){
+        const c = GAME.caseContent[state.caseId];
+        app.innerHTML = `
+          ${renderTopbar(txt(c.officeTitle))}
+          <div class="grid cols-5">
+            ${c.sections.map(s => `
+              <div class="card" data-section="${s.id}">
+                <div class="badge active">${escapeHtml(t("open"))}</div>
+                <h2>${escapeHtml(txt(s.title))}</h2>
+                <p>${escapeHtml(t("openDrawer"))}</p>
+                <div class="pill">${escapeHtml(t("enter"))}</div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+        wireCommonButtons();
+        app.querySelectorAll(".card").forEach(el => el.addEventListener("click", () => goSection(el.dataset.section)));
+        return;
+      }
+
+      if (state.view === "section"){
+        const c = GAME.caseContent[state.caseId];
+        const sec = c.sections.find(s => s.id === state.sectionId);
+        const docs = c.documents[state.sectionId] || [];
+
+        const selected = state.docId ? docs.find(d => d.id === state.docId) : (docs[0] || null);
+        if (!state.docId && selected) state.docId = selected.id;
+
+        app.innerHTML = `
+          ${renderTopbar(txt(sec.title))}
+          <div class="split">
+            <section class="panel">
+              <div class="ph">
+                <h3>${escapeHtml(t("documents"))}</h3>
+                <span style="color:var(--muted);font-size:12px;">${escapeHtml(t("items", docs.length))}</span>
+              </div>
+              <div class="content">
+                <div class="list">
+                  ${docs.length ? docs.map(d => `
+                    <div class="doc" data-doc="${d.id}">
+                      <div class="title">${escapeHtml(txt(d.title))}</div>
+                      <div class="meta">${escapeHtml(txt(d.meta || {en:"", ar:""}))}</div>
+                    </div>
+                  `).join("") : `
+                    <div style="color:var(--muted);font-size:13px;line-height:1.4;">
+                      ${escapeHtml(t("emptyForNow"))}
+                    </div>
+                  `}
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="ph">
+                <h3>${escapeHtml(t("viewer"))}</h3>
+                <button class="btn" id="officeBtn">${escapeHtml(t("officeBtn"))}</button>
+              </div>
+              <div class="content viewer" id="viewer"></div>
+            </section>
+          </div>
+        `;
+
+        wireCommonButtons();
+        document.getElementById("officeBtn").addEventListener("click", back);
+
+        app.querySelectorAll(".doc").forEach(el => {
+          el.addEventListener("click", () => { state.docId = el.dataset.doc; renderViewer(); });
+        });
+
+        renderViewer();
+
+        function renderViewer(){
+          const v = document.getElementById("viewer");
+          const doc = docs.find(d => d.id === state.docId) || null;
+
+          if (!doc){
+            v.innerHTML = `<div style="color:var(--muted);font-size:13px;">${escapeHtml(t("selectDoc"))}</div>`;
+            return;
+          }
+
+          if (doc.type === "link"){
+            const url = doc.url || "";
+            v.innerHTML = `
+              <h4>${escapeHtml(txt(doc.title))}</h4>
+              <div class="meta">${escapeHtml(txt(doc.meta || {en:"", ar:""}))}</div>
+              <pre>${escapeHtml(t("fileLink"))}</pre>
+              <div class="hint">
+                ${escapeHtml(t("openLink"))}: <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>
+              </div>
+            `;
+            return;
+          }
+
+          const body = doc.body?.[state.lang] ?? doc.body?.en ?? "";
+          v.innerHTML = `
+            <h4>${escapeHtml(txt(doc.title))}</h4>
+            <div class="meta">${escapeHtml(txt(doc.meta || {en:"", ar:""}))}</div>
+            <pre>${escapeHtml(body)}</pre>
+            <div class="hint">${escapeHtml(t("hint"))}</div>
+          `;
+        }
+
+        return;
+      }
+    }
+
+    applyLang();
   </script>
 </body>
 </html>
+
 
 
 
