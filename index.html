@@ -7,43 +7,63 @@
 
   <style>
     :root{
-      --card:#121826;
-      --text:#e6e8ee;
-      --muted:#aab0c0;
-      --line:#26304a;
-      --accent:#6aa7ff;
-      --good:#56d364;
+      /* Paper-noir palette */
+      --bg:#0b0c10;
+      --cardTop: rgba(30,34,46,0.92);
+      --cardBot: rgba(18,20,30,0.92);
+      --panelTop: rgba(34,38,54,0.92);
+      --panelBot: rgba(20,22,34,0.92);
+
+      --text:#e8e6dc;
+      --muted:#b6b1a2;
+
+      /* Brass accent */
+      --accent:#c9a24d;
+      --accentSoft: rgba(201,162,77,0.35);
+
+      --good:#66d18f;
       --warn:#ffcc66;
+      --danger:#e36b6b;
+
+      --paper: rgba(240,235,220,0.92);
+      --ink: #201c14;
     }
 
     *{
       box-sizing:border-box;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Naskh Arabic", "Noto Sans Arabic", "Geeza Pro", "Tahoma", sans-serif;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+        "Noto Naskh Arabic", "Noto Sans Arabic", "Geeza Pro", "Tahoma", sans-serif;
     }
 
-    /* ---------- IMAGE BACKGROUNDS ---------- */
+    .mono{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      letter-spacing:0.2px;
+    }
+
     body{
       margin:0;
       color:var(--text);
-      background:#000;
+      background:var(--bg);
       min-height:100vh;
     }
 
-    /* Home + Cases */
-    body[data-bg="world"]{
+    /* ---------- BACKGROUNDS ---------- */
+    /* Use your noir office photo for the "case" space */
+    body[data-bg="case"]{
       background:
-        linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.88)),
+        linear-gradient(rgba(0,0,0,0.20), rgba(0,0,0,0.45)),
         url("image1.jpg") center / cover no-repeat fixed;
     }
 
-    /* Office + Section */
-    body[data-bg="case"]{
+    /* Home + cases: still noir, but a bit more atmospheric */
+    body[data-bg="world"]{
       background:
-        linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.92)),
-        url("image2.jpg") center / cover no-repeat fixed;
+        linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.65)),
+        url("image1.jpg") center / cover no-repeat fixed;
+      filter: saturate(0.95) contrast(1.03);
     }
 
-    /* Vignette + grain */
+    /* Vignette + very light grain */
     body::before{
       content:"";
       position:fixed;
@@ -51,13 +71,16 @@
       pointer-events:none;
       z-index:0;
       background:
-        radial-gradient(circle at 50% 35%, rgba(0,0,0,0.00) 28%, rgba(0,0,0,0.88) 82%),
+        radial-gradient(circle at 50% 35%,
+          rgba(0,0,0,0.00) 35%,
+          rgba(0,0,0,0.55) 90%
+        ),
         repeating-linear-gradient(
           0deg,
-          rgba(255,255,255,0.016),
-          rgba(255,255,255,0.016) 1px,
+          rgba(255,255,255,0.008),
+          rgba(255,255,255,0.008) 1px,
           transparent 1px,
-          transparent 3px
+          transparent 4px
         );
     }
 
@@ -70,7 +93,7 @@
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      background:rgba(0,0,0,0.45);
+      background:rgba(0,0,0,0.35);
       backdrop-filter: blur(8px);
     }
 
@@ -83,9 +106,10 @@
     header h1{
       margin:0;
       font-size:16px;
-      font-weight:750;
+      font-weight:800;
       letter-spacing:0.2px;
     }
+
     header .crumb{
       color:var(--muted);
       font-size:13px;
@@ -122,7 +146,7 @@
     }
 
     .btn{
-      background:rgba(0,0,0,0.25);
+      background:rgba(0,0,0,0.20);
       border:1px solid rgba(255,255,255,0.10);
       color:var(--text);
       padding:8px 10px;
@@ -133,23 +157,15 @@
       transition: transform .08s ease, border-color .08s ease, background .08s ease;
     }
     .btn:hover{
-      border-color: rgba(106,167,255,0.45);
-      background: rgba(0,0,0,0.35);
+      border-color: var(--accentSoft);
+      background: rgba(0,0,0,0.28);
       transform: translateY(-1px);
-    }
-    .btn.primary{
-      border-color: rgba(106,167,255,0.65);
-      color:#dce8ff;
-      background: rgba(20,30,55,0.35);
-    }
-    .btn.primary:hover{
-      border-color: rgba(106,167,255,0.85);
-      background: rgba(20,30,55,0.48);
     }
 
     .grid{ display:grid; gap:14px; }
     .grid.cols-3{ grid-template-columns:repeat(3,minmax(0,1fr)); }
     .grid.cols-5{ grid-template-columns:repeat(5,minmax(0,1fr)); }
+
     @media (max-width:950px){ .grid.cols-5{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
     @media (max-width:650px){
       .grid.cols-3{ grid-template-columns:1fr; }
@@ -157,14 +173,14 @@
     }
 
     .card{
-      background: linear-gradient(180deg, rgba(18,24,38,0.88), rgba(10,13,22,0.88));
+      background: linear-gradient(180deg, var(--cardTop), var(--cardBot));
       border:1px solid rgba(255,255,255,0.10);
       border-radius:14px;
       padding:16px;
       cursor:pointer;
       transition: transform .10s ease, border-color .10s ease, box-shadow .10s ease;
       user-select:none;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.40);
       position:relative;
       overflow:hidden;
       min-height:92px;
@@ -172,8 +188,8 @@
     }
     .card:hover{
       transform: translateY(-3px);
-      border-color: rgba(106,167,255,0.45);
-      box-shadow: 0 18px 45px rgba(0,0,0,0.55);
+      border-color: var(--accentSoft);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.55);
     }
     .card h2{ margin:0 0 6px 0; font-size:16px; }
     .card p{ margin:0; color:var(--muted); font-size:13px; line-height:1.35; }
@@ -186,7 +202,7 @@
       font-size:12px;
       color:var(--muted);
       margin-top:10px;
-      background: rgba(0,0,0,0.22);
+      background: rgba(0,0,0,0.18);
     }
 
     .badge{
@@ -198,11 +214,39 @@
       border-radius:999px;
       border:1px solid rgba(255,255,255,0.10);
       color:var(--muted);
-      background:rgba(0,0,0,0.25);
+      background:rgba(0,0,0,0.20);
       backdrop-filter: blur(6px);
     }
     .badge.closed{ border-color:rgba(255,204,102,0.35); color:var(--warn); }
-    .badge.active{ border-color:rgba(86,211,100,0.35); color:var(--good); }
+    .badge.active{ border-color:rgba(102,209,143,0.35); color:var(--good); }
+
+    /* Locked cases: look physically locked, not interactive */
+    .card[data-status="closed"]{
+      opacity:0.65;
+      filter:saturate(0.65);
+      cursor:not-allowed;
+    }
+    .card[data-status="closed"]:hover{
+      transform:none;
+      border-color:rgba(255,255,255,0.10);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.40);
+      background: linear-gradient(180deg, var(--cardTop), var(--cardBot));
+    }
+    .card[data-status="closed"]::after{
+      content:"LOCKED";
+      position:absolute;
+      top:52%;
+      left:50%;
+      transform:translate(-50%,-50%) rotate(-12deg);
+      padding:8px 16px;
+      border:1px solid rgba(255,204,102,0.40);
+      color:rgba(255,204,102,0.90);
+      background:rgba(0,0,0,0.30);
+      border-radius:999px;
+      font-weight:900;
+      letter-spacing:2px;
+      text-transform:uppercase;
+    }
 
     .split{
       display:grid;
@@ -212,24 +256,58 @@
     @media (max-width:900px){ .split{ grid-template-columns:1fr; } }
 
     .panel{
-      background: linear-gradient(180deg, rgba(18,24,38,0.88), rgba(10,13,22,0.88));
+      background: linear-gradient(180deg, var(--panelTop), var(--panelBot));
       border:1px solid rgba(255,255,255,0.10);
       border-radius:14px;
       overflow:hidden;
       backdrop-filter: blur(6px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.40);
     }
     .panel .ph{
       padding:12px 14px;
       border-bottom:1px solid rgba(255,255,255,0.08);
-      background:rgba(0,0,0,0.35);
+      background:rgba(0,0,0,0.25);
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
+      flex-wrap:wrap;
     }
     .panel .ph h3{ margin:0; font-size:14px; }
     .panel .content{ padding:12px; }
+
+    .caseHeader{
+      display:grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap:14px;
+      margin-bottom:14px;
+    }
+    @media (max-width:900px){ .caseHeader{ grid-template-columns:1fr; } }
+
+    .stamp{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:10px;
+      border:1px dashed rgba(201,162,77,0.55);
+      color:rgba(201,162,77,0.95);
+      background:rgba(0,0,0,0.18);
+      font-weight:900;
+      letter-spacing:1.4px;
+      text-transform:uppercase;
+      font-size:12px;
+    }
+
+    .kv{
+      display:grid;
+      grid-template-columns: 120px 1fr;
+      gap:8px 12px;
+      font-size:13px;
+      line-height:1.35;
+    }
+    .kv .k{ color:var(--muted); }
+    .kv .v{ color:var(--text); }
 
     .list{ display:flex; flex-direction:column; gap:10px; }
     .doc{
@@ -237,37 +315,104 @@
       border-radius:12px;
       padding:10px;
       cursor:pointer;
-      background:rgba(0,0,0,0.20);
+      background:rgba(0,0,0,0.16);
       transition: transform .08s ease, border-color .08s ease, background .08s ease;
+      position:relative;
     }
     .doc:hover{
       transform: translateY(-1px);
-      border-color: rgba(106,167,255,0.45);
-      background: rgba(0,0,0,0.28);
+      border-color: var(--accentSoft);
+      background: rgba(0,0,0,0.22);
     }
-    .doc .title{ font-weight:750; font-size:13px; margin-bottom:4px; }
+    .doc.active{
+      border-color: var(--accentSoft);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+    }
+
+    .docRow{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .doc .title{ font-weight:850; font-size:13px; margin-bottom:4px; }
     .doc .meta{ color:var(--muted); font-size:12px; }
+    .docMarks{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-shrink:0;
+      padding-top:2px;
+    }
+
+    .unreadDot{
+      width:9px;
+      height:9px;
+      border-radius:999px;
+      background: rgba(201,162,77,0.95);
+      box-shadow: 0 0 0 3px rgba(201,162,77,0.12);
+      display:none;
+    }
+    .doc.unread .unreadDot{ display:inline-block; }
+
+    .pinBtn{
+      width:26px;
+      height:26px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.10);
+      background:rgba(0,0,0,0.14);
+      color:var(--muted);
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      transition: border-color .08s ease, background .08s ease, transform .08s ease;
+      user-select:none;
+    }
+    .pinBtn:hover{
+      border-color: var(--accentSoft);
+      background:rgba(0,0,0,0.20);
+      transform: translateY(-1px);
+    }
+    .pinBtn.pinned{
+      color: rgba(201,162,77,0.95);
+      border-color: rgba(201,162,77,0.35);
+    }
 
     .viewer h4{ margin:0 0 6px 0; font-size:16px; }
     .viewer .meta{ color:var(--muted); font-size:12px; margin-bottom:10px; }
-    .viewer pre{
-      white-space:pre-wrap;
-      margin:0;
-      border:1px solid rgba(255,255,255,0.10);
-      border-radius:12px;
-      padding:12px;
-      background:rgba(0,0,0,0.35);
-      line-height:1.5;
-      font-size:13px;
+
+    .viewerBody{
+      transition: opacity .14s ease, filter .14s ease;
     }
-    .viewer .hint{
+    .viewerBody.loading{
+      opacity:0.05;
+      filter: blur(2px);
+    }
+
+    /* Treat documents like paper */
+    .imgWrap{
+      border:1px solid rgba(0,0,0,0.18);
+      border-radius:10px;
+      background: var(--paper);
+      padding:12px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.35);
+    }
+    .imgWrap img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:6px;
+      outline:1px solid rgba(0,0,0,0.12);
+      background:#fff;
+    }
+
+    .hint{
       margin-top:10px;
       color:var(--muted);
       font-size:12px;
       line-height:1.35;
     }
-    .viewer a{ color:var(--accent); text-decoration:none; }
-    .viewer a:hover{ text-decoration:underline; }
 
     .toast{
       position:fixed;
@@ -289,13 +434,15 @@
     }
     .toast.show{ opacity:1; }
 
-    /* ---------- RTL SUPPORT ---------- */
+    /* RTL SUPPORT */
     body[dir="rtl"]{ direction: rtl; }
-    body[dir="rtl"] header{ direction: rtl; }
-    body[dir="rtl"] .topbar{ direction: rtl; }
     body[dir="rtl"] .topbar .left{ flex-direction: row-reverse; }
-    body[dir="rtl"] .panel .ph{ direction: rtl; }
     body[dir="rtl"] .badge{ right:auto; left:12px; }
+    body[dir="rtl"] .docRow{ flex-direction: row-reverse; }
+    body[dir="rtl"] .docMarks{ flex-direction: row-reverse; }
+    body[dir="rtl"] .caseHeader{ direction: rtl; }
+    body[dir="rtl"] .kv{ grid-template-columns: 1fr 120px; }
+    body[dir="rtl"] .kv .k{ text-align:right; }
   </style>
 </head>
 
@@ -319,11 +466,14 @@
 
   <script>
     /*
-      Local setup:
-      Put these 3 files in the same folder:
-      - index.html
-      - image1.jpg (world)
-      - image2.jpg (case)
+      Local setup (same folder as index.html):
+      image1.jpg  (noir detective office)
+      official_police_report.jpg
+      crime_scene_map.jpg
+      building_exterior.jpg
+      office_layout.jpg
+      investigation_index1.jpg
+      investigation_index2.jpg
     */
 
     const I18N = {
@@ -331,59 +481,79 @@
         title: "Detective Demo",
         language: "Language",
         home: "Home",
-        chooseDifficulty: "Choose difficulty",
-        enter: "Enter",
+        chooseDifficulty: "Select difficulty",
+        browse: "Browse",
         casesTitle: (d) => `${cap(d)} cases`,
-        navigate: "Navigate the case files",
+        navigate: "Review and cross-check the file",
         back: "Back",
         homeBtn: "Home",
-        available: "Available",
-        closed: "Closed",
-        open: "Open",
-        locked: "Locked",
-        notAvailable: "Not available yet.",
-        openCaseFile: "Open the case file.",
-        closedToast: "Closed. Not available yet.",
+        available: "Open",
+        closed: "Locked",
+        open: "Review",
+        locked: "Sealed",
+        notAvailable: "Sealed. Not available yet.",
+        openCaseFile: "Open the case file and begin review.",
+        closedToast: "Sealed. Not available yet.",
         detectiveOffice: "Detective Office",
-        openDrawer: "Open this drawer.",
+        openDrawer: "Open drawer",
         documents: "Documents",
         viewer: "Viewer",
         items: (n) => `${n} item(s)`,
         emptyForNow: "Empty for now.",
         selectDoc: "Select a document.",
-        officeBtn: "Detective Office",
-        fileLink: "This document is a file link.",
-        openLink: "Open",
-        hint: 'To attach a PDF/image locally: set a document to type "link" with url like "evidence1.pdf" after putting the file next to index.html.'
+        officeBtn: "Office",
+        openFull: "Open full image",
+        missing: "This case is not configured yet.",
+        pin: "Pin",
+        unpin: "Unpin",
+        pinnedFirst: "Pinned first",
+        caseHeaderTitle: "Case Brief",
+        caseId: "Case ID",
+        status: "Status",
+        location: "Location",
+        opened: "Opened",
+        assigned: "Assigned",
+        classification: "Classification",
+        confidential: "Confidential"
       },
       ar: {
         title: "لعبة المحقق",
         language: "اللغة",
         home: "الرئيسية",
         chooseDifficulty: "اختر مستوى الصعوبة",
-        enter: "دخول",
+        browse: "تصفح",
         casesTitle: (d) => `قضايا ${capAr(d)}`,
-        navigate: "تصفح ملفات القضية",
+        navigate: "راجع الملفات وقارن الأدلة",
         back: "رجوع",
         homeBtn: "الرئيسية",
-        available: "متاحة",
-        closed: "مغلقة",
-        open: "فتح",
-        locked: "مقفلة",
-        notAvailable: "غير متاحة حاليا.",
-        openCaseFile: "افتح ملف القضية.",
-        closedToast: "مغلقة. غير متاحة حاليا.",
+        available: "مفتوحة",
+        closed: "مقفلة",
+        open: "مراجعة",
+        locked: "مختومة",
+        notAvailable: "مختومة. غير متاحة حاليا.",
+        openCaseFile: "افتح ملف القضية وابدأ المراجعة.",
+        closedToast: "مختومة. غير متاحة حاليا.",
         detectiveOffice: "مكتب المحقق",
-        openDrawer: "افتح هذا الدرج.",
+        openDrawer: "افتح الدرج",
         documents: "المستندات",
         viewer: "المعاينة",
         items: (n) => `${n} عنصر`,
         emptyForNow: "فارغة حاليا.",
         selectDoc: "اختر مستندا.",
-        officeBtn: "مكتب المحقق",
-        fileLink: "هذا المستند عبارة عن رابط ملف.",
-        openLink: "فتح",
-        hint: 'لإضافة PDF أو صورة محليا: اجعل نوع المستند "link" وضع url مثل "evidence1.pdf" بعد وضع الملف بجانب index.html.'
+        officeBtn: "المكتب",
+        openFull: "افتح الصورة كاملة",
+        missing: "هذه القضية غير مفعلة بعد.",
+        pin: "تثبيت",
+        unpin: "إلغاء التثبيت",
+        pinnedFirst: "المثبت أولا",
+        caseHeaderTitle: "ملخص القضية",
+        caseId: "رقم القضية",
+        status: "الحالة",
+        location: "الموقع",
+        opened: "تاريخ الفتح",
+        assigned: "المكلف",
+        classification: "التصنيف",
+        confidential: "سري"
       }
     };
 
@@ -395,14 +565,19 @@
       return d || "";
     }
 
-    const storageKey = "detective_lang";
+    const storageKeyLang = "detective_lang";
+    const storageKeyRead = "detective_read_docs_v1";
+    const storageKeyPins = "detective_pins_v1";
+    const storageKeyPinnedFirst = "detective_pinned_first_v1";
+
     const state = {
-      lang: (localStorage.getItem(storageKey) === "ar") ? "ar" : "en",
+      lang: (localStorage.getItem(storageKeyLang) === "ar") ? "ar" : "en",
       view: "home",         // home | cases | office | section
       difficulty: null,     // easy | medium | hard
       caseId: null,         // easy_case_1 ...
       sectionId: null,      // objectives ...
-      docId: null           // obj_1 ...
+      docId: null,          // ir_map ...
+      pinnedFirst: (localStorage.getItem(storageKeyPinnedFirst) === "1")
     };
 
     function t(key, ...args){
@@ -411,11 +586,54 @@
       return (typeof val === "function") ? val(...args) : val;
     }
 
+    function txt(obj){ return obj && obj[state.lang] ? obj[state.lang] : (obj?.en ?? ""); }
+
+    function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function loadJSON(key, fallback){
+      try{
+        const raw = localStorage.getItem(key);
+        if (!raw) return fallback;
+        return JSON.parse(raw);
+      }catch{
+        return fallback;
+      }
+    }
+    function saveJSON(key, val){
+      localStorage.setItem(key, JSON.stringify(val));
+    }
+
+    const readState = loadJSON(storageKeyRead, {}); // { [docId]: true }
+    const pinState = loadJSON(storageKeyPins, {});  // { [docId]: true }
+
+    function isRead(docId){ return !!readState[docId]; }
+    function markRead(docId){
+      if (!docId) return;
+      readState[docId] = true;
+      saveJSON(storageKeyRead, readState);
+    }
+
+    function isPinned(docId){ return !!pinState[docId]; }
+    function togglePin(docId){
+      if (!docId) return;
+      pinState[docId] = !pinState[docId];
+      if (!pinState[docId]) delete pinState[docId];
+      saveJSON(storageKeyPins, pinState);
+      render(); // re-sort if needed
+    }
+
     const GAME = {
       difficulties: [
-        { id: "easy", title: { en: "Easy", ar: "سهل" }, desc: { en: "Entry level cases.", ar: "قضايا للمبتدئين." } },
-        { id: "medium", title: { en: "Medium", ar: "متوسط" }, desc: { en: "More noise and contradictions.", ar: "مزيد من الضوضاء والتناقضات." } },
-        { id: "hard", title: { en: "Hard", ar: "صعب" }, desc: { en: "Dense files, ambiguity.", ar: "ملفات كثيفة وغموض." } }
+        { id: "easy", title: { en: "Easy", ar: "سهل" }, desc: { en: "Clear trail. Minimal noise.", ar: "مسار واضح وضوضاء قليلة." } },
+        { id: "medium", title: { en: "Medium", ar: "متوسط" }, desc: { en: "Contradictions appear.", ar: "تظهر تناقضات." } },
+        { id: "hard", title: { en: "Hard", ar: "صعب" }, desc: { en: "Ambiguity and misdirection.", ar: "غموض وتضليل." } }
       ],
 
       casesByDifficulty: {
@@ -439,151 +657,65 @@
       caseContent: {
         easy_case_1: {
           officeTitle: { en: "Detective Office", ar: "مكتب المحقق" },
+          caseMeta: {
+            caseId: { en: "E-01", ar: "E-01" },
+            status: { en: "Open", ar: "مفتوحة" },
+            location: { en: "Old City, 3rd Precinct", ar: "المدينة القديمة، الدائرة الثالثة" },
+            opened: { en: "1974-10-18", ar: "1974-10-18" },
+            assigned: { en: "Detective (You)", ar: "المحقق (أنت)" },
+            classification: { en: "Confidential", ar: "سري" }
+          },
           sections: [
             { id: "objectives", title: { en: "Case Objectives", ar: "أهداف القضية" } },
             { id: "initial_report", title: { en: "Initial Report", ar: "البلاغ الأولي" } },
             { id: "first_file", title: { en: "First File", ar: "الملف الأول" } },
             { id: "second_file", title: { en: "Second File", ar: "الملف الثاني" } },
-            { id: "additional_evidence", title: { en: "Additional evidences", ar: "أدلة إضافية" } }
+            { id: "additional_evidence", title: { en: "Additional Evidence", ar: "أدلة إضافية" } }
           ],
           documents: {
             objectives: [
               {
                 id: "obj_1",
-                title: { en: "Objectives Sheet", ar: "ورقة الأهداف" },
-                meta:  { en: "Internal memo", ar: "مذكرة داخلية" },
+                title: { en: "Objectives", ar: "الأهداف" },
+                meta:  { en: "Draft", ar: "مسودة" },
                 type: "text",
                 body: {
                   en:
-`Your job:
-1) Identify what happened.
-2) Build a consistent timeline.
-3) Decide which claims are reliable.
-4) Name the key evidence that proves your conclusion.
-
-Constraints:
-- Assume at least one statement is misleading.
-- Assume one document is incomplete.`,
+`1) Identify victim and last known movements.
+2) Establish timeline from witness accounts.
+3) Reconcile discrepancies between scene notes and photographs.
+4) Determine likely entry and exit routes.`,
                   ar:
-`مهمتك:
-1) تحديد ما الذي حدث.
-2) بناء خط زمني متماسك.
-3) تحديد أي الادعاءات موثوقة.
-4) تحديد الدليل الأساسي الذي يثبت استنتاجك.
-
-قيود:
-- افترض أن هناك تصريحا واحدا على الأقل مضلل.
-- افترض أن هناك مستندا واحدا غير مكتمل.`
+`1) تحديد هوية الضحية وآخر تحركاتها.
+2) بناء خط زمني من إفادات الشهود.
+3) مقارنة التعارضات بين ملاحظات الموقع والصور.
+4) تحديد مسارات الدخول والخروج المحتملة.`
                 }
               }
             ],
+
             initial_report: [
-              {
-                id: "ir_1",
-                title: { en: "Initial Call Summary", ar: "ملخص الاتصال الأول" },
-                meta:  { en: "Dispatch notes", ar: "ملاحظات البلاغات" },
-                type: "text",
-                body: {
-                  en:
-`Time: 21:18
-Caller: Unknown
-Message: "Someone is going to die tonight. The library. Third room."
-
-Operator notes:
-- Caller hung up immediately
-- Number hidden`,
-                  ar:
-`الوقت: 21:18
-المتصل: مجهول
-الرسالة: "شخص ما سيموت الليلة. المكتبة. الغرفة الثالثة."
-
-ملاحظات الموظف:
-- أغلق المتصل فورا
-- الرقم مخفي`
-                }
-              }
+              { id: "ir_police",  title: { en: "Official Police Report", ar: "محضر الشرطة" }, meta: { en: "Scan", ar: "صورة" }, type: "image", url: "official_police_report.jpg" },
+              { id: "ir_map",     title: { en: "Crime Scene Map", ar: "خريطة مواقع" },       meta: { en: "Sketch", ar: "صورة" }, type: "image", url: "crime_scene_map.jpg" },
+              { id: "ir_building",title: { en: "Building Exterior", ar: "الواجهة الخارجية" }, meta:{ en:"Photo", ar:"صورة" }, type:"image", url:"building_exterior.jpg" },
+              { id: "ir_layout",  title: { en: "Office Layout", ar: "مخطط المكتب" },        meta: { en: "Diagram", ar: "صورة" }, type: "image", url: "office_layout.jpg" },
+              { id: "ir_index_1", title: { en: "Investigation Index (1)", ar: "فهرس المستندات (1)" }, meta:{ en:"Index", ar:"صورة" }, type:"image", url:"investigation_index1.jpg" },
+              { id: "ir_index_2", title: { en: "Investigation Index (2)", ar: "فهرس المستندات (2)" }, meta:{ en:"Index", ar:"صورة" }, type:"image", url:"investigation_index2.jpg" }
             ],
+
             first_file: [
-              {
-                id: "ff_1",
-                title: { en: "Incident Report", ar: "تقرير الحادثة" },
-                meta:  { en: "Police report", ar: "تقرير الشرطة" },
-                type: "text",
-                body: {
-                  en:
-`Officer: M. Kareem
-Location: Old City Library
-Victim: Nadir Al-Sabah
-No sign of forced entry.
-Witness heard argument at 21:40 near the archives corridor.`,
-                  ar:
-`الضابط: م. كريم
-الموقع: مكتبة المدينة القديمة
-الضحية: نادر الصباح
-لا توجد آثار كسر أو اقتحام.
-شاهد سمع جدالا الساعة 21:40 قرب ممر الأرشيف.`
-                }
-              },
-              {
-                id: "ff_2",
-                title: { en: "Autopsy Summary", ar: "ملخص التشريح" },
-                meta:  { en: "Medical examiner", ar: "الطب الشرعي" },
-                type: "text",
-                body: {
-                  en:
-`Cause of death: poisoning.
-Likely fast-acting compound.
-Estimated time of death: 21:45 to 22:05.`,
-                  ar:
-`سبب الوفاة: تسمم.
-يرجح وجود مادة سريعة المفعول.
-الوقت التقريبي للوفاة: 21:45 إلى 22:05.`
-                }
-              }
+              { id: "ff_placeholder", title: { en: "Witness Statements", ar: "إفادات الشهود" }, meta: { en: "Not added yet", ar: "غير مضافة بعد" }, type: "text",
+                body: { en: "No documents yet.", ar: "لا توجد مستندات بعد." } }
             ],
+
             second_file: [
-              {
-                id: "sf_1",
-                title: { en: "Librarian Statement", ar: "إفادة أمين المكتبة" },
-                meta:  { en: "Interview transcript", ar: "نص مقابلة" },
-                type: "text",
-                body: {
-                  en:
-`I locked the reading room at 21:30.
-I saw Amal leaving at 21:35.
-At 21:50 I smelled strong cleaning chemicals from the corridor.`,
-                  ar:
-`أقفلت غرفة القراءة الساعة 21:30.
-رأيت أمل تغادر الساعة 21:35.
-عند 21:50 شممت رائحة مواد تنظيف قوية من الممر.`
-                }
-              }
+              { id: "sf_placeholder", title: { en: "Forensics", ar: "الأدلة الجنائية" }, meta: { en: "Not added yet", ar: "غير مضافة بعد" }, type: "text",
+                body: { en: "No documents yet.", ar: "لا توجد مستندات بعد." } }
             ],
+
             additional_evidence: [
-              {
-                id: "ae_1",
-                title: { en: "Placeholder: Add your real PDF here", ar: "مكان مخصص: أضف ملف PDF هنا" },
-                meta:  { en: "Replace with your file link or local file", ar: "استبدله برابط ملفك أو ملف محلي" },
-                type: "text",
-                body: {
-                  en:
-`To attach a PDF/image locally:
-1) Put the file next to index.html
-2) Change this document to type: "link"
-3) Set url like: "evidence1.pdf"
-
-Example:
-{ type: "link", url: "evidence1.pdf" }`,
-                  ar:
-`لإضافة PDF أو صورة محليا:
-1) ضع الملف بجانب index.html
-2) غيّر نوع المستند إلى "link"
-3) ضع url مثل: "evidence1.pdf"
-
-مثال:
-{ type: "link", url: "evidence1.pdf" }`
-                }
-              }
+              { id: "ae_placeholder", title: { en: "Loose Ends", ar: "خيوط متفرقة" }, meta: { en: "Not added yet", ar: "غير مضافة بعد" }, type: "text",
+                body: { en: "No documents yet.", ar: "لا توجد مستندات بعد." } }
             ]
           }
         }
@@ -612,7 +744,7 @@ Example:
 
     langBtn.addEventListener("click", () => {
       state.lang = (state.lang === "en") ? "ar" : "en";
-      localStorage.setItem(storageKey, state.lang);
+      localStorage.setItem(storageKeyLang, state.lang);
       applyLang();
     });
 
@@ -663,29 +795,21 @@ Example:
       goHome();
     }
 
-    function escapeHtml(str){
-      return String(str ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
-    function txt(obj){ return obj && obj[state.lang] ? obj[state.lang] : (obj?.en ?? ""); }
-
     function renderTopbar(titleRight){
       const left = `
         <div class="left">
           ${state.view === "home" ? "" : `<button class="btn" id="backBtn">${escapeHtml(t("back"))}</button>`}
           <div style="display:flex;flex-direction:column;gap:2px;">
-            <div style="font-weight:750;font-size:14px;">${escapeHtml(titleRight)}</div>
+            <div style="font-weight:850;font-size:14px;">${escapeHtml(titleRight)}</div>
             <div style="color:var(--muted);font-size:12px;">${escapeHtml(t("navigate"))}</div>
           </div>
         </div>
       `;
       const right = `
         <div style="display:flex;gap:10px;align-items:center;">
+          ${state.view === "section" ? `
+            <button class="btn" id="pinnedFirstBtn">${escapeHtml(t("pinnedFirst"))}: ${state.pinnedFirst ? "ON" : "OFF"}</button>
+          ` : ""}
           ${state.view === "home" ? "" : `<button class="btn" id="homeBtn">${escapeHtml(t("homeBtn"))}</button>`}
         </div>
       `;
@@ -695,20 +819,33 @@ Example:
     function wireCommonButtons(){
       const backBtn = document.getElementById("backBtn");
       if (backBtn) backBtn.addEventListener("click", back);
+
       const homeBtn = document.getElementById("homeBtn");
       if (homeBtn) homeBtn.addEventListener("click", goHome);
+
+      const pinnedFirstBtn = document.getElementById("pinnedFirstBtn");
+      if (pinnedFirstBtn){
+        pinnedFirstBtn.addEventListener("click", () => {
+          state.pinnedFirst = !state.pinnedFirst;
+          localStorage.setItem(storageKeyPinnedFirst, state.pinnedFirst ? "1" : "0");
+          render();
+        });
+      }
     }
 
     function render(){
       document.body.setAttribute("data-bg", (state.view === "home" || state.view === "cases") ? "world" : "case");
 
+      const diffObj = GAME.difficulties.find(d => d.id === state.difficulty);
+      const diffName = diffObj ? txt(diffObj.title) : "";
+
       if (state.view === "home") crumb.textContent = t("home");
-      if (state.view === "cases") crumb.textContent = `${t("home")} / ${txt(GAME.difficulties.find(d => d.id === state.difficulty)?.title)}`;
-      if (state.view === "office") crumb.textContent = `${t("home")} / ${txt(GAME.difficulties.find(d => d.id === state.difficulty)?.title)} / ${txt({en:"Case 1", ar:"القضية 1"})} / ${t("detectiveOffice")}`;
+      if (state.view === "cases") crumb.textContent = `${t("home")} / ${diffName}`;
+      if (state.view === "office") crumb.textContent = `${t("home")} / ${diffName} / ${txt({en:"Case 1", ar:"القضية 1"})} / ${t("detectiveOffice")}`;
       if (state.view === "section") {
         const c = GAME.caseContent[state.caseId];
         const sec = c ? c.sections.find(s => s.id === state.sectionId) : null;
-        crumb.textContent = `${t("home")} / ${txt(GAME.difficulties.find(d => d.id === state.difficulty)?.title)} / ${txt({en:"Case 1", ar:"القضية 1"})} / ${t("detectiveOffice")} / ${sec ? txt(sec.title) : ""}`;
+        crumb.textContent = `${t("home")} / ${diffName} / ${txt({en:"Case 1", ar:"القضية 1"})} / ${t("detectiveOffice")} / ${sec ? txt(sec.title) : ""}`;
       }
 
       if (state.view === "home"){
@@ -719,7 +856,7 @@ Example:
               <div class="card" data-diff="${d.id}">
                 <h2>${escapeHtml(txt(d.title))}</h2>
                 <p>${escapeHtml(txt(d.desc))}</p>
-                <div class="pill">${escapeHtml(t("enter"))}</div>
+                <div class="pill">${escapeHtml(t("browse"))}</div>
               </div>
             `).join("")}
           </div>
@@ -746,10 +883,8 @@ Example:
         wireCommonButtons();
         app.querySelectorAll(".card").forEach(el => {
           el.addEventListener("click", () => {
-            const status = el.dataset.status;
-            const caseId = el.dataset.case;
-            if (status !== "active") { showToast(t("closedToast")); return; }
-            goOffice(caseId);
+            if (el.dataset.status !== "active") { showToast(t("closedToast")); return; }
+            goOffice(el.dataset.case);
           });
         });
         return;
@@ -757,19 +892,68 @@ Example:
 
       if (state.view === "office"){
         const c = GAME.caseContent[state.caseId];
+        if (!c){
+          app.innerHTML = `
+            ${renderTopbar(t("detectiveOffice"))}
+            <div class="panel">
+              <div class="ph"><h3>${escapeHtml(t("detectiveOffice"))}</h3></div>
+              <div class="content" style="color:var(--muted);font-size:13px;line-height:1.4;">
+                ${escapeHtml(t("missing"))}
+              </div>
+            </div>
+          `;
+          wireCommonButtons();
+          return;
+        }
+
+        const meta = c.caseMeta;
+
         app.innerHTML = `
           ${renderTopbar(txt(c.officeTitle))}
+          <div class="caseHeader">
+            <section class="panel">
+              <div class="ph">
+                <h3>${escapeHtml(t("caseHeaderTitle"))}</h3>
+                <span class="stamp"><span class="mono">${escapeHtml(t("confidential"))}</span></span>
+              </div>
+              <div class="content">
+                <div class="kv">
+                  <div class="k">${escapeHtml(t("caseId"))}</div><div class="v mono">${escapeHtml(txt(meta.caseId))}</div>
+                  <div class="k">${escapeHtml(t("status"))}</div><div class="v">${escapeHtml(txt(meta.status))}</div>
+                  <div class="k">${escapeHtml(t("location"))}</div><div class="v">${escapeHtml(txt(meta.location))}</div>
+                  <div class="k">${escapeHtml(t("opened"))}</div><div class="v mono">${escapeHtml(txt(meta.opened))}</div>
+                  <div class="k">${escapeHtml(t("assigned"))}</div><div class="v">${escapeHtml(txt(meta.assigned))}</div>
+                  <div class="k">${escapeHtml(t("classification"))}</div><div class="v">${escapeHtml(txt(meta.classification))}</div>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="ph">
+                <h3>${escapeHtml(t("detectiveOffice"))}</h3>
+                <span style="color:var(--muted);font-size:12px;" class="mono">${escapeHtml(txt(meta.caseId))}</span>
+              </div>
+              <div class="content" style="color:var(--muted);font-size:13px;line-height:1.45;">
+                ${escapeHtml(state.lang === "en"
+                  ? "Start with the Initial Report. Mark inconsistencies. Pin anything that feels wrong."
+                  : "ابدأ بالبلاغ الأولي. ضع علامات على التناقضات. ثبّت أي شيء يبدو غير منطقي."
+                )}
+              </div>
+            </section>
+          </div>
+
           <div class="grid cols-5">
             ${c.sections.map(s => `
               <div class="card" data-section="${s.id}">
                 <div class="badge active">${escapeHtml(t("open"))}</div>
                 <h2>${escapeHtml(txt(s.title))}</h2>
                 <p>${escapeHtml(t("openDrawer"))}</p>
-                <div class="pill">${escapeHtml(t("enter"))}</div>
+                <div class="pill">${escapeHtml(t("open"))}</div>
               </div>
             `).join("")}
           </div>
         `;
+
         wireCommonButtons();
         app.querySelectorAll(".card").forEach(el => el.addEventListener("click", () => goSection(el.dataset.section)));
         return;
@@ -778,8 +962,20 @@ Example:
       if (state.view === "section"){
         const c = GAME.caseContent[state.caseId];
         const sec = c.sections.find(s => s.id === state.sectionId);
-        const docs = c.documents[state.sectionId] || [];
 
+        let docs = (c.documents[state.sectionId] || []).slice();
+
+        // Sort: pinned first if enabled
+        if (state.pinnedFirst){
+          docs.sort((a,b) => {
+            const ap = isPinned(a.id) ? 1 : 0;
+            const bp = isPinned(b.id) ? 1 : 0;
+            if (ap !== bp) return bp - ap;
+            return a.title?.en?.localeCompare(b.title?.en || "") || 0;
+          });
+        }
+
+        // Default selection
         const selected = state.docId ? docs.find(d => d.id === state.docId) : (docs[0] || null);
         if (!state.docId && selected) state.docId = selected.id;
 
@@ -793,12 +989,25 @@ Example:
               </div>
               <div class="content">
                 <div class="list">
-                  ${docs.length ? docs.map(d => `
-                    <div class="doc" data-doc="${d.id}">
-                      <div class="title">${escapeHtml(txt(d.title))}</div>
-                      <div class="meta">${escapeHtml(txt(d.meta || {en:"", ar:""}))}</div>
-                    </div>
-                  `).join("") : `
+                  ${docs.length ? docs.map(d => {
+                    const unread = !isRead(d.id);
+                    const pinned = isPinned(d.id);
+                    const active = (d.id === state.docId);
+                    return `
+                      <div class="doc ${unread ? "unread" : ""} ${active ? "active" : ""}" data-doc="${d.id}">
+                        <div class="docRow">
+                          <div>
+                            <div class="title">${escapeHtml(txt(d.title))}</div>
+                            <div class="meta mono">${escapeHtml(txt(d.meta || {en:"", ar:""}))}</div>
+                          </div>
+                          <div class="docMarks">
+                            <span class="unreadDot" title="Unread"></span>
+                            <button class="pinBtn ${pinned ? "pinned" : ""}" data-pin="${d.id}" title="${escapeHtml(pinned ? t("unpin") : t("pin"))}">✦</button>
+                          </div>
+                        </div>
+                      </div>
+                    `;
+                  }).join("") : `
                     <div style="color:var(--muted);font-size:13px;line-height:1.4;">
                       ${escapeHtml(t("emptyForNow"))}
                     </div>
@@ -810,9 +1019,14 @@ Example:
             <section class="panel">
               <div class="ph">
                 <h3>${escapeHtml(t("viewer"))}</h3>
-                <button class="btn" id="officeBtn">${escapeHtml(t("officeBtn"))}</button>
+                <div style="display:flex;gap:8px;align-items:center;">
+                  <a class="btn" id="openFullBtn" href="#" target="_blank" rel="noopener noreferrer">${escapeHtml(t("openFull"))}</a>
+                  <button class="btn" id="officeBtn">${escapeHtml(t("officeBtn"))}</button>
+                </div>
               </div>
-              <div class="content viewer" id="viewer"></div>
+              <div class="content viewer">
+                <div class="viewerBody" id="viewerBody"></div>
+              </div>
             </section>
           </div>
         `;
@@ -820,41 +1034,78 @@ Example:
         wireCommonButtons();
         document.getElementById("officeBtn").addEventListener("click", back);
 
-        app.querySelectorAll(".doc").forEach(el => {
-          el.addEventListener("click", () => { state.docId = el.dataset.doc; renderViewer(); });
+        // Pin buttons (prevent selecting doc)
+        app.querySelectorAll("[data-pin]").forEach(btn => {
+          btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            togglePin(btn.dataset.pin);
+          });
         });
 
-        renderViewer();
+        // Doc selection
+        app.querySelectorAll(".doc").forEach(el => {
+          el.addEventListener("click", () => {
+            state.docId = el.dataset.doc;
+            markRead(state.docId);
+            renderViewer(docs);
+            // refresh list styling for unread/active without full render
+            app.querySelectorAll(".doc").forEach(dEl => {
+              dEl.classList.toggle("active", dEl.dataset.doc === state.docId);
+              dEl.classList.toggle("unread", !isRead(dEl.dataset.doc));
+            });
+          });
+        });
 
-        function renderViewer(){
-          const v = document.getElementById("viewer");
-          const doc = docs.find(d => d.id === state.docId) || null;
+        // Mark selected as read immediately
+        if (state.docId) markRead(state.docId);
+
+        renderViewer(docs);
+
+        function renderViewer(docsList){
+          const body = document.getElementById("viewerBody");
+          const openFullBtn = document.getElementById("openFullBtn");
+          const doc = docsList.find(d => d.id === state.docId) || null;
 
           if (!doc){
-            v.innerHTML = `<div style="color:var(--muted);font-size:13px;">${escapeHtml(t("selectDoc"))}</div>`;
+            body.innerHTML = `<div style="color:var(--muted);font-size:13px;">${escapeHtml(t("selectDoc"))}</div>`;
+            openFullBtn.style.display = "none";
             return;
           }
 
-          if (doc.type === "link"){
-            const url = doc.url || "";
-            v.innerHTML = `
+          // Fade transition
+          body.classList.add("loading");
+          window.clearTimeout(renderViewer._t);
+          renderViewer._t = window.setTimeout(() => {
+            openFullBtn.style.display = "none";
+            openFullBtn.href = "#";
+
+            if (doc.type === "image"){
+              openFullBtn.style.display = "inline-flex";
+              openFullBtn.href = doc.url;
+
+              body.innerHTML = `
+                <h4>${escapeHtml(txt(doc.title))}</h4>
+                <div class="meta mono">${escapeHtml(txt(doc.meta || {en:"", ar:""}))}</div>
+                <div class="imgWrap">
+                  <img src="${escapeHtml(doc.url)}" alt="${escapeHtml(txt(doc.title))}" />
+                </div>
+                <div class="hint mono">${escapeHtml(doc.url)}</div>
+              `;
+              body.classList.remove("loading");
+              return;
+            }
+
+            // Text fallback
+            const text = doc.body?.[state.lang] ?? doc.body?.en ?? "";
+            body.innerHTML = `
               <h4>${escapeHtml(txt(doc.title))}</h4>
-              <div class="meta">${escapeHtml(txt(doc.meta || {en:"", ar:""}))}</div>
-              <pre>${escapeHtml(t("fileLink"))}</pre>
-              <div class="hint">
-                ${escapeHtml(t("openLink"))}: <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>
+              <div class="meta mono">${escapeHtml(txt(doc.meta || {en:"", ar:""}))}</div>
+              <div class="imgWrap" style="padding:14px;color:var(--ink);">
+                <div style="white-space:pre-wrap;line-height:1.6;font-size:13px;">${escapeHtml(text)}</div>
               </div>
             `;
-            return;
-          }
-
-          const body = doc.body?.[state.lang] ?? doc.body?.en ?? "";
-          v.innerHTML = `
-            <h4>${escapeHtml(txt(doc.title))}</h4>
-            <div class="meta">${escapeHtml(txt(doc.meta || {en:"", ar:""}))}</div>
-            <pre>${escapeHtml(body)}</pre>
-            <div class="hint">${escapeHtml(t("hint"))}</div>
-          `;
+            body.classList.remove("loading");
+          }, 140);
         }
 
         return;
@@ -865,6 +1116,7 @@ Example:
   </script>
 </body>
 </html>
+
 
 
 
