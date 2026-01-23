@@ -1,389 +1,868 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" id="rootHtml">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Detective Demo</title>
 
   <style>
-    :root {
-      --bg-dark: #06080d;
-      --bg-mid: #0b0d12;
-      --card: #121826;
-      --text: #e6e8ee;
-      --muted: #aab0c0;
-      --accent: #6aa7ff;
-      --line: #26304a;
+    :root{
+      --card:#121826;
+      --text:#e6e8ee;
+      --muted:#aab0c0;
+      --line:#26304a;
+      --accent:#6aa7ff;
+      --good:#56d364;
+      --warn:#ffcc66;
     }
 
-    * {
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    *{
+      box-sizing:border-box;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Naskh Arabic", "Noto Sans Arabic", "Geeza Pro", "Tahoma", sans-serif;
     }
 
-    body {
-      margin: 0;
-      color: var(--text);
+    /* ---------- IMAGE BACKGROUNDS ---------- */
+    body{
+      margin:0;
+      color:var(--text);
+      background:#000;
+      min-height:100vh;
+    }
+
+    /* Home + Cases */
+    body[data-bg="world"]{
       background:
-        radial-gradient(circle at 15% 10%, rgba(90,110,180,0.18), transparent 45%),
-        radial-gradient(circle at 85% 20%, rgba(140,140,140,0.08), transparent 45%),
-        linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-mid) 40%, var(--bg-dark) 100%);
+        linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.88)),
+        url("image1.jpg") center / cover no-repeat fixed;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background-image:
+    /* Office + Section */
+    body[data-bg="case"]{
+      background:
+        linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.92)),
+        url("image2.jpg") center / cover no-repeat fixed;
+    }
+
+    /* Vignette + grain */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(0,0,0,0.00) 28%, rgba(0,0,0,0.88) 82%),
         repeating-linear-gradient(
           0deg,
-          rgba(255,255,255,0.015),
-          rgba(255,255,255,0.015) 1px,
+          rgba(255,255,255,0.016),
+          rgba(255,255,255,0.016) 1px,
           transparent 1px,
-          transparent 2px
+          transparent 3px
         );
-      pointer-events: none;
-      z-index: 0;
     }
 
-    header, main {
-      position: relative;
-      z-index: 1;
+    header, main{ position:relative; z-index:1; }
+
+    header{
+      padding:16px 18px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      background:rgba(0,0,0,0.45);
+      backdrop-filter: blur(8px);
     }
 
-    header {
-      padding: 18px 20px;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      gap: 12px;
-      align-items: center;
+    .headerLeft{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+    }
+
+    header h1{
+      margin:0;
+      font-size:16px;
+      font-weight:750;
+      letter-spacing:0.2px;
+    }
+    header .crumb{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:2px;
+      max-width: 80vw;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+
+    .langWrap{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .langLabel{
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    main{ padding:18px; max-width:1100px; margin:0 auto; }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .topbar .left{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .btn{
+      background:rgba(0,0,0,0.25);
+      border:1px solid rgba(255,255,255,0.10);
+      color:var(--text);
+      padding:8px 10px;
+      border-radius:10px;
+      cursor:pointer;
+      font-size:13px;
+      white-space:nowrap;
+      transition: transform .08s ease, border-color .08s ease, background .08s ease;
+    }
+    .btn:hover{
+      border-color: rgba(106,167,255,0.45);
       background: rgba(0,0,0,0.35);
+      transform: translateY(-1px);
+    }
+    .btn.primary{
+      border-color: rgba(106,167,255,0.65);
+      color:#dce8ff;
+      background: rgba(20,30,55,0.35);
+    }
+    .btn.primary:hover{
+      border-color: rgba(106,167,255,0.85);
+      background: rgba(20,30,55,0.48);
+    }
+
+    .grid{ display:grid; gap:14px; }
+    .grid.cols-3{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .grid.cols-5{ grid-template-columns:repeat(5,minmax(0,1fr)); }
+    @media (max-width:950px){ .grid.cols-5{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
+    @media (max-width:650px){
+      .grid.cols-3{ grid-template-columns:1fr; }
+      .grid.cols-5{ grid-template-columns:1fr; }
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(18,24,38,0.88), rgba(10,13,22,0.88));
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:14px;
+      padding:16px;
+      cursor:pointer;
+      transition: transform .10s ease, border-color .10s ease, box-shadow .10s ease;
+      user-select:none;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+      position:relative;
+      overflow:hidden;
+      min-height:92px;
       backdrop-filter: blur(6px);
     }
+    .card:hover{
+      transform: translateY(-3px);
+      border-color: rgba(106,167,255,0.45);
+      box-shadow: 0 18px 45px rgba(0,0,0,0.55);
+    }
+    .card h2{ margin:0 0 6px 0; font-size:16px; }
+    .card p{ margin:0; color:var(--muted); font-size:13px; line-height:1.35; }
 
-    header h1 {
-      font-size: 16px;
-      margin: 0;
-      font-weight: 650;
+    .pill{
+      display:inline-block;
+      padding:4px 8px;
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:999px;
+      font-size:12px;
+      color:var(--muted);
+      margin-top:10px;
+      background: rgba(0,0,0,0.22);
     }
 
-    header .crumb {
-      color: var(--muted);
-      font-size: 13px;
+    .badge{
+      position:absolute;
+      top:12px;
+      right:12px;
+      font-size:12px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      color:var(--muted);
+      background:rgba(0,0,0,0.25);
+      backdrop-filter: blur(6px);
     }
+    .badge.closed{ border-color:rgba(255,204,102,0.35); color:var(--warn); }
+    .badge.active{ border-color:rgba(86,211,100,0.35); color:var(--good); }
 
-    main {
-      padding: 20px;
-      max-width: 1100px;
-      margin: 0 auto;
+    .split{
+      display:grid;
+      grid-template-columns: 340px 1fr;
+      gap:14px;
     }
+    @media (max-width:900px){ .split{ grid-template-columns:1fr; } }
 
-    .grid {
-      display: grid;
-      gap: 14px;
+    .panel{
+      background: linear-gradient(180deg, rgba(18,24,38,0.88), rgba(10,13,22,0.88));
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:14px;
+      overflow:hidden;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.45);
     }
+    .panel .ph{
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      background:rgba(0,0,0,0.35);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .panel .ph h3{ margin:0; font-size:14px; }
+    .panel .content{ padding:12px; }
 
-    .grid.cols-3 {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+    .list{ display:flex; flex-direction:column; gap:10px; }
+    .doc{
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:12px;
+      padding:10px;
+      cursor:pointer;
+      background:rgba(0,0,0,0.20);
+      transition: transform .08s ease, border-color .08s ease, background .08s ease;
     }
+    .doc:hover{
+      transform: translateY(-1px);
+      border-color: rgba(106,167,255,0.45);
+      background: rgba(0,0,0,0.28);
+    }
+    .doc .title{ font-weight:750; font-size:13px; margin-bottom:4px; }
+    .doc .meta{ color:var(--muted); font-size:12px; }
 
-    .grid.cols-4 {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+    .viewer h4{ margin:0 0 6px 0; font-size:16px; }
+    .viewer .meta{ color:var(--muted); font-size:12px; margin-bottom:10px; }
+    .viewer pre{
+      white-space:pre-wrap;
+      margin:0;
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:12px;
+      padding:12px;
+      background:rgba(0,0,0,0.35);
+      line-height:1.5;
+      font-size:13px;
     }
+    .viewer .hint{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.35;
+    }
+    .viewer a{ color:var(--accent); text-decoration:none; }
+    .viewer a:hover{ text-decoration:underline; }
 
-    @media (max-width:900px) {
-      .grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      background:rgba(0,0,0,0.78);
+      border:1px solid rgba(255,255,255,0.12);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      font-size:13px;
+      z-index:9999;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .12s ease;
+      max-width:min(680px, calc(100% - 24px));
+      backdrop-filter: blur(8px);
     }
+    .toast.show{ opacity:1; }
 
-    @media (max-width:650px) {
-      .grid.cols-3 { grid-template-columns: 1fr; }
-    }
-
-    .card {
-      background: linear-gradient(180deg, #141b2d, #0f1422);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 16px;
-      cursor: pointer;
-      transition: transform .08s ease, border-color .08s ease;
-      user-select: none;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.35);
-    }
-
-    .card:hover {
-      transform: translateY(-2px);
-      border-color: #3a4a73;
-    }
-
-    .card h2 {
-      margin: 0 0 6px 0;
-      font-size: 16px;
-    }
-
-    .card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.35;
-    }
-
-    .pill {
-      display: inline-block;
-      padding: 4px 8px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 10px;
-    }
-
-    .btn {
-      background: transparent;
-      border: 1px solid var(--line);
-      color: var(--text);
-      padding: 8px 10px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .btn:hover {
-      border-color: #3a4a73;
-    }
-
-    .btn.primary {
-      border-color: #2b5fbf;
-      color: #dce8ff;
-    }
-
-    .btn.primary:hover {
-      border-color: #3d7cff;
-    }
-
-    .split {
-      display: grid;
-      grid-template-columns: 320px 1fr;
-      gap: 14px;
-    }
-
-    @media (max-width:900px) {
-      .split { grid-template-columns: 1fr; }
-    }
-
-    .panel {
-      background: linear-gradient(180deg, #131a2b, #0e1321);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      overflow: hidden;
-    }
-
-    .panel header {
-      border-bottom: 1px solid var(--line);
-      padding: 12px 14px;
-      background: rgba(0,0,0,0.35);
-    }
-
-    .panel header h2 {
-      margin: 0;
-      font-size: 14px;
-    }
-
-    .list {
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .doc {
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 10px;
-      cursor: pointer;
-      background: rgba(255,255,255,0.03);
-    }
-
-    .doc:hover {
-      border-color: #3a4a73;
-    }
-
-    .doc .title {
-      font-weight: 650;
-      font-size: 13px;
-      margin-bottom: 4px;
-    }
-
-    .doc .meta {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .viewer {
-      padding: 14px;
-    }
-
-    .viewer h3 {
-      margin: 0 0 6px 0;
-      font-size: 16px;
-    }
-
-    .viewer .meta {
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 10px;
-    }
-
-    .viewer pre {
-      white-space: pre-wrap;
-      margin: 0;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 12px;
-      background: rgba(0,0,0,0.4);
-      line-height: 1.45;
-      font-size: 13px;
-    }
-
-    .form {
-      display: grid;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    label {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      border-radius: 10px;
-      border: 1px solid var(--line);
-      background: rgba(0,0,0,0.35);
-      color: var(--text);
-      outline: none;
-    }
-
-    input:focus {
-      border-color: #3d7cff;
-    }
-
-    .result {
-      margin-top: 10px;
-      color: var(--muted);
-      font-size: 13px;
-    }
+    /* ---------- RTL SUPPORT ---------- */
+    body[dir="rtl"]{ direction: rtl; }
+    body[dir="rtl"] header{ direction: rtl; }
+    body[dir="rtl"] .topbar{ direction: rtl; }
+    body[dir="rtl"] .topbar .left{ flex-direction: row-reverse; }
+    body[dir="rtl"] .panel .ph{ direction: rtl; }
+    body[dir="rtl"] .badge{ right:auto; left:12px; }
   </style>
 </head>
 
-<body>
+<body data-bg="world" dir="ltr">
   <header>
-    <button class="btn" id="backBtn" style="display:none;">Back</button>
-    <div>
-      <h1>Detective Demo</h1>
-      <div class="crumb" id="crumb">Home</div>
+    <div class="headerLeft">
+      <div>
+        <h1 id="titleText">Detective Demo</h1>
+        <div class="crumb" id="crumb">Home</div>
+      </div>
+    </div>
+
+    <div class="langWrap">
+      <div class="langLabel" id="langLabel">Language</div>
+      <button class="btn" id="langBtn">AR</button>
     </div>
   </header>
 
   <main id="app"></main>
+  <div class="toast" id="toast"></div>
 
   <script>
-    const DATA = {
-      difficulties: [
-        { id: "easy", title: "Easy", desc: "Clear clues, few documents." },
-        { id: "med", title: "Medium", desc: "More contradictions and noise." },
-        { id: "hard", title: "Hard", desc: "Ambiguity, red herrings, dense files." }
-      ],
-      cases: [
-        {
-          id: "case_1",
-          title: "The Library Incident",
-          blurb: "A body is found in the closed reading room.",
-          documents: [
-            { id:"d1", title:"Incident Report", type:"Police", date:"2026-01-20 22:10",
-              body:`Officer: M. Kareem
-Location: Old City Library
-No sign of forced entry.
-Witness heard argument at 21:40.`},
-            { id:"d2", title:"Librarian Statement", type:"Interview", date:"2026-01-21 09:15",
-              body:`I locked the room at 21:30.
-Only two people remained inside.`},
-            { id:"d3", title:"Autopsy Summary", type:"Medical", date:"2026-01-21 14:00",
-              body:`Cause of death: poisoning.
-Time of death: approx 21:45.`}
-          ],
-          solution: { killer:"Sahar", method:"poison", key:"autopsy" }
-        }
-      ]
+    /*
+      Local setup:
+      Put these 3 files in the same folder:
+      - index.html
+      - image1.jpg (world)
+      - image2.jpg (case)
+    */
+
+    const I18N = {
+      en: {
+        title: "Detective Demo",
+        language: "Language",
+        home: "Home",
+        chooseDifficulty: "Choose difficulty",
+        enter: "Enter",
+        casesTitle: (d) => `${cap(d)} cases`,
+        navigate: "Navigate the case files",
+        back: "Back",
+        homeBtn: "Home",
+        available: "Available",
+        closed: "Closed",
+        open: "Open",
+        locked: "Locked",
+        notAvailable: "Not available yet.",
+        openCaseFile: "Open the case file.",
+        closedToast: "Closed. Not available yet.",
+        detectiveOffice: "Detective Office",
+        openDrawer: "Open this drawer.",
+        documents: "Documents",
+        viewer: "Viewer",
+        items: (n) => `${n} item(s)`,
+        emptyForNow: "Empty for now.",
+        selectDoc: "Select a document.",
+        officeBtn: "Detective Office",
+        fileLink: "This document is a file link.",
+        openLink: "Open",
+        hint: 'To attach a PDF/image locally: set a document to type "link" with url like "evidence1.pdf" after putting the file next to index.html.'
+      },
+      ar: {
+        title: "لعبة المحقق",
+        language: "اللغة",
+        home: "الرئيسية",
+        chooseDifficulty: "اختر مستوى الصعوبة",
+        enter: "دخول",
+        casesTitle: (d) => `قضايا ${capAr(d)}`,
+        navigate: "تصفح ملفات القضية",
+        back: "رجوع",
+        homeBtn: "الرئيسية",
+        available: "متاحة",
+        closed: "مغلقة",
+        open: "فتح",
+        locked: "مقفلة",
+        notAvailable: "غير متاحة حاليا.",
+        openCaseFile: "افتح ملف القضية.",
+        closedToast: "مغلقة. غير متاحة حاليا.",
+        detectiveOffice: "مكتب المحقق",
+        openDrawer: "افتح هذا الدرج.",
+        documents: "المستندات",
+        viewer: "المعاينة",
+        items: (n) => `${n} عنصر`,
+        emptyForNow: "فارغة حاليا.",
+        selectDoc: "اختر مستندا.",
+        officeBtn: "مكتب المحقق",
+        fileLink: "هذا المستند عبارة عن رابط ملف.",
+        openLink: "فتح",
+        hint: 'لإضافة PDF أو صورة محليا: اجعل نوع المستند "link" وضع url مثل "evidence1.pdf" بعد وضع الملف بجانب index.html.'
+      }
     };
 
-    const state = { page: "home", difficulty: null, caseId: null, docId: null };
+    function cap(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : ""; }
+    function capAr(d){
+      if (d === "easy") return "السهلة";
+      if (d === "medium") return "المتوسطة";
+      if (d === "hard") return "الصعبة";
+      return d || "";
+    }
+
+    const storageKey = "detective_lang";
+    const state = {
+      lang: (localStorage.getItem(storageKey) === "ar") ? "ar" : "en",
+      view: "home",         // home | cases | office | section
+      difficulty: null,     // easy | medium | hard
+      caseId: null,         // easy_case_1 ...
+      sectionId: null,      // objectives ...
+      docId: null           // obj_1 ...
+    };
+
+    function t(key, ...args){
+      const dict = I18N[state.lang];
+      const val = dict[key];
+      return (typeof val === "function") ? val(...args) : val;
+    }
+
+    const GAME = {
+      difficulties: [
+        { id: "easy", title: { en: "Easy", ar: "سهل" }, desc: { en: "Entry level cases.", ar: "قضايا للمبتدئين." } },
+        { id: "medium", title: { en: "Medium", ar: "متوسط" }, desc: { en: "More noise and contradictions.", ar: "مزيد من الضوضاء والتناقضات." } },
+        { id: "hard", title: { en: "Hard", ar: "صعب" }, desc: { en: "Dense files, ambiguity.", ar: "ملفات كثيفة وغموض." } }
+      ],
+
+      casesByDifficulty: {
+        easy: Array.from({ length: 10 }, (_, i) => ({
+          id: `easy_case_${i+1}`,
+          label: { en: `Case ${i+1}`, ar: `القضية ${i+1}` },
+          status: (i === 0) ? "active" : "closed"
+        })),
+        medium: Array.from({ length: 10 }, (_, i) => ({
+          id: `med_case_${i+1}`,
+          label: { en: `Case ${i+1}`, ar: `القضية ${i+1}` },
+          status: "closed"
+        })),
+        hard: Array.from({ length: 10 }, (_, i) => ({
+          id: `hard_case_${i+1}`,
+          label: { en: `Case ${i+1}`, ar: `القضية ${i+1}` },
+          status: "closed"
+        }))
+      },
+
+      caseContent: {
+        easy_case_1: {
+          officeTitle: { en: "Detective Office", ar: "مكتب المحقق" },
+          sections: [
+            { id: "objectives", title: { en: "Case Objectives", ar: "أهداف القضية" } },
+            { id: "initial_report", title: { en: "Initial Report", ar: "البلاغ الأولي" } },
+            { id: "first_file", title: { en: "First File", ar: "الملف الأول" } },
+            { id: "second_file", title: { en: "Second File", ar: "الملف الثاني" } },
+            { id: "additional_evidence", title: { en: "Additional evidences", ar: "أدلة إضافية" } }
+          ],
+          documents: {
+            objectives: [
+              {
+                id: "obj_1",
+                title: { en: "Objectives Sheet", ar: "ورقة الأهداف" },
+                meta:  { en: "Internal memo", ar: "مذكرة داخلية" },
+                type: "text",
+                body: {
+                  en:
+`Your job:
+1) Identify what happened.
+2) Build a consistent timeline.
+3) Decide which claims are reliable.
+4) Name the key evidence that proves your conclusion.
+
+Constraints:
+- Assume at least one statement is misleading.
+- Assume one document is incomplete.`,
+                  ar:
+`مهمتك:
+1) تحديد ما الذي حدث.
+2) بناء خط زمني متماسك.
+3) تحديد أي الادعاءات موثوقة.
+4) تحديد الدليل الأساسي الذي يثبت استنتاجك.
+
+قيود:
+- افترض أن هناك تصريحا واحدا على الأقل مضلل.
+- افترض أن هناك مستندا واحدا غير مكتمل.`
+                }
+              }
+            ],
+            initial_report: [
+              {
+                id: "ir_1",
+                title: { en: "Initial Call Summary", ar: "ملخص الاتصال الأول" },
+                meta:  { en: "Dispatch notes", ar: "ملاحظات البلاغات" },
+                type: "text",
+                body: {
+                  en:
+`Time: 21:18
+Caller: Unknown
+Message: "Someone is going to die tonight. The library. Third room."
+
+Operator notes:
+- Caller hung up immediately
+- Number hidden`,
+                  ar:
+`الوقت: 21:18
+المتصل: مجهول
+الرسالة: "شخص ما سيموت الليلة. المكتبة. الغرفة الثالثة."
+
+ملاحظات الموظف:
+- أغلق المتصل فورا
+- الرقم مخفي`
+                }
+              }
+            ],
+            first_file: [
+              {
+                id: "ff_1",
+                title: { en: "Incident Report", ar: "تقرير الحادثة" },
+                meta:  { en: "Police report", ar: "تقرير الشرطة" },
+                type: "text",
+                body: {
+                  en:
+`Officer: M. Kareem
+Location: Old City Library
+Victim: Nadir Al-Sabah
+No sign of forced entry.
+Witness heard argument at 21:40 near the archives corridor.`,
+                  ar:
+`الضابط: م. كريم
+الموقع: مكتبة المدينة القديمة
+الضحية: نادر الصباح
+لا توجد آثار كسر أو اقتحام.
+شاهد سمع جدالا الساعة 21:40 قرب ممر الأرشيف.`
+                }
+              },
+              {
+                id: "ff_2",
+                title: { en: "Autopsy Summary", ar: "ملخص التشريح" },
+                meta:  { en: "Medical examiner", ar: "الطب الشرعي" },
+                type: "text",
+                body: {
+                  en:
+`Cause of death: poisoning.
+Likely fast-acting compound.
+Estimated time of death: 21:45 to 22:05.`,
+                  ar:
+`سبب الوفاة: تسمم.
+يرجح وجود مادة سريعة المفعول.
+الوقت التقريبي للوفاة: 21:45 إلى 22:05.`
+                }
+              }
+            ],
+            second_file: [
+              {
+                id: "sf_1",
+                title: { en: "Librarian Statement", ar: "إفادة أمين المكتبة" },
+                meta:  { en: "Interview transcript", ar: "نص مقابلة" },
+                type: "text",
+                body: {
+                  en:
+`I locked the reading room at 21:30.
+I saw Amal leaving at 21:35.
+At 21:50 I smelled strong cleaning chemicals from the corridor.`,
+                  ar:
+`أقفلت غرفة القراءة الساعة 21:30.
+رأيت أمل تغادر الساعة 21:35.
+عند 21:50 شممت رائحة مواد تنظيف قوية من الممر.`
+                }
+              }
+            ],
+            additional_evidence: [
+              {
+                id: "ae_1",
+                title: { en: "Placeholder: Add your real PDF here", ar: "مكان مخصص: أضف ملف PDF هنا" },
+                meta:  { en: "Replace with your file link or local file", ar: "استبدله برابط ملفك أو ملف محلي" },
+                type: "text",
+                body: {
+                  en:
+`To attach a PDF/image locally:
+1) Put the file next to index.html
+2) Change this document to type: "link"
+3) Set url like: "evidence1.pdf"
+
+Example:
+{ type: "link", url: "evidence1.pdf" }`,
+                  ar:
+`لإضافة PDF أو صورة محليا:
+1) ضع الملف بجانب index.html
+2) غيّر نوع المستند إلى "link"
+3) ضع url مثل: "evidence1.pdf"
+
+مثال:
+{ type: "link", url: "evidence1.pdf" }`
+                }
+              }
+            ]
+          }
+        }
+      }
+    };
+
+    const rootHtml = document.getElementById("rootHtml");
     const app = document.getElementById("app");
     const crumb = document.getElementById("crumb");
-    const backBtn = document.getElementById("backBtn");
+    const toastEl = document.getElementById("toast");
+    const titleText = document.getElementById("titleText");
+    const langLabel = document.getElementById("langLabel");
+    const langBtn = document.getElementById("langBtn");
 
-    backBtn.onclick = () => {
-      if (state.page === "case") state.page = "cases";
-      else state.page = "home";
+    function applyLang(){
+      const isAr = state.lang === "ar";
+      document.body.setAttribute("dir", isAr ? "rtl" : "ltr");
+      rootHtml.setAttribute("lang", isAr ? "ar" : "en");
+
+      titleText.textContent = t("title");
+      langLabel.textContent = t("language");
+      langBtn.textContent = isAr ? "EN" : "AR";
+
       render();
-    };
+    }
 
-    function render() {
-      backBtn.style.display = state.page === "home" ? "none" : "inline-block";
+    langBtn.addEventListener("click", () => {
+      state.lang = (state.lang === "en") ? "ar" : "en";
+      localStorage.setItem(storageKey, state.lang);
+      applyLang();
+    });
 
-      if (state.page === "home") {
-        crumb.textContent = "Home";
+    function showToast(msg){
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      window.clearTimeout(showToast._t);
+      showToast._t = window.setTimeout(() => toastEl.classList.remove("show"), 1400);
+    }
+
+    function goHome(){
+      state.view = "home";
+      state.difficulty = null;
+      state.caseId = null;
+      state.sectionId = null;
+      state.docId = null;
+      render();
+    }
+
+    function goCases(difficulty){
+      state.view = "cases";
+      state.difficulty = difficulty;
+      state.caseId = null;
+      state.sectionId = null;
+      state.docId = null;
+      render();
+    }
+
+    function goOffice(caseId){
+      state.view = "office";
+      state.caseId = caseId;
+      state.sectionId = null;
+      state.docId = null;
+      render();
+    }
+
+    function goSection(sectionId){
+      state.view = "section";
+      state.sectionId = sectionId;
+      state.docId = null;
+      render();
+    }
+
+    function back(){
+      if (state.view === "section") { state.view = "office"; state.sectionId = null; state.docId = null; render(); return; }
+      if (state.view === "office") { state.view = "cases"; state.caseId = null; render(); return; }
+      if (state.view === "cases") { goHome(); return; }
+      goHome();
+    }
+
+    function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function txt(obj){ return obj && obj[state.lang] ? obj[state.lang] : (obj?.en ?? ""); }
+
+    function renderTopbar(titleRight){
+      const left = `
+        <div class="left">
+          ${state.view === "home" ? "" : `<button class="btn" id="backBtn">${escapeHtml(t("back"))}</button>`}
+          <div style="display:flex;flex-direction:column;gap:2px;">
+            <div style="font-weight:750;font-size:14px;">${escapeHtml(titleRight)}</div>
+            <div style="color:var(--muted);font-size:12px;">${escapeHtml(t("navigate"))}</div>
+          </div>
+        </div>
+      `;
+      const right = `
+        <div style="display:flex;gap:10px;align-items:center;">
+          ${state.view === "home" ? "" : `<button class="btn" id="homeBtn">${escapeHtml(t("homeBtn"))}</button>`}
+        </div>
+      `;
+      return `<div class="topbar">${left}${right}</div>`;
+    }
+
+    function wireCommonButtons(){
+      const backBtn = document.getElementById("backBtn");
+      if (backBtn) backBtn.addEventListener("click", back);
+      const homeBtn = document.getElementById("homeBtn");
+      if (homeBtn) homeBtn.addEventListener("click", goHome);
+    }
+
+    function render(){
+      document.body.setAttribute("data-bg", (state.view === "home" || state.view === "cases") ? "world" : "case");
+
+      if (state.view === "home") crumb.textContent = t("home");
+      if (state.view === "cases") crumb.textContent = `${t("home")} / ${txt(GAME.difficulties.find(d => d.id === state.difficulty)?.title)}`;
+      if (state.view === "office") crumb.textContent = `${t("home")} / ${txt(GAME.difficulties.find(d => d.id === state.difficulty)?.title)} / ${txt({en:"Case 1", ar:"القضية 1"})} / ${t("detectiveOffice")}`;
+      if (state.view === "section") {
+        const c = GAME.caseContent[state.caseId];
+        const sec = c ? c.sections.find(s => s.id === state.sectionId) : null;
+        crumb.textContent = `${t("home")} / ${txt(GAME.difficulties.find(d => d.id === state.difficulty)?.title)} / ${txt({en:"Case 1", ar:"القضية 1"})} / ${t("detectiveOffice")} / ${sec ? txt(sec.title) : ""}`;
+      }
+
+      if (state.view === "home"){
         app.innerHTML = `
+          ${renderTopbar(t("chooseDifficulty"))}
           <div class="grid cols-3">
-            ${DATA.difficulties.map(d => `
-              <div class="card" data-id="${d.id}">
-                <h2>${d.title}</h2>
-                <p>${d.desc}</p>
-                <div class="pill">Pick difficulty</div>
+            ${GAME.difficulties.map(d => `
+              <div class="card" data-diff="${d.id}">
+                <h2>${escapeHtml(txt(d.title))}</h2>
+                <p>${escapeHtml(txt(d.desc))}</p>
+                <div class="pill">${escapeHtml(t("enter"))}</div>
               </div>
             `).join("")}
-          </div>`;
-        app.querySelectorAll(".card").forEach(c =>
-          c.onclick = () => { state.page="cases"; render(); }
-        );
+          </div>
+        `;
+        app.querySelectorAll(".card").forEach(el => el.addEventListener("click", () => goCases(el.dataset.diff)));
         return;
       }
 
-      if (state.page === "cases") {
-        crumb.textContent = "Cases";
+      if (state.view === "cases"){
+        const list = GAME.casesByDifficulty[state.difficulty] || [];
         app.innerHTML = `
-          <div class="grid cols-4">
-            ${DATA.cases.map(c => `
-              <div class="card" data-id="${c.id}">
-                <h2>${c.title}</h2>
-                <p>${c.blurb}</p>
-                <div class="pill">Open case</div>
+          ${renderTopbar(t("casesTitle", state.difficulty))}
+          <div class="grid cols-5">
+            ${list.map(c => `
+              <div class="card" data-case="${c.id}" data-status="${c.status}">
+                <div class="badge ${c.status}">${escapeHtml(c.status === "active" ? t("available") : t("closed"))}</div>
+                <h2>${escapeHtml(txt(c.label))}</h2>
+                <p>${escapeHtml(c.status === "active" ? t("openCaseFile") : t("notAvailable"))}</p>
+                <div class="pill">${escapeHtml(c.status === "active" ? t("open") : t("locked"))}</div>
               </div>
             `).join("")}
-          </div>`;
-        app.querySelectorAll(".card").forEach(c =>
-          c.onclick = () => { state.page="case"; state.caseId=c.dataset.id; render(); }
-        );
+          </div>
+        `;
+        wireCommonButtons();
+        app.querySelectorAll(".card").forEach(el => {
+          el.addEventListener("click", () => {
+            const status = el.dataset.status;
+            const caseId = el.dataset.case;
+            if (status !== "active") { showToast(t("closedToast")); return; }
+            goOffice(caseId);
+          });
+        });
         return;
       }
 
-      if (state.page === "case") {
-        const c = DATA.cases[0];
-        crumb.textContent = c.title;
-        const d = c.documents[0];
+      if (state.view === "office"){
+        const c = GAME.caseContent[state.caseId];
         app.innerHTML = `
-          <div class="panel">
-            <div class="viewer">
-              <h3>${d.title}</h3>
-              <div class="meta">${d.type} · ${d.date}</div>
-              <pre>${d.body}</pre>
-            </div>
-          </div>`;
+          ${renderTopbar(txt(c.officeTitle))}
+          <div class="grid cols-5">
+            ${c.sections.map(s => `
+              <div class="card" data-section="${s.id}">
+                <div class="badge active">${escapeHtml(t("open"))}</div>
+                <h2>${escapeHtml(txt(s.title))}</h2>
+                <p>${escapeHtml(t("openDrawer"))}</p>
+                <div class="pill">${escapeHtml(t("enter"))}</div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+        wireCommonButtons();
+        app.querySelectorAll(".card").forEach(el => el.addEventListener("click", () => goSection(el.dataset.section)));
+        return;
+      }
+
+      if (state.view === "section"){
+        const c = GAME.caseContent[state.caseId];
+        const sec = c.sections.find(s => s.id === state.sectionId);
+        const docs = c.documents[state.sectionId] || [];
+
+        const selected = state.docId ? docs.find(d => d.id === state.docId) : (docs[0] || null);
+        if (!state.docId && selected) state.docId = selected.id;
+
+        app.innerHTML = `
+          ${renderTopbar(txt(sec.title))}
+          <div class="split">
+            <section class="panel">
+              <div class="ph">
+                <h3>${escapeHtml(t("documents"))}</h3>
+                <span style="color:var(--muted);font-size:12px;">${escapeHtml(t("items", docs.length))}</span>
+              </div>
+              <div class="content">
+                <div class="list">
+                  ${docs.length ? docs.map(d => `
+                    <div class="doc" data-doc="${d.id}">
+                      <div class="title">${escapeHtml(txt(d.title))}</div>
+                      <div class="meta">${escapeHtml(txt(d.meta || {en:"", ar:""}))}</div>
+                    </div>
+                  `).join("") : `
+                    <div style="color:var(--muted);font-size:13px;line-height:1.4;">
+                      ${escapeHtml(t("emptyForNow"))}
+                    </div>
+                  `}
+                </div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="ph">
+                <h3>${escapeHtml(t("viewer"))}</h3>
+                <button class="btn" id="officeBtn">${escapeHtml(t("officeBtn"))}</button>
+              </div>
+              <div class="content viewer" id="viewer"></div>
+            </section>
+          </div>
+        `;
+
+        wireCommonButtons();
+        document.getElementById("officeBtn").addEventListener("click", back);
+
+        app.querySelectorAll(".doc").forEach(el => {
+          el.addEventListener("click", () => { state.docId = el.dataset.doc; renderViewer(); });
+        });
+
+        renderViewer();
+
+        function renderViewer(){
+          const v = document.getElementById("viewer");
+          const doc = docs.find(d => d.id === state.docId) || null;
+
+          if (!doc){
+            v.innerHTML = `<div style="color:var(--muted);font-size:13px;">${escapeHtml(t("selectDoc"))}</div>`;
+            return;
+          }
+
+          if (doc.type === "link"){
+            const url = doc.url || "";
+            v.innerHTML = `
+              <h4>${escapeHtml(txt(doc.title))}</h4>
+              <div class="meta">${escapeHtml(txt(doc.meta || {en:"", ar:""}))}</div>
+              <pre>${escapeHtml(t("fileLink"))}</pre>
+              <div class="hint">
+                ${escapeHtml(t("openLink"))}: <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>
+              </div>
+            `;
+            return;
+          }
+
+          const body = doc.body?.[state.lang] ?? doc.body?.en ?? "";
+          v.innerHTML = `
+            <h4>${escapeHtml(txt(doc.title))}</h4>
+            <div class="meta">${escapeHtml(txt(doc.meta || {en:"", ar:""}))}</div>
+            <pre>${escapeHtml(body)}</pre>
+            <div class="hint">${escapeHtml(t("hint"))}</div>
+          `;
+        }
+
+        return;
       }
     }
 
-    render();
+    applyLang();
   </script>
 </body>
 </html>
+
