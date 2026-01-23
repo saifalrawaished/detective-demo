@@ -10,7 +10,6 @@
       --card:#121826;
       --text:#e6e8ee;
       --muted:#aab0c0;
-      --line:#26304a;
       --accent:#6aa7ff;
       --good:#56d364;
       --warn:#ffcc66;
@@ -18,7 +17,8 @@
 
     *{
       box-sizing:border-box;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Naskh Arabic", "Noto Sans Arabic", "Geeza Pro", "Tahoma", sans-serif;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial,
+        "Noto Naskh Arabic", "Noto Sans Arabic", "Geeza Pro", "Tahoma", sans-serif;
     }
 
     /* ---------- IMAGE BACKGROUNDS ---------- */
@@ -74,18 +74,13 @@
       backdrop-filter: blur(8px);
     }
 
-    .headerLeft{
-      display:flex;
-      align-items:flex-start;
-      gap:12px;
-    }
-
     header h1{
       margin:0;
       font-size:16px;
       font-weight:750;
       letter-spacing:0.2px;
     }
+
     header .crumb{
       color:var(--muted);
       font-size:13px;
@@ -131,25 +126,22 @@
       font-size:13px;
       white-space:nowrap;
       transition: transform .08s ease, border-color .08s ease, background .08s ease;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
     }
     .btn:hover{
       border-color: rgba(106,167,255,0.45);
       background: rgba(0,0,0,0.35);
       transform: translateY(-1px);
     }
-    .btn.primary{
-      border-color: rgba(106,167,255,0.65);
-      color:#dce8ff;
-      background: rgba(20,30,55,0.35);
-    }
-    .btn.primary:hover{
-      border-color: rgba(106,167,255,0.85);
-      background: rgba(20,30,55,0.48);
-    }
 
     .grid{ display:grid; gap:14px; }
     .grid.cols-3{ grid-template-columns:repeat(3,minmax(0,1fr)); }
     .grid.cols-5{ grid-template-columns:repeat(5,minmax(0,1fr)); }
+
     @media (max-width:950px){ .grid.cols-5{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
     @media (max-width:650px){
       .grid.cols-3{ grid-template-columns:1fr; }
@@ -227,11 +219,13 @@
       align-items:center;
       justify-content:space-between;
       gap:10px;
+      flex-wrap:wrap;
     }
     .panel .ph h3{ margin:0; font-size:14px; }
     .panel .content{ padding:12px; }
 
     .list{ display:flex; flex-direction:column; gap:10px; }
+
     .doc{
       border:1px solid rgba(255,255,255,0.10);
       border-radius:12px;
@@ -245,29 +239,58 @@
       border-color: rgba(106,167,255,0.45);
       background: rgba(0,0,0,0.28);
     }
+    .doc.active{
+      border-color: rgba(106,167,255,0.70);
+      background: rgba(20,30,55,0.35);
+    }
     .doc .title{ font-weight:750; font-size:13px; margin-bottom:4px; }
     .doc .meta{ color:var(--muted); font-size:12px; }
 
-    .viewer h4{ margin:0 0 6px 0; font-size:16px; }
-    .viewer .meta{ color:var(--muted); font-size:12px; margin-bottom:10px; }
-    .viewer pre{
-      white-space:pre-wrap;
-      margin:0;
+    /* ---------- IMAGE DOC VIEWER ---------- */
+    .viewerTitle{ margin:0 0 8px 0; font-size:14px; font-weight:800; }
+    .viewerMeta{ margin:0 0 10px 0; color:var(--muted); font-size:12px; }
+
+    .paperStage{
       border:1px solid rgba(255,255,255,0.10);
-      border-radius:12px;
-      padding:12px;
-      background:rgba(0,0,0,0.35);
-      line-height:1.5;
-      font-size:13px;
+      border-radius:14px;
+      background:rgba(0,0,0,0.28);
+      padding:10px;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.55);
     }
-    .viewer .hint{
+
+    .paperStage img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+    }
+
+    /* Mobile-first: full-screen-ish viewer feel */
+    .mobileStage{
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:16px;
+      background:rgba(0,0,0,0.22);
+      padding:12px;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.60);
+      margin-bottom:14px;
+      position:relative;
+      touch-action: pan-y pinch-zoom;
+    }
+    .mobileStage img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:14px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.50);
+    }
+
+    .hint{
       margin-top:10px;
       color:var(--muted);
       font-size:12px;
       line-height:1.35;
     }
-    .viewer a{ color:var(--accent); text-decoration:none; }
-    .viewer a:hover{ text-decoration:underline; }
 
     .toast{
       position:fixed;
@@ -289,23 +312,115 @@
     }
     .toast.show{ opacity:1; }
 
+    /* ---------- MOBILE CONTROLS (swipe-primary) ---------- */
+    .mobileChrome{
+      position: sticky;
+      bottom: 0;
+      z-index: 5;
+      padding: 10px 0 0 0;
+    }
+
+    .bottomBar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      background:rgba(0,0,0,0.55);
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:14px;
+      padding:10px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 45px rgba(0,0,0,0.55);
+    }
+
+    .barGroup{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .counter{
+      color:var(--muted);
+      font-size:12px;
+      padding:6px 10px;
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:999px;
+      background:rgba(0,0,0,0.25);
+      min-width:72px;
+      text-align:center;
+    }
+
+    .iconBtn{
+      min-width:44px;
+      height:40px;
+      padding:0 12px;
+      border-radius:12px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    /* Bottom sheet */
+    .sheetOverlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.55);
+      z-index: 9990;
+      display:none;
+    }
+    .sheetOverlay.show{ display:block; }
+
+    .sheet{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:-100%;
+      z-index: 9991;
+      background:rgba(12,16,26,0.94);
+      border-top:1px solid rgba(255,255,255,0.12);
+      border-top-left-radius:18px;
+      border-top-right-radius:18px;
+      padding:12px;
+      box-shadow: 0 -20px 60px rgba(0,0,0,0.70);
+      transition: bottom 220ms ease;
+      max-height: 70vh;
+      overflow:auto;
+      backdrop-filter: blur(12px);
+    }
+    .sheet.show{ bottom:0; }
+
+    .sheetHandle{
+      width:64px;
+      height:5px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.22);
+      margin: 2px auto 10px auto;
+    }
+
+    .sheetTitle{
+      font-weight:800;
+      font-size:13px;
+      margin:0 0 10px 0;
+      color:var(--text);
+    }
+
+    /* Hide chrome class */
+    .hidden{ display:none !important; }
+
     /* ---------- RTL SUPPORT ---------- */
     body[dir="rtl"]{ direction: rtl; }
-    body[dir="rtl"] header{ direction: rtl; }
-    body[dir="rtl"] .topbar{ direction: rtl; }
     body[dir="rtl"] .topbar .left{ flex-direction: row-reverse; }
-    body[dir="rtl"] .panel .ph{ direction: rtl; }
     body[dir="rtl"] .badge{ right:auto; left:12px; }
+    body[dir="rtl"] .bottomBar{ direction: rtl; }
+    body[dir="rtl"] .barGroup{ direction: rtl; }
   </style>
 </head>
 
 <body data-bg="world" dir="ltr">
   <header>
-    <div class="headerLeft">
-      <div>
-        <h1 id="titleText">Detective Demo</h1>
-        <div class="crumb" id="crumb">Home</div>
-      </div>
+    <div>
+      <h1 id="titleText">Detective Demo</h1>
+      <div class="crumb" id="crumb">Home</div>
     </div>
 
     <div class="langWrap">
@@ -315,15 +430,27 @@
   </header>
 
   <main id="app"></main>
+
+  <div class="sheetOverlay" id="sheetOverlay"></div>
+  <div class="sheet" id="sheet">
+    <div class="sheetHandle"></div>
+    <div class="sheetTitle" id="sheetTitle">Documents</div>
+    <div id="sheetList"></div>
+  </div>
+
   <div class="toast" id="toast"></div>
 
   <script>
     /*
-      Local setup:
-      Put these 3 files in the same folder:
-      - index.html
-      - image1.jpg (world)
-      - image2.jpg (case)
+      Files next to index.html:
+      image1.jpg
+      image2.jpg
+      official_police_report.jpg
+      crime_scene_map.jpg
+      building_exterior.jpg
+      office_layout.jpg
+      investigation_index1.jpg
+      investigation_index2.jpg
     */
 
     const I18N = {
@@ -352,9 +479,12 @@
         emptyForNow: "Empty for now.",
         selectDoc: "Select a document.",
         officeBtn: "Detective Office",
-        fileLink: "This document is a file link.",
-        openLink: "Open",
-        hint: 'To attach a PDF/image locally: set a document to type "link" with url like "evidence1.pdf" after putting the file next to index.html.'
+        openFull: "Open full image",
+        missing: "This case is not configured yet.",
+        list: "List",
+        prev: "Prev",
+        next: "Next",
+        tapHint: "Tip: swipe left/right to flip documents. Tap to hide/show controls."
       },
       ar: {
         title: "لعبة المحقق",
@@ -381,9 +511,12 @@
         emptyForNow: "فارغة حاليا.",
         selectDoc: "اختر مستندا.",
         officeBtn: "مكتب المحقق",
-        fileLink: "هذا المستند عبارة عن رابط ملف.",
-        openLink: "فتح",
-        hint: 'لإضافة PDF أو صورة محليا: اجعل نوع المستند "link" وضع url مثل "evidence1.pdf" بعد وضع الملف بجانب index.html.'
+        openFull: "افتح الصورة كاملة",
+        missing: "هذه القضية غير مفعلة بعد.",
+        list: "قائمة",
+        prev: "السابق",
+        next: "التالي",
+        tapHint: "معلومة: اسحب يمينا ويسارا للتنقل. اضغط لإظهار وإخفاء الأزرار."
       }
     };
 
@@ -396,19 +529,37 @@
     }
 
     const storageKey = "detective_lang";
+
+    const uiState = {
+      chromeOn: true,      // for mobile section viewer
+      sheetOpen: false,
+      touchStartX: null,
+      touchStartY: null,
+      touchStartT: null
+    };
+
     const state = {
       lang: (localStorage.getItem(storageKey) === "ar") ? "ar" : "en",
       view: "home",         // home | cases | office | section
       difficulty: null,     // easy | medium | hard
       caseId: null,         // easy_case_1 ...
       sectionId: null,      // objectives ...
-      docId: null           // obj_1 ...
+      docId: null           // ir_map ...
     };
 
     function t(key, ...args){
       const dict = I18N[state.lang];
       const val = dict[key];
       return (typeof val === "function") ? val(...args) : val;
+    }
+    function txt(obj){ return obj && obj[state.lang] ? obj[state.lang] : (obj?.en ?? ""); }
+    function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
     }
 
     const GAME = {
@@ -448,142 +599,28 @@
           ],
           documents: {
             objectives: [
-              {
-                id: "obj_1",
-                title: { en: "Objectives Sheet", ar: "ورقة الأهداف" },
-                meta:  { en: "Internal memo", ar: "مذكرة داخلية" },
-                type: "text",
-                body: {
-                  en:
-`Your job:
-1) Identify what happened.
-2) Build a consistent timeline.
-3) Decide which claims are reliable.
-4) Name the key evidence that proves your conclusion.
-
-Constraints:
-- Assume at least one statement is misleading.
-- Assume one document is incomplete.`,
-                  ar:
-`مهمتك:
-1) تحديد ما الذي حدث.
-2) بناء خط زمني متماسك.
-3) تحديد أي الادعاءات موثوقة.
-4) تحديد الدليل الأساسي الذي يثبت استنتاجك.
-
-قيود:
-- افترض أن هناك تصريحا واحدا على الأقل مضلل.
-- افترض أن هناك مستندا واحدا غير مكتمل.`
-                }
-              }
+              { id:"obj_1", title:{en:"Objectives (placeholder)", ar:"الأهداف (مكان مخصص)"}, meta:{en:"Add later", ar:"أضف لاحقا"}, type:"text", body:{en:"Add objectives here later.", ar:"أضف الأهداف هنا لاحقا."} }
             ],
+
             initial_report: [
-              {
-                id: "ir_1",
-                title: { en: "Initial Call Summary", ar: "ملخص الاتصال الأول" },
-                meta:  { en: "Dispatch notes", ar: "ملاحظات البلاغات" },
-                type: "text",
-                body: {
-                  en:
-`Time: 21:18
-Caller: Unknown
-Message: "Someone is going to die tonight. The library. Third room."
-
-Operator notes:
-- Caller hung up immediately
-- Number hidden`,
-                  ar:
-`الوقت: 21:18
-المتصل: مجهول
-الرسالة: "شخص ما سيموت الليلة. المكتبة. الغرفة الثالثة."
-
-ملاحظات الموظف:
-- أغلق المتصل فورا
-- الرقم مخفي`
-                }
-              }
+              { id:"ir_map", title:{en:"Crime Scene Map", ar:"خريطة مواقع"}, meta:{en:"Image document", ar:"صورة"}, type:"image", url:"crime_scene_map.jpg" },
+              { id:"ir_building", title:{en:"Building Exterior", ar:"الواجهة الخارجية"}, meta:{en:"Image document", ar:"صورة"}, type:"image", url:"building_exterior.jpg" },
+              { id:"ir_layout", title:{en:"Office Layout", ar:"مخطط المكتب"}, meta:{en:"Image document", ar:"صورة"}, type:"image", url:"office_layout.jpg" },
+              { id:"ir_index_1", title:{en:"Investigation Index (1)", ar:"فهرس المستندات (1)"}, meta:{en:"Image document", ar:"صورة"}, type:"image", url:"investigation_index1.jpg" },
+              { id:"ir_index_2", title:{en:"Investigation Index (2)", ar:"فهرس المستندات (2)"}, meta:{en:"Image document", ar:"صورة"}, type:"image", url:"investigation_index2.jpg" },
+              { id:"ir_police", title:{en:"Official Police Report", ar:"محضر الشرطة"}, meta:{en:"Image document", ar:"صورة"}, type:"image", url:"official_police_report.jpg" }
             ],
+
             first_file: [
-              {
-                id: "ff_1",
-                title: { en: "Incident Report", ar: "تقرير الحادثة" },
-                meta:  { en: "Police report", ar: "تقرير الشرطة" },
-                type: "text",
-                body: {
-                  en:
-`Officer: M. Kareem
-Location: Old City Library
-Victim: Nadir Al-Sabah
-No sign of forced entry.
-Witness heard argument at 21:40 near the archives corridor.`,
-                  ar:
-`الضابط: م. كريم
-الموقع: مكتبة المدينة القديمة
-الضحية: نادر الصباح
-لا توجد آثار كسر أو اقتحام.
-شاهد سمع جدالا الساعة 21:40 قرب ممر الأرشيف.`
-                }
-              },
-              {
-                id: "ff_2",
-                title: { en: "Autopsy Summary", ar: "ملخص التشريح" },
-                meta:  { en: "Medical examiner", ar: "الطب الشرعي" },
-                type: "text",
-                body: {
-                  en:
-`Cause of death: poisoning.
-Likely fast-acting compound.
-Estimated time of death: 21:45 to 22:05.`,
-                  ar:
-`سبب الوفاة: تسمم.
-يرجح وجود مادة سريعة المفعول.
-الوقت التقريبي للوفاة: 21:45 إلى 22:05.`
-                }
-              }
+              { id:"ff_placeholder", title:{en:"First File (empty)", ar:"الملف الأول (فارغ)"}, meta:{en:"Add files later", ar:"أضف ملفات لاحقا"}, type:"text", body:{en:"No documents yet.", ar:"لا توجد مستندات بعد."} }
             ],
+
             second_file: [
-              {
-                id: "sf_1",
-                title: { en: "Librarian Statement", ar: "إفادة أمين المكتبة" },
-                meta:  { en: "Interview transcript", ar: "نص مقابلة" },
-                type: "text",
-                body: {
-                  en:
-`I locked the reading room at 21:30.
-I saw Amal leaving at 21:35.
-At 21:50 I smelled strong cleaning chemicals from the corridor.`,
-                  ar:
-`أقفلت غرفة القراءة الساعة 21:30.
-رأيت أمل تغادر الساعة 21:35.
-عند 21:50 شممت رائحة مواد تنظيف قوية من الممر.`
-                }
-              }
+              { id:"sf_placeholder", title:{en:"Second File (empty)", ar:"الملف الثاني (فارغ)"}, meta:{en:"Add files later", ar:"أضف ملفات لاحقا"}, type:"text", body:{en:"No documents yet.", ar:"لا توجد مستندات بعد."} }
             ],
+
             additional_evidence: [
-              {
-                id: "ae_1",
-                title: { en: "Placeholder: Add your real PDF here", ar: "مكان مخصص: أضف ملف PDF هنا" },
-                meta:  { en: "Replace with your file link or local file", ar: "استبدله برابط ملفك أو ملف محلي" },
-                type: "text",
-                body: {
-                  en:
-`To attach a PDF/image locally:
-1) Put the file next to index.html
-2) Change this document to type: "link"
-3) Set url like: "evidence1.pdf"
-
-Example:
-{ type: "link", url: "evidence1.pdf" }`,
-                  ar:
-`لإضافة PDF أو صورة محليا:
-1) ضع الملف بجانب index.html
-2) غيّر نوع المستند إلى "link"
-3) ضع url مثل: "evidence1.pdf"
-
-مثال:
-{ type: "link", url: "evidence1.pdf" }`
-                }
-              }
+              { id:"ae_placeholder", title:{en:"Additional evidences (empty)", ar:"أدلة إضافية (فارغ)"}, meta:{en:"Add files later", ar:"أضف ملفات لاحقا"}, type:"text", body:{en:"No documents yet.", ar:"لا توجد مستندات بعد."} }
             ]
           }
         }
@@ -598,15 +635,29 @@ Example:
     const langLabel = document.getElementById("langLabel");
     const langBtn = document.getElementById("langBtn");
 
+    const sheetOverlay = document.getElementById("sheetOverlay");
+    const sheet = document.getElementById("sheet");
+    const sheetTitle = document.getElementById("sheetTitle");
+    const sheetList = document.getElementById("sheetList");
+
+    function isMobile(){
+      return window.matchMedia("(max-width: 900px)").matches;
+    }
+
+    function showToast(msg){
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      window.clearTimeout(showToast._t);
+      showToast._t = window.setTimeout(() => toastEl.classList.remove("show"), 1400);
+    }
+
     function applyLang(){
       const isAr = state.lang === "ar";
       document.body.setAttribute("dir", isAr ? "rtl" : "ltr");
       rootHtml.setAttribute("lang", isAr ? "ar" : "en");
-
       titleText.textContent = t("title");
       langLabel.textContent = t("language");
       langBtn.textContent = isAr ? "EN" : "AR";
-
       render();
     }
 
@@ -616,19 +667,14 @@ Example:
       applyLang();
     });
 
-    function showToast(msg){
-      toastEl.textContent = msg;
-      toastEl.classList.add("show");
-      window.clearTimeout(showToast._t);
-      showToast._t = window.setTimeout(() => toastEl.classList.remove("show"), 1400);
-    }
-
     function goHome(){
       state.view = "home";
       state.difficulty = null;
       state.caseId = null;
       state.sectionId = null;
       state.docId = null;
+      uiState.chromeOn = true;
+      closeSheet();
       render();
     }
 
@@ -638,6 +684,8 @@ Example:
       state.caseId = null;
       state.sectionId = null;
       state.docId = null;
+      uiState.chromeOn = true;
+      closeSheet();
       render();
     }
 
@@ -646,33 +694,90 @@ Example:
       state.caseId = caseId;
       state.sectionId = null;
       state.docId = null;
+      uiState.chromeOn = true;
+      closeSheet();
       render();
     }
 
     function goSection(sectionId){
       state.view = "section";
       state.sectionId = sectionId;
-      state.docId = null;
+      state.docId = null; // reset to first doc
+      uiState.chromeOn = true;
+      closeSheet();
       render();
     }
 
     function back(){
+      closeSheet();
       if (state.view === "section") { state.view = "office"; state.sectionId = null; state.docId = null; render(); return; }
       if (state.view === "office") { state.view = "cases"; state.caseId = null; render(); return; }
       if (state.view === "cases") { goHome(); return; }
       goHome();
     }
 
-    function escapeHtml(str){
-      return String(str ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+    function currentContext(){
+      const c = GAME.caseContent[state.caseId] || null;
+      const sec = c ? c.sections.find(s => s.id === state.sectionId) : null;
+      const docs = c && state.sectionId ? (c.documents[state.sectionId] || []) : [];
+      return { c, sec, docs };
     }
 
-    function txt(obj){ return obj && obj[state.lang] ? obj[state.lang] : (obj?.en ?? ""); }
+    function docIndexById(docs, docId){
+      const idx = docs.findIndex(d => d.id === docId);
+      return idx >= 0 ? idx : 0;
+    }
+
+    function setDocByIndex(docs, idx){
+      if (!docs.length) return;
+      const clamped = Math.max(0, Math.min(docs.length - 1, idx));
+      state.docId = docs[clamped].id;
+      renderViewerOnly();
+      updateSheetHighlight();
+    }
+
+    function nextDoc(){
+      const { docs } = currentContext();
+      if (!docs.length) return;
+      const idx = docIndexById(docs, state.docId);
+      if (idx >= docs.length - 1) return;
+      setDocByIndex(docs, idx + 1);
+    }
+
+    function prevDoc(){
+      const { docs } = currentContext();
+      if (!docs.length) return;
+      const idx = docIndexById(docs, state.docId);
+      if (idx <= 0) return;
+      setDocByIndex(docs, idx - 1);
+    }
+
+    function openSheet(){
+      uiState.sheetOpen = true;
+      sheetOverlay.classList.add("show");
+      sheet.classList.add("show");
+    }
+
+    function closeSheet(){
+      uiState.sheetOpen = false;
+      sheetOverlay.classList.remove("show");
+      sheet.classList.remove("show");
+    }
+
+    sheetOverlay.addEventListener("click", closeSheet);
+
+    // Allow swipe down on sheet to close (simple)
+    let sheetTouchStartY = null;
+    sheet.addEventListener("touchstart", (e) => {
+      if (!e.touches || !e.touches.length) return;
+      sheetTouchStartY = e.touches[0].clientY;
+    }, { passive:true });
+    sheet.addEventListener("touchend", (e) => {
+      if (sheetTouchStartY == null) return;
+      const endY = (e.changedTouches && e.changedTouches.length) ? e.changedTouches[0].clientY : null;
+      if (endY != null && (endY - sheetTouchStartY) > 60) closeSheet();
+      sheetTouchStartY = null;
+    }, { passive:true });
 
     function renderTopbar(titleRight){
       const left = `
@@ -695,6 +800,7 @@ Example:
     function wireCommonButtons(){
       const backBtn = document.getElementById("backBtn");
       if (backBtn) backBtn.addEventListener("click", back);
+
       const homeBtn = document.getElementById("homeBtn");
       if (homeBtn) homeBtn.addEventListener("click", goHome);
     }
@@ -702,13 +808,15 @@ Example:
     function render(){
       document.body.setAttribute("data-bg", (state.view === "home" || state.view === "cases") ? "world" : "case");
 
+      const diffObj = GAME.difficulties.find(d => d.id === state.difficulty);
+      const diffName = diffObj ? txt(diffObj.title) : "";
+
       if (state.view === "home") crumb.textContent = t("home");
-      if (state.view === "cases") crumb.textContent = `${t("home")} / ${txt(GAME.difficulties.find(d => d.id === state.difficulty)?.title)}`;
-      if (state.view === "office") crumb.textContent = `${t("home")} / ${txt(GAME.difficulties.find(d => d.id === state.difficulty)?.title)} / ${txt({en:"Case 1", ar:"القضية 1"})} / ${t("detectiveOffice")}`;
+      if (state.view === "cases") crumb.textContent = `${t("home")} / ${diffName}`;
+      if (state.view === "office") crumb.textContent = `${t("home")} / ${diffName} / ${txt({en:"Case 1", ar:"القضية 1"})} / ${t("detectiveOffice")}`;
       if (state.view === "section") {
-        const c = GAME.caseContent[state.caseId];
-        const sec = c ? c.sections.find(s => s.id === state.sectionId) : null;
-        crumb.textContent = `${t("home")} / ${txt(GAME.difficulties.find(d => d.id === state.difficulty)?.title)} / ${txt({en:"Case 1", ar:"القضية 1"})} / ${t("detectiveOffice")} / ${sec ? txt(sec.title) : ""}`;
+        const { c, sec } = currentContext();
+        crumb.textContent = `${t("home")} / ${diffName} / ${txt({en:"Case 1", ar:"القضية 1"})} / ${t("detectiveOffice")} / ${sec ? txt(sec.title) : ""}`;
       }
 
       if (state.view === "home"){
@@ -746,10 +854,8 @@ Example:
         wireCommonButtons();
         app.querySelectorAll(".card").forEach(el => {
           el.addEventListener("click", () => {
-            const status = el.dataset.status;
-            const caseId = el.dataset.case;
-            if (status !== "active") { showToast(t("closedToast")); return; }
-            goOffice(caseId);
+            if (el.dataset.status !== "active") { showToast(t("closedToast")); return; }
+            goOffice(el.dataset.case);
           });
         });
         return;
@@ -757,6 +863,20 @@ Example:
 
       if (state.view === "office"){
         const c = GAME.caseContent[state.caseId];
+        if (!c){
+          app.innerHTML = `
+            ${renderTopbar(t("detectiveOffice"))}
+            <div class="panel">
+              <div class="ph"><h3>${escapeHtml(t("detectiveOffice"))}</h3></div>
+              <div class="content" style="color:var(--muted);font-size:13px;line-height:1.4;">
+                ${escapeHtml(t("missing"))}
+              </div>
+            </div>
+          `;
+          wireCommonButtons();
+          return;
+        }
+
         app.innerHTML = `
           ${renderTopbar(txt(c.officeTitle))}
           <div class="grid cols-5">
@@ -776,93 +896,303 @@ Example:
       }
 
       if (state.view === "section"){
-        const c = GAME.caseContent[state.caseId];
-        const sec = c.sections.find(s => s.id === state.sectionId);
-        const docs = c.documents[state.sectionId] || [];
+        const { c, sec, docs } = currentContext();
 
-        const selected = state.docId ? docs.find(d => d.id === state.docId) : (docs[0] || null);
-        if (!state.docId && selected) state.docId = selected.id;
+        if (!docs.length){
+          app.innerHTML = `
+            ${renderTopbar(sec ? txt(sec.title) : "")}
+            <div class="panel">
+              <div class="ph"><h3>${escapeHtml(t("documents"))}</h3></div>
+              <div class="content" style="color:var(--muted);font-size:13px;line-height:1.4;">
+                ${escapeHtml(t("emptyForNow"))}
+              </div>
+            </div>
+          `;
+          wireCommonButtons();
+          return;
+        }
 
+        // default to first doc
+        if (!state.docId) state.docId = docs[0].id;
+
+        // Build desktop vs mobile section UI
+        if (!isMobile()){
+          app.innerHTML = `
+            ${renderTopbar(txt(sec.title))}
+            <div class="split">
+              <section class="panel">
+                <div class="ph">
+                  <h3>${escapeHtml(t("documents"))}</h3>
+                  <span style="color:var(--muted);font-size:12px;">${escapeHtml(t("items", docs.length))}</span>
+                </div>
+                <div class="content">
+                  <div class="list" id="desktopList">
+                    ${docs.map(d => `
+                      <div class="doc ${d.id === state.docId ? "active" : ""}" data-doc="${d.id}">
+                        <div class="title">${escapeHtml(txt(d.title))}</div>
+                        <div class="meta">${escapeHtml(txt(d.meta || {en:"", ar:""}))}</div>
+                      </div>
+                    `).join("")}
+                  </div>
+                </div>
+              </section>
+
+              <section class="panel">
+                <div class="ph">
+                  <h3>${escapeHtml(t("viewer"))}</h3>
+                  <div style="display:flex;gap:8px;align-items:center;">
+                    <a class="btn" id="openFullBtn" href="#" target="_blank" rel="noopener noreferrer">${escapeHtml(t("openFull"))}</a>
+                    <button class="btn" id="officeBtn">${escapeHtml(t("officeBtn"))}</button>
+                  </div>
+                </div>
+                <div class="content" id="viewer"></div>
+              </section>
+            </div>
+          `;
+
+          wireCommonButtons();
+          document.getElementById("officeBtn").addEventListener("click", back);
+
+          document.querySelectorAll("#desktopList .doc").forEach(el => {
+            el.addEventListener("click", () => {
+              state.docId = el.dataset.doc;
+              renderViewerOnly();
+            });
+          });
+
+          renderViewerOnly();
+          closeSheet();
+          return;
+        }
+
+        // Mobile section UI (swipe-primary)
         app.innerHTML = `
           ${renderTopbar(txt(sec.title))}
-          <div class="split">
-            <section class="panel">
-              <div class="ph">
-                <h3>${escapeHtml(t("documents"))}</h3>
-                <span style="color:var(--muted);font-size:12px;">${escapeHtml(t("items", docs.length))}</span>
-              </div>
-              <div class="content">
-                <div class="list">
-                  ${docs.length ? docs.map(d => `
-                    <div class="doc" data-doc="${d.id}">
-                      <div class="title">${escapeHtml(txt(d.title))}</div>
-                      <div class="meta">${escapeHtml(txt(d.meta || {en:"", ar:""}))}</div>
-                    </div>
-                  `).join("") : `
-                    <div style="color:var(--muted);font-size:13px;line-height:1.4;">
-                      ${escapeHtml(t("emptyForNow"))}
-                    </div>
-                  `}
+          <div id="mobileViewerRoot">
+            <div id="mobileViewer"></div>
+
+            <div class="mobileChrome ${uiState.chromeOn ? "" : "hidden"}" id="mobileChrome">
+              <div class="bottomBar">
+                <div class="barGroup">
+                  <button class="btn iconBtn" id="prevBtn">${escapeHtml(t("prev"))}</button>
+                  <div class="counter" id="counter">1 / ${docs.length}</div>
+                  <button class="btn iconBtn" id="nextBtn">${escapeHtml(t("next"))}</button>
+                </div>
+
+                <div class="barGroup">
+                  <a class="btn iconBtn" id="openFullBtn" href="#" target="_blank" rel="noopener noreferrer">${escapeHtml(t("openFull"))}</a>
+                  <button class="btn iconBtn" id="listBtn">${escapeHtml(t("list"))}</button>
+                  <button class="btn iconBtn" id="officeBtn">${escapeHtml(t("officeBtn"))}</button>
                 </div>
               </div>
-            </section>
-
-            <section class="panel">
-              <div class="ph">
-                <h3>${escapeHtml(t("viewer"))}</h3>
-                <button class="btn" id="officeBtn">${escapeHtml(t("officeBtn"))}</button>
-              </div>
-              <div class="content viewer" id="viewer"></div>
-            </section>
+              <div class="hint">${escapeHtml(t("tapHint"))}</div>
+            </div>
           </div>
         `;
 
         wireCommonButtons();
-        document.getElementById("officeBtn").addEventListener("click", back);
 
-        app.querySelectorAll(".doc").forEach(el => {
-          el.addEventListener("click", () => { state.docId = el.dataset.doc; renderViewer(); });
+        document.getElementById("officeBtn").addEventListener("click", back);
+        document.getElementById("listBtn").addEventListener("click", () => {
+          buildSheetList();
+          openSheet();
         });
 
-        renderViewer();
+        document.getElementById("prevBtn").addEventListener("click", prevDoc);
+        document.getElementById("nextBtn").addEventListener("click", nextDoc);
 
-        function renderViewer(){
-          const v = document.getElementById("viewer");
-          const doc = docs.find(d => d.id === state.docId) || null;
+        // Tap to toggle chrome and swipe to flip
+        const mobileViewer = document.getElementById("mobileViewer");
+        mobileViewer.addEventListener("click", (e) => {
+          if (uiState.sheetOpen) return;
+          uiState.chromeOn = !uiState.chromeOn;
+          const chrome = document.getElementById("mobileChrome");
+          if (chrome) chrome.classList.toggle("hidden", !uiState.chromeOn);
+        });
 
-          if (!doc){
-            v.innerHTML = `<div style="color:var(--muted);font-size:13px;">${escapeHtml(t("selectDoc"))}</div>`;
-            return;
-          }
+        mobileViewer.addEventListener("touchstart", (e) => {
+          if (uiState.sheetOpen) return;
+          if (!e.touches || e.touches.length !== 1) return;
+          const t0 = e.touches[0];
+          uiState.touchStartX = t0.clientX;
+          uiState.touchStartY = t0.clientY;
+          uiState.touchStartT = Date.now();
+        }, { passive:true });
 
-          if (doc.type === "link"){
-            const url = doc.url || "";
-            v.innerHTML = `
-              <h4>${escapeHtml(txt(doc.title))}</h4>
-              <div class="meta">${escapeHtml(txt(doc.meta || {en:"", ar:""}))}</div>
-              <pre>${escapeHtml(t("fileLink"))}</pre>
-              <div class="hint">
-                ${escapeHtml(t("openLink"))}: <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>
-              </div>
-            `;
-            return;
-          }
+        mobileViewer.addEventListener("touchend", (e) => {
+          if (uiState.sheetOpen) return;
+          if (uiState.touchStartX == null) return;
 
-          const body = doc.body?.[state.lang] ?? doc.body?.en ?? "";
-          v.innerHTML = `
-            <h4>${escapeHtml(txt(doc.title))}</h4>
-            <div class="meta">${escapeHtml(txt(doc.meta || {en:"", ar:""}))}</div>
-            <pre>${escapeHtml(body)}</pre>
-            <div class="hint">${escapeHtml(t("hint"))}</div>
-          `;
-        }
+          const end = (e.changedTouches && e.changedTouches.length) ? e.changedTouches[0] : null;
+          if (!end) { uiState.touchStartX = null; return; }
 
+          const dx = end.clientX - uiState.touchStartX;
+          const dy = end.clientY - uiState.touchStartY;
+          const dt = Date.now() - uiState.touchStartT;
+
+          uiState.touchStartX = null;
+          uiState.touchStartY = null;
+          uiState.touchStartT = null;
+
+          // Swipe detection: mostly horizontal, enough distance, quick enough
+          if (Math.abs(dx) < 45) return;
+          if (Math.abs(dx) < Math.abs(dy)) return;
+          if (dt > 650) return;
+
+          // LTR: swipe left => next. RTL: still keep physical rule: swipe left => next.
+          if (dx < 0) nextDoc();
+          else prevDoc();
+        }, { passive:true });
+
+        buildSheetList();
+        renderViewerOnly();
         return;
       }
     }
+
+    function buildSheetList(){
+      const { sec, docs } = currentContext();
+      sheetTitle.textContent = `${t("documents")} • ${sec ? txt(sec.title) : ""}`;
+
+      sheetList.innerHTML = `
+        <div class="list">
+          ${docs.map(d => `
+            <div class="doc ${d.id === state.docId ? "active" : ""}" data-doc="${d.id}">
+              <div class="title">${escapeHtml(txt(d.title))}</div>
+              <div class="meta">${escapeHtml(txt(d.meta || {en:"", ar:""}))}</div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+
+      sheetList.querySelectorAll(".doc").forEach(el => {
+        el.addEventListener("click", () => {
+          const { docs } = currentContext();
+          state.docId = el.dataset.doc;
+          closeSheet();
+          renderViewerOnly();
+          updateSheetHighlight();
+        });
+      });
+    }
+
+    function updateSheetHighlight(){
+      if (!sheetList) return;
+      sheetList.querySelectorAll(".doc").forEach(el => {
+        el.classList.toggle("active", el.dataset.doc === state.docId);
+      });
+    }
+
+    function renderViewerOnly(){
+      if (state.view !== "section") return;
+
+      const { docs } = currentContext();
+      if (!docs.length) return;
+
+      const idx = docIndexById(docs, state.docId);
+      const doc = docs[idx] || docs[0];
+
+      // Desktop viewer
+      const viewer = document.getElementById("viewer");
+      const openFullBtnDesktop = document.getElementById("openFullBtn");
+
+      // Mobile viewer
+      const mobileViewer = document.getElementById("mobileViewer");
+      const openFullBtnMobile = document.getElementById("openFullBtn");
+      const counter = document.getElementById("counter");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+
+      // Update desktop list highlight if present
+      const desktopList = document.getElementById("desktopList");
+      if (desktopList){
+        desktopList.querySelectorAll(".doc").forEach(el => {
+          el.classList.toggle("active", el.dataset.doc === doc.id);
+        });
+      }
+
+      // Update mobile counter and button states
+      if (counter) counter.textContent = `${idx + 1} / ${docs.length}`;
+      if (prevBtn) prevBtn.disabled = (idx === 0);
+      if (nextBtn) nextBtn.disabled = (idx === docs.length - 1);
+
+      const title = escapeHtml(txt(doc.title));
+      const meta = escapeHtml(txt(doc.meta || {en:"", ar:""}));
+
+      const isImage = doc.type === "image";
+      const isLink = doc.type === "link";
+      const url = doc.url || "";
+
+      const fullHref = isImage || isLink ? url : "#";
+
+      // Desktop open full
+      if (openFullBtnDesktop){
+        openFullBtnDesktop.style.display = (isImage || isLink) ? "inline-flex" : "none";
+        openFullBtnDesktop.href = fullHref;
+      }
+      // Mobile open full
+      if (openFullBtnMobile){
+        openFullBtnMobile.style.display = (isImage || isLink) ? "inline-flex" : "none";
+        openFullBtnMobile.href = fullHref;
+      }
+
+      // Render image as paper
+      if (isImage){
+        const html = `
+          <div class="viewerTitle">${title}</div>
+          <div class="viewerMeta">${meta}</div>
+          <div class="${isMobile() ? "mobileStage" : "paperStage"}">
+            <img src="${escapeHtml(url)}" alt="${title}" />
+          </div>
+        `;
+        if (viewer) viewer.innerHTML = html;
+        if (mobileViewer) mobileViewer.innerHTML = html;
+        updateSheetHighlight();
+        return;
+      }
+
+      // Link
+      if (isLink){
+        const html = `
+          <div class="viewerTitle">${title}</div>
+          <div class="viewerMeta">${meta}</div>
+          <div class="${isMobile() ? "mobileStage" : "paperStage"}" style="padding:14px;">
+            <div style="color:var(--muted);font-size:13px;line-height:1.5;">
+              <a class="btn" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(t("openFull"))}</a>
+            </div>
+          </div>
+        `;
+        if (viewer) viewer.innerHTML = html;
+        if (mobileViewer) mobileViewer.innerHTML = html;
+        updateSheetHighlight();
+        return;
+      }
+
+      // Text fallback (kept for other sections)
+      const body = doc.body?.[state.lang] ?? doc.body?.en ?? "";
+      const html = `
+        <div class="viewerTitle">${title}</div>
+        <div class="viewerMeta">${meta}</div>
+        <div class="${isMobile() ? "mobileStage" : "paperStage"}" style="padding:14px;">
+          <div style="white-space:pre-wrap;line-height:1.55;font-size:13px;">${escapeHtml(body)}</div>
+        </div>
+      `;
+      if (viewer) viewer.innerHTML = html;
+      if (mobileViewer) mobileViewer.innerHTML = html;
+      updateSheetHighlight();
+    }
+
+    // Rerender on resize so mobile/desktop layout switches cleanly
+    window.addEventListener("resize", () => {
+      if (state.view === "section") {
+        closeSheet();
+        render();
+      }
+    });
 
     applyLang();
   </script>
 </body>
 </html>
+
 
