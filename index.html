@@ -7,7 +7,6 @@
 
   <style>
     :root{
-      /* Paper-noir palette */
       --bg:#0b0c10;
 
       --cardTop: rgba(30,34,46,0.92);
@@ -19,7 +18,6 @@
       --text:#e8e6dc;
       --muted:#b6b1a2;
 
-      /* Brass accent */
       --accent:#c9a24d;
       --accentSoft: rgba(201,162,77,0.35);
 
@@ -49,14 +47,12 @@
     }
 
     /* ---------- BACKGROUNDS (3 SPACES) ---------- */
-    /* Page 0: Title / Entry */
     body[data-bg="title"]{
       background:
         linear-gradient(rgba(0,0,0,0.42), rgba(0,0,0,0.78)),
         url("image0.jpg") center / cover no-repeat fixed;
     }
 
-    /* Pages 1-2: Difficulty + Cases list (procedural/archives space) */
     body[data-bg="world"]{
       background:
         linear-gradient(rgba(0,0,0,0.34), rgba(0,0,0,0.62)),
@@ -64,14 +60,12 @@
       filter: saturate(0.95) contrast(1.03);
     }
 
-    /* Page 3+: Office + Sections (investigation space) */
     body[data-bg="case"]{
       background:
         linear-gradient(rgba(0,0,0,0.18), rgba(0,0,0,0.44)),
         url("image1.jpg") center / cover no-repeat fixed;
     }
 
-    /* Vignette + light grain */
     body::before{
       content:"";
       position:fixed;
@@ -103,12 +97,6 @@
       gap:12px;
       background:rgba(0,0,0,0.30);
       backdrop-filter: blur(8px);
-    }
-
-    .headerLeft{
-      display:flex;
-      align-items:flex-start;
-      gap:12px;
     }
 
     header h1{
@@ -169,6 +157,18 @@
       background: rgba(0,0,0,0.28);
       transform: translateY(-1px);
     }
+    .btn[disabled]{
+      opacity:0.55;
+      cursor:not-allowed;
+    }
+    .btnPrimary{
+      border-color: rgba(201,162,77,0.45);
+      background: rgba(0,0,0,0.28);
+    }
+    .btnPrimary:hover{
+      border-color: rgba(201,162,77,0.65);
+      background: rgba(0,0,0,0.36);
+    }
 
     .grid{ display:grid; gap:14px; }
     .grid.cols-3{ grid-template-columns:repeat(3,minmax(0,1fr)); }
@@ -228,7 +228,6 @@
     .badge.closed{ border-color:rgba(255,204,102,0.35); color:var(--warn); }
     .badge.active{ border-color:rgba(102,209,143,0.35); color:var(--good); }
 
-    /* Locked cases: feel physically sealed */
     .card[data-status="closed"]{
       opacity:0.65;
       filter:saturate(0.65);
@@ -386,9 +385,6 @@
       border-color: rgba(201,162,77,0.35);
     }
 
-    .viewer h4{ margin:0 0 6px 0; font-size:16px; }
-    .viewer .meta{ color:var(--muted); font-size:12px; margin-bottom:10px; }
-
     .viewerBody{
       transition: opacity .14s ease, filter .14s ease;
     }
@@ -397,7 +393,6 @@
       filter: blur(2px);
     }
 
-    /* Documents look like paper on a desk */
     .imgWrap{
       border:1px solid rgba(0,0,0,0.18);
       border-radius:10px;
@@ -421,7 +416,7 @@
       line-height:1.35;
     }
 
-    /* Title screen layout */
+    /* Title screen */
     .titleWrap{
       min-height: calc(100vh - 80px);
       display:flex;
@@ -448,9 +443,7 @@
       gap:10px;
       flex-wrap:wrap;
     }
-    .titlePanel .content{
-      padding:16px;
-    }
+    .titlePanel .content{ padding:16px; }
     .titleBig{
       margin:0;
       font-size:34px;
@@ -471,13 +464,76 @@
       gap:10px;
       flex-wrap:wrap;
     }
-    .btnPrimary{
-      border-color: rgba(201,162,77,0.45);
-      background: rgba(0,0,0,0.28);
+
+    /* ---------- CALL MODULE (Detective Office panel) ---------- */
+    .callBox{
+      margin-top:10px;
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:12px;
+      background: rgba(0,0,0,0.14);
+      padding:10px;
     }
-    .btnPrimary:hover{
-      border-color: rgba(201,162,77,0.65);
-      background: rgba(0,0,0,0.36);
+    .callTop{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .callTitle{
+      font-weight:900;
+      letter-spacing:0.6px;
+      text-transform:uppercase;
+      font-size:12px;
+      color: rgba(201,162,77,0.95);
+    }
+    .callStatus{
+      color: var(--muted);
+      font-size:12px;
+    }
+    .callControls{
+      margin-top:10px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .callProgressWrap{
+      margin-top:10px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .callBar{
+      height:8px;
+      flex:1;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.18);
+      overflow:hidden;
+    }
+    .callFill{
+      height:100%;
+      width:0%;
+      background: rgba(201,162,77,0.65);
+    }
+    .callTime{
+      font-size:12px;
+      color: var(--muted);
+      min-width: 86px;
+      text-align:right;
+    }
+    .transcript{
+      margin-top:10px;
+      display:none;
+      border-radius:10px;
+      border:1px solid rgba(0,0,0,0.18);
+      background: var(--paper);
+      color: var(--ink);
+      padding:12px;
+      line-height:1.55;
+      font-size:13px;
+      white-space:pre-wrap;
     }
 
     .toast{
@@ -509,6 +565,8 @@
     body[dir="rtl"] .kv{ grid-template-columns: 1fr 120px; }
     body[dir="rtl"] .kv .k{ text-align:right; }
     body[dir="rtl"] .titleBtns{ flex-direction: row-reverse; }
+    body[dir="rtl"] .callProgressWrap{ flex-direction: row-reverse; }
+    body[dir="rtl"] .callTime{ text-align:left; }
   </style>
 </head>
 
@@ -533,9 +591,11 @@
   <script>
     /*
       Local setup (same folder as index.html):
-        image0.jpg  (Page 0: title / entry)
-        image2.jpg  (Pages 1-2: difficulty + cases list)
-        image1.jpg  (Page 3+: detective office + sections)
+        image0.jpg  (Page 0)
+        image2.jpg  (Pages 1-2)
+        image1.jpg  (Page 3+)
+
+        case1_brief_call.m4a   (NEW: office call audio, Case 1 only)
 
         official_police_report.jpg
         crime_scene_map.jpg
@@ -596,7 +656,26 @@
         assigned: "Assigned",
         classification: "Classification",
         confidential: "Confidential",
-        briefLine: "Start with the Initial Report. Mark inconsistencies. Pin anything that feels wrong."
+
+        /* Call module strings */
+        callTitle: "Incoming call",
+        callRinging: "Ringing",
+        callReady: "Ready",
+        callInProgress: "In call",
+        callPaused: "Paused",
+        callHeard: "Heard",
+        answer: "Answer",
+        play: "Play",
+        pause: "Pause",
+        stop: "Stop",
+        transcript: "Transcript",
+        hideTranscript: "Hide transcript",
+
+        /* Replace these later with your real transcript */
+        transcriptText:
+`[Transcript placeholder]
+Officer briefing content goes here.
+Replace this string when ready.`
       },
       ar: {
         title: "لعبة المحقق",
@@ -648,7 +727,25 @@
         assigned: "المكلف",
         classification: "التصنيف",
         confidential: "سري",
-        briefLine: "ابدأ بالبلاغ الأولي. ضع علامات على التناقضات. ثبّت أي شيء يبدو غير منطقي."
+
+        /* Call module strings */
+        callTitle: "مكالمة واردة",
+        callRinging: "يرن",
+        callReady: "جاهز",
+        callInProgress: "أثناء المكالمة",
+        callPaused: "متوقف مؤقتا",
+        callHeard: "تم الاستماع",
+        answer: "رد",
+        play: "تشغيل",
+        pause: "إيقاف مؤقت",
+        stop: "إيقاف",
+        transcript: "النص",
+        hideTranscript: "إخفاء النص",
+
+        transcriptText:
+`[نص بديل]
+ضع نص البلاغ هنا.
+استبدل هذا النص لاحقا.`
       }
     };
 
@@ -665,13 +762,16 @@
     const storageKeyPins = "detective_pins_v1";
     const storageKeyPinnedFirst = "detective_pinned_first_v1";
 
+    /* Call state persistence (Case 1 only) */
+    const storageKeyCase1CallHeard = "detective_case1_call_heard_v1";
+
     const state = {
       lang: (localStorage.getItem(storageKeyLang) === "ar") ? "ar" : "en",
       view: "title",        // title | home | cases | office | section
-      difficulty: null,     // easy | medium | hard
-      caseId: null,         // easy_case_1 ...
-      sectionId: null,      // objectives ...
-      docId: null,          // ir_map ...
+      difficulty: null,
+      caseId: null,
+      sectionId: null,
+      docId: null,
       pinnedFirst: (localStorage.getItem(storageKeyPinnedFirst) === "1")
     };
 
@@ -705,8 +805,15 @@
       localStorage.setItem(key, JSON.stringify(val));
     }
 
-    const readState = loadJSON(storageKeyRead, {}); // { [docId]: true }
-    const pinState = loadJSON(storageKeyPins, {});  // { [docId]: true }
+    function getBool(key){
+      return localStorage.getItem(key) === "1";
+    }
+    function setBool(key, val){
+      localStorage.setItem(key, val ? "1" : "0");
+    }
+
+    const readState = loadJSON(storageKeyRead, {});
+    const pinState = loadJSON(storageKeyPins, {});
 
     function isRead(docId){ return !!readState[docId]; }
     function markRead(docId){
@@ -722,6 +829,98 @@
       if (!pinState[docId]) delete pinState[docId];
       saveJSON(storageKeyPins, pinState);
       render();
+    }
+
+    /* ---------- AUDIO MANAGER (single voice channel) ---------- */
+    const VOICE = {
+      audio: null,
+      src: "case1_brief_call.m4a",
+      status: "idle", // idle | playing | paused | ended | error
+      duration: 0,
+      currentTime: 0,
+      onUpdate: null
+    };
+
+    function ensureVoice(){
+      if (VOICE.audio) return VOICE.audio;
+
+      const a = document.createElement("audio");
+      a.preload = "metadata";
+      a.src = VOICE.src;
+
+      a.addEventListener("loadedmetadata", () => {
+        VOICE.duration = Number.isFinite(a.duration) ? a.duration : 0;
+        notifyVoice();
+      });
+
+      a.addEventListener("timeupdate", () => {
+        VOICE.currentTime = a.currentTime || 0;
+        notifyVoice();
+      });
+
+      a.addEventListener("play", () => {
+        VOICE.status = "playing";
+        notifyVoice();
+      });
+
+      a.addEventListener("pause", () => {
+        if (VOICE.status !== "ended") VOICE.status = "paused";
+        notifyVoice();
+      });
+
+      a.addEventListener("ended", () => {
+        VOICE.status = "ended";
+        setBool(storageKeyCase1CallHeard, true);
+        notifyVoice();
+      });
+
+      a.addEventListener("error", () => {
+        VOICE.status = "error";
+        notifyVoice();
+      });
+
+      VOICE.audio = a;
+      return a;
+    }
+
+    function notifyVoice(){
+      if (typeof VOICE.onUpdate === "function") VOICE.onUpdate();
+    }
+
+    async function voicePlay(){
+      const a = ensureVoice();
+      try{
+        await a.play();
+      }catch{
+        VOICE.status = "error";
+        notifyVoice();
+      }
+    }
+
+    function voicePause(){
+      const a = ensureVoice();
+      a.pause();
+    }
+
+    function voiceStop(){
+      if (!VOICE.audio) return;
+      VOICE.audio.pause();
+      VOICE.audio.currentTime = 0;
+      VOICE.currentTime = 0;
+      VOICE.status = "idle";
+      notifyVoice();
+    }
+
+    function voiceTearDownIfNotInOffice(){
+      /* Prevent audio continuing when you navigate away */
+      if (state.view !== "office") voiceStop();
+    }
+
+    function formatTime(s){
+      const sec = Math.max(0, Math.floor(s || 0));
+      const m = Math.floor(sec / 60);
+      const r = sec % 60;
+      return `${m}:${String(r).padStart(2,"0")}`;
     }
 
     const GAME = {
@@ -788,7 +987,6 @@
                 }
               }
             ],
-
             initial_report: [
               { id: "ir_police",  title: { en: "Official Police Report", ar: "محضر الشرطة" }, meta: { en: "Scan", ar: "صورة" }, type: "image", url: "official_police_report.jpg" },
               { id: "ir_map",     title: { en: "Crime Scene Map", ar: "خريطة مواقع" },       meta: { en: "Sketch", ar: "صورة" }, type: "image", url: "crime_scene_map.jpg" },
@@ -797,17 +995,14 @@
               { id: "ir_index_1", title: { en: "Investigation Index (1)", ar: "فهرس المستندات (1)" }, meta:{ en:"Index", ar:"صورة" }, type:"image", url:"investigation_index1.jpg" },
               { id: "ir_index_2", title: { en: "Investigation Index (2)", ar: "فهرس المستندات (2)" }, meta:{ en:"Index", ar:"صورة" }, type:"image", url:"investigation_index2.jpg" }
             ],
-
             first_file: [
               { id: "ff_placeholder", title: { en: "Witness Statements", ar: "إفادات الشهود" }, meta: { en: "Not added yet", ar: "غير مضافة بعد" }, type: "text",
                 body: { en: "No documents yet.", ar: "لا توجد مستندات بعد." } }
             ],
-
             second_file: [
               { id: "sf_placeholder", title: { en: "Forensics", ar: "الأدلة الجنائية" }, meta: { en: "Not added yet", ar: "غير مضافة بعد" }, type: "text",
                 body: { en: "No documents yet.", ar: "لا توجد مستندات بعد." } }
             ],
-
             additional_evidence: [
               { id: "ae_placeholder", title: { en: "Loose Ends", ar: "خيوط متفرقة" }, meta: { en: "Not added yet", ar: "غير مضافة بعد" }, type: "text",
                 body: { en: "No documents yet.", ar: "لا توجد مستندات بعد." } }
@@ -923,10 +1118,10 @@
 
     function wireCommonButtons(){
       const backBtn = document.getElementById("backBtn");
-      if (backBtn) backBtn.addEventListener("click", back);
+      if (backBtn) backBtn.addEventListener("click", () => { voiceTearDownIfNotInOffice(); back(); });
 
       const homeBtn = document.getElementById("homeBtn");
-      if (homeBtn) homeBtn.addEventListener("click", goHome);
+      if (homeBtn) homeBtn.addEventListener("click", () => { voiceTearDownIfNotInOffice(); goHome(); });
 
       const pinnedFirstBtn = document.getElementById("pinnedFirstBtn");
       if (pinnedFirstBtn){
@@ -963,15 +1158,16 @@
       setBackgroundForView();
       setCrumb();
 
-      /* ---------- PAGE 0: TITLE / ENTRY ---------- */
+      /* Stop voice if not in office (prevents leakage) */
+      if (state.view !== "office") voiceStop();
+
+      /* ---------- PAGE 0 ---------- */
       if (state.view === "title"){
         app.innerHTML = `
           <div class="titleWrap">
             <section class="titlePanel">
               <div class="ph">
-                <div style="display:flex;flex-direction:column;gap:2px;">
-                  <div class="stamp"><span class="mono">${escapeHtml(t("entry"))}</span></div>
-                </div>
+                <div class="stamp"><span class="mono">${escapeHtml(t("entry"))}</span></div>
                 <div class="mono" style="color:var(--muted);font-size:12px;">v0.1</div>
               </div>
 
@@ -1000,7 +1196,7 @@
         return;
       }
 
-      /* ---------- PAGE 1: DIFFICULTY (HOME) ---------- */
+      /* ---------- PAGE 1: DIFFICULTY ---------- */
       if (state.view === "home"){
         app.innerHTML = `
           ${renderTopbar(t("chooseDifficulty"))}
@@ -1019,7 +1215,7 @@
         return;
       }
 
-      /* ---------- PAGE 2: CASES LIST ---------- */
+      /* ---------- PAGE 2: CASES ---------- */
       if (state.view === "cases"){
         const list = GAME.casesByDifficulty[state.difficulty] || [];
         app.innerHTML = `
@@ -1045,7 +1241,7 @@
         return;
       }
 
-      /* ---------- PAGE 3: DETECTIVE OFFICE ---------- */
+      /* ---------- PAGE 3: OFFICE ---------- */
       if (state.view === "office"){
         const c = GAME.caseContent[state.caseId];
         if (!c){
@@ -1063,6 +1259,9 @@
         }
 
         const meta = c.caseMeta;
+
+        const callHeard = getBool(storageKeyCase1CallHeard);
+        const callStateLabel = callHeard ? t("callHeard") : t("callRinging");
 
         app.innerHTML = `
           ${renderTopbar(txt(c.officeTitle))}
@@ -1085,13 +1284,48 @@
               </div>
             </section>
 
+            <!-- Detective Office panel (call module is here) -->
             <section class="panel">
               <div class="ph">
                 <h3>${escapeHtml(t("detectiveOffice"))}</h3>
                 <span style="color:var(--muted);font-size:12px;" class="mono">${escapeHtml(txt(meta.caseId))}</span>
               </div>
-              <div class="content" style="color:var(--muted);font-size:13px;line-height:1.45;">
-                ${escapeHtml(t("briefLine"))}
+
+              <div class="content">
+                <div style="color:var(--muted);font-size:13px;line-height:1.45;">
+                  ${escapeHtml(state.lang === "en"
+                    ? "Before you touch the file: take the call. The department’s version comes first."
+                    : "قبل فتح الملفات: استمع إلى المكالمة. رواية القسم تأتي أولا."
+                  )}
+                </div>
+
+                <div class="callBox" id="callBox">
+                  <div class="callTop">
+                    <div>
+                      <div class="callTitle">${escapeHtml(t("callTitle"))}</div>
+                      <div class="callStatus" id="callStatus">${escapeHtml(callStateLabel)}</div>
+                    </div>
+                    <div class="mono" style="color:var(--muted);font-size:12px;">
+                      ${escapeHtml(callHeard ? t("callHeard") : t("callRinging"))}
+                    </div>
+                  </div>
+
+                  <div class="callControls">
+                    <button class="btn btnPrimary" id="callAnswerBtn">${escapeHtml(callHeard ? t("play") : t("answer"))}</button>
+                    <button class="btn" id="callPauseBtn">${escapeHtml(t("pause"))}</button>
+                    <button class="btn" id="callStopBtn">${escapeHtml(t("stop"))}</button>
+                    <button class="btn" id="callTranscriptBtn">${escapeHtml(t("transcript"))}</button>
+                  </div>
+
+                  <div class="callProgressWrap">
+                    <div class="callBar"><div class="callFill" id="callFill"></div></div>
+                    <div class="callTime mono" id="callTime">0:00 / 0:00</div>
+                  </div>
+
+                  <div class="transcript" id="callTranscript">
+                    ${escapeHtml(t("transcriptText"))}
+                  </div>
+                </div>
               </div>
             </section>
           </div>
@@ -1109,6 +1343,61 @@
         `;
 
         wireCommonButtons();
+
+        /* Call UI wiring (office only) */
+        const answerBtn = document.getElementById("callAnswerBtn");
+        const pauseBtn = document.getElementById("callPauseBtn");
+        const stopBtn = document.getElementById("callStopBtn");
+        const transcriptBtn = document.getElementById("callTranscriptBtn");
+        const transcriptEl = document.getElementById("callTranscript");
+        const statusEl = document.getElementById("callStatus");
+        const fillEl = document.getElementById("callFill");
+        const timeEl = document.getElementById("callTime");
+
+        transcriptBtn.addEventListener("click", () => {
+          const open = transcriptEl.style.display === "block";
+          transcriptEl.style.display = open ? "none" : "block";
+          transcriptBtn.textContent = open ? t("transcript") : t("hideTranscript");
+        });
+
+        answerBtn.addEventListener("click", async () => {
+          ensureVoice();
+          await voicePlay();
+        });
+
+        pauseBtn.addEventListener("click", () => voicePause());
+        stopBtn.addEventListener("click", () => voiceStop());
+
+        /* UI refresh loop via VOICE.onUpdate */
+        VOICE.onUpdate = () => {
+          const heardNow = getBool(storageKeyCase1CallHeard);
+
+          let label = t("callReady");
+          if (!heardNow && (VOICE.status === "idle" || VOICE.status === "paused")) label = t("callRinging");
+          if (VOICE.status === "playing") label = t("callInProgress");
+          if (VOICE.status === "paused") label = t("callPaused");
+          if (heardNow && (VOICE.status === "idle" || VOICE.status === "ended")) label = t("callHeard");
+          if (VOICE.status === "error") label = "Audio error";
+
+          statusEl.textContent = label;
+          answerBtn.textContent = heardNow ? t("play") : t("answer");
+
+          const d = VOICE.duration || (VOICE.audio ? VOICE.audio.duration : 0) || 0;
+          const cTime = VOICE.currentTime || (VOICE.audio ? VOICE.audio.currentTime : 0) || 0;
+
+          const pct = d > 0 ? Math.min(100, Math.max(0, (cTime / d) * 100)) : 0;
+          fillEl.style.width = pct.toFixed(1) + "%";
+          timeEl.textContent = `${formatTime(cTime)} / ${formatTime(d)}`;
+
+          /* Disable/enable buttons cleanly */
+          pauseBtn.disabled = !(VOICE.status === "playing");
+          stopBtn.disabled = !(VOICE.status === "playing" || VOICE.status === "paused");
+        };
+
+        /* Initialize UI once */
+        ensureVoice();
+        notifyVoice();
+
         app.querySelectorAll(".card").forEach(el => el.addEventListener("click", () => goSection(el.dataset.section)));
         return;
       }
@@ -1177,7 +1466,7 @@
                   <button class="btn" id="officeBtn">${escapeHtml(t("officeBtn"))}</button>
                 </div>
               </div>
-              <div class="content viewer">
+              <div class="content">
                 <div class="viewerBody" id="viewerBody"></div>
               </div>
             </section>
@@ -1185,7 +1474,7 @@
         `;
 
         wireCommonButtons();
-        document.getElementById("officeBtn").addEventListener("click", back);
+        document.getElementById("officeBtn").addEventListener("click", () => { back(); });
 
         app.querySelectorAll("[data-pin]").forEach(btn => {
           btn.addEventListener("click", (e) => {
@@ -1232,8 +1521,10 @@
               openFullBtn.href = doc.url;
 
               body.innerHTML = `
-                <h4>${escapeHtml(txt(doc.title))}</h4>
-                <div class="meta mono">${escapeHtml(txt(doc.meta || {en:"", ar:""}))}</div>
+                <h4 style="margin:0 0 6px 0;font-size:16px;">${escapeHtml(txt(doc.title))}</h4>
+                <div style="color:var(--muted);font-size:12px;margin-bottom:10px;"
+
+                <div style="color:var(--muted);font-size:12px;margin-bottom:10px;" class="mono">${escapeHtml(txt(doc.meta || {en:"", ar:""}))}</div>
                 <div class="imgWrap">
                   <img src="${escapeHtml(doc.url)}" alt="${escapeHtml(txt(doc.title))}" />
                 </div>
@@ -1245,8 +1536,8 @@
 
             const text = doc.body?.[state.lang] ?? doc.body?.en ?? "";
             body.innerHTML = `
-              <h4>${escapeHtml(txt(doc.title))}</h4>
-              <div class="meta mono">${escapeHtml(txt(doc.meta || {en:"", ar:""}))}</div>
+              <h4 style="margin:0 0 6px 0;font-size:16px;">${escapeHtml(txt(doc.title))}</h4>
+              <div style="color:var(--muted);font-size:12px;margin-bottom:10px;" class="mono">${escapeHtml(txt(doc.meta || {en:"", ar:""}))}</div>
               <div class="imgWrap" style="padding:14px;color:var(--ink);">
                 <div style="white-space:pre-wrap;line-height:1.6;font-size:13px;">${escapeHtml(text)}</div>
               </div>
