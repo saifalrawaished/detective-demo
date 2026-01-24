@@ -26,6 +26,12 @@
 
       --paper: rgba(240,235,220,0.92);
       --ink: #201c14;
+
+      --shadow: 0 12px 28px rgba(0,0,0,0.40);
+      --shadowHover: 0 18px 40px rgba(0,0,0,0.55);
+
+      --focus: 2px solid var(--accent);
+      --radius: 14px;
     }
 
     *{
@@ -46,26 +52,24 @@
       min-height:100vh;
     }
 
-    /* ---------- BACKGROUNDS (3 SPACES) ---------- */
+    /* ---------- BACKGROUNDS ---------- */
     body[data-bg="title"]{
       background:
         linear-gradient(rgba(0,0,0,0.42), rgba(0,0,0,0.78)),
-        url("image0.jpg") center / cover no-repeat fixed;
+        url("image0.jpg") center / cover no-repeat;
     }
-
     body[data-bg="world"]{
       background:
         linear-gradient(rgba(0,0,0,0.34), rgba(0,0,0,0.62)),
-        url("image2.jpg") center / cover no-repeat fixed;
-      filter: saturate(0.95) contrast(1.03);
+        url("image2.jpg") center / cover no-repeat;
     }
-
     body[data-bg="case"]{
       background:
         linear-gradient(rgba(0,0,0,0.18), rgba(0,0,0,0.44)),
-        url("image1.jpg") center / cover no-repeat fixed;
+        url("image1.jpg") center / cover no-repeat;
     }
 
+    /* film grain + scanline */
     body::before{
       content:"";
       position:fixed;
@@ -74,8 +78,8 @@
       z-index:0;
       background:
         radial-gradient(circle at 50% 35%,
-          rgba(0,0,0,0.00) 38%,
-          rgba(0,0,0,0.52) 92%
+          rgba(0,0,0,0.00) 35%,
+          rgba(0,0,0,0.55) 92%
         ),
         repeating-linear-gradient(
           0deg,
@@ -84,6 +88,20 @@
           transparent 1px,
           transparent 4px
         );
+    }
+
+    body[data-bg="title"]::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+      background:
+        radial-gradient(circle at 20% 25%, rgba(255,255,255,0.06), transparent 50%),
+        radial-gradient(circle at 70% 20%, rgba(255,255,255,0.04), transparent 55%),
+        radial-gradient(circle at 55% 65%, rgba(255,255,255,0.03), transparent 60%);
+      mix-blend-mode: overlay;
+      opacity:0.25;
     }
 
     header, main{ position:relative; z-index:1; }
@@ -99,10 +117,16 @@
       backdrop-filter: blur(8px);
     }
 
+    /* Title page keeps the same system header, just quieter */
+    body[data-bg="title"] header{
+      background: rgba(0,0,0,0.18);
+      border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+
     header h1{
       margin:0;
       font-size:16px;
-      font-weight:800;
+      font-weight:900;
       letter-spacing:0.2px;
     }
 
@@ -139,6 +163,7 @@
       display:flex;
       align-items:center;
       gap:10px;
+      min-width: 0;
     }
 
     .btn{
@@ -150,24 +175,67 @@
       cursor:pointer;
       font-size:13px;
       white-space:nowrap;
-      transition: transform .08s ease, border-color .08s ease, background .08s ease;
+      transition: transform .08s ease, border-color .08s ease, background .08s ease, box-shadow .08s ease;
+      user-select:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
     }
     .btn:hover{
       border-color: var(--accentSoft);
       background: rgba(0,0,0,0.28);
       transform: translateY(-1px);
     }
+    .btn:active{
+      transform: translateY(0px) scale(0.99);
+    }
     .btn[disabled]{
       opacity:0.55;
       cursor:not-allowed;
+      transform:none !important;
     }
     .btnPrimary{
       border-color: rgba(201,162,77,0.45);
       background: rgba(0,0,0,0.28);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.25);
     }
     .btnPrimary:hover{
       border-color: rgba(201,162,77,0.65);
       background: rgba(0,0,0,0.36);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.35);
+    }
+    .btn:focus-visible{
+      outline: var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* quiet link-style control */
+    .btnLink{
+      border:1px solid transparent;
+      background: transparent;
+      padding:6px 8px;
+      border-radius:10px;
+      color:var(--muted);
+      cursor:pointer;
+      font-size:13px;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      transition: border-color .08s ease, background .08s ease, color .08s ease, transform .08s ease;
+      user-select:none;
+    }
+    .btnLink:hover{
+      color:var(--text);
+      border-color: rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.20);
+      transform: translateY(-1px);
+    }
+    .btnLink:active{ transform: translateY(0px) scale(0.99); }
+    .btnLink:focus-visible{
+      outline: var(--focus);
+      outline-offset: 2px;
     }
 
     .grid{ display:grid; gap:14px; }
@@ -183,23 +251,31 @@
     .card{
       background: linear-gradient(180deg, var(--cardTop), var(--cardBot));
       border:1px solid rgba(255,255,255,0.10);
-      border-radius:14px;
+      border-radius: var(--radius);
       padding:16px;
       cursor:pointer;
-      transition: transform .10s ease, border-color .10s ease, box-shadow .10s ease;
+      transition: transform .10s ease, border-color .10s ease, box-shadow .10s ease, background .10s ease;
       user-select:none;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.40);
+      box-shadow: var(--shadow);
       position:relative;
       overflow:hidden;
-      min-height:92px;
+      min-height:96px;
       backdrop-filter: blur(6px);
     }
     .card:hover{
       transform: translateY(-3px);
       border-color: var(--accentSoft);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.55);
+      box-shadow: var(--shadowHover);
     }
-    .card h2{ margin:0 0 6px 0; font-size:16px; }
+    .card:active{
+      transform: translateY(-1px) scale(0.995);
+    }
+    .card:focus-visible{
+      outline: var(--focus);
+      outline-offset: 2px;
+    }
+
+    .card h2{ margin:0 0 6px 0; font-size:16px; font-weight:900; }
     .card p{ margin:0; color:var(--muted); font-size:13px; line-height:1.35; }
 
     .pill{
@@ -229,14 +305,14 @@
     .badge.active{ border-color:rgba(102,209,143,0.35); color:var(--good); }
 
     .card[data-status="closed"]{
-      opacity:0.65;
+      opacity:0.68;
       filter:saturate(0.65);
       cursor:not-allowed;
     }
     .card[data-status="closed"]:hover{
       transform:none;
       border-color:rgba(255,255,255,0.10);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.40);
+      box-shadow: var(--shadow);
     }
     .card[data-status="closed"]::after{
       content:"LOCKED";
@@ -252,15 +328,16 @@
       font-weight:900;
       letter-spacing:2px;
       text-transform:uppercase;
+      pointer-events:none;
     }
 
     .panel{
       background: linear-gradient(180deg, var(--panelTop), var(--panelBot));
       border:1px solid rgba(255,255,255,0.10);
-      border-radius:14px;
+      border-radius: var(--radius);
       overflow:hidden;
       backdrop-filter: blur(6px);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.40);
+      box-shadow: var(--shadow);
     }
     .panel .ph{
       padding:12px 14px;
@@ -272,7 +349,7 @@
       gap:10px;
       flex-wrap:wrap;
     }
-    .panel .ph h3{ margin:0; font-size:14px; }
+    .panel .ph h3{ margin:0; font-size:14px; font-weight:900; }
     .panel .content{ padding:12px; }
 
     .caseHeader{
@@ -316,23 +393,30 @@
     @media (max-width:900px){ .split{ grid-template-columns:1fr; } }
 
     .list{ display:flex; flex-direction:column; gap:10px; }
+
     .doc{
       border:1px solid rgba(255,255,255,0.10);
       border-radius:12px;
       padding:10px;
       cursor:pointer;
       background:rgba(0,0,0,0.16);
-      transition: transform .08s ease, border-color .08s ease, background .08s ease;
+      transition: transform .08s ease, border-color .08s ease, background .08s ease, box-shadow .08s ease;
       position:relative;
+      user-select:none;
     }
     .doc:hover{
       transform: translateY(-1px);
       border-color: var(--accentSoft);
       background: rgba(0,0,0,0.22);
     }
+    .doc:active{ transform: translateY(0px) scale(0.995); }
     .doc.active{
       border-color: var(--accentSoft);
       box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+    }
+    .doc:focus-visible{
+      outline: var(--focus);
+      outline-offset: 2px;
     }
 
     .docRow{
@@ -341,15 +425,8 @@
       justify-content:space-between;
       gap:10px;
     }
-    .doc .title{ font-weight:850; font-size:13px; margin-bottom:4px; }
+    .doc .title{ font-weight:900; font-size:13px; margin-bottom:4px; }
     .doc .meta{ color:var(--muted); font-size:12px; }
-    .docMarks{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-shrink:0;
-      padding-top:2px;
-    }
 
     .unreadDot{
       width:9px;
@@ -358,38 +435,18 @@
       background: rgba(201,162,77,0.95);
       box-shadow: 0 0 0 3px rgba(201,162,77,0.12);
       display:none;
+      flex-shrink:0;
+      margin-top:4px;
     }
     .doc.unread .unreadDot{ display:inline-block; }
 
-    .pinBtn{
-      width:26px;
-      height:26px;
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,0.10);
-      background:rgba(0,0,0,0.14);
-      color:var(--muted);
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      transition: border-color .08s ease, background .08s ease, transform .08s ease;
-      user-select:none;
-    }
-    .pinBtn:hover{
-      border-color: var(--accentSoft);
-      background:rgba(0,0,0,0.20);
-      transform: translateY(-1px);
-    }
-    .pinBtn.pinned{
-      color: rgba(201,162,77,0.95);
-      border-color: rgba(201,162,77,0.35);
-    }
-
     .viewerBody{
+      position:relative;
       transition: opacity .14s ease, filter .14s ease;
+      min-height: 220px;
     }
     .viewerBody.loading{
-      opacity:0.05;
+      opacity:0.06;
       filter: blur(2px);
     }
 
@@ -414,16 +471,47 @@
       color:var(--muted);
       font-size:12px;
       line-height:1.35;
+      word-break: break-word;
+    }
+
+    .viewStamp{
+      position:absolute;
+      top:10px;
+      right:10px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(201,162,77,0.55);
+      background: rgba(0,0,0,0.28);
+      color: rgba(201,162,77,0.95);
+      font-weight:900;
+      letter-spacing:1.2px;
+      text-transform:uppercase;
+      font-size:12px;
+      opacity:0;
+      transform: translateY(-4px);
+      pointer-events:none;
+    }
+    .viewStamp.show{
+      opacity:1;
+      transform: translateY(0px);
+      transition: opacity .14s ease, transform .14s ease;
     }
 
     /* Title screen */
+
     .titleWrap{
-      min-height: calc(100vh - 80px);
+      min-height: calc(100vh - 64px);
       display:flex;
       align-items:center;
       justify-content:center;
       padding: 18px 0 40px;
     }
+
+    /* If header grows taller on small screens, keep title centered correctly */
+    @media (max-width: 650px){
+      .titleWrap{ min-height: calc(100vh - 92px); }
+    }
+
     .titlePanel{
       width:min(720px, 100%);
       background: linear-gradient(180deg, rgba(26,28,40,0.80), rgba(12,12,18,0.80));
@@ -448,7 +536,7 @@
       margin:0;
       font-size:34px;
       letter-spacing:0.6px;
-      font-weight:900;
+      font-weight:950;
       line-height:1.1;
     }
     .titleSub{
@@ -456,16 +544,42 @@
       color:var(--muted);
       font-size:14px;
       line-height:1.45;
-      max-width: 62ch;
+      max-width: 64ch;
     }
     .titleBtns{
       margin-top:16px;
       display:flex;
       gap:10px;
       flex-wrap:wrap;
+      align-items:center;
+    }
+    .titleFoot{
+      margin-top:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
     }
 
-    /* ---------- CALL MODULE (Detective Office panel) ---------- */
+    /* Title page layout: same design system, Minecraft-simple behavior */
+    body[data-bg="title"] .titleBtns{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+      margin-top:18px;
+      max-width: 360px;
+    }
+    body[data-bg="title"] .titleBtns .btn{
+      width:100%;
+      padding:12px 14px;
+      font-size:15px;
+    }
+    body[data-bg="title"] .titleFoot{
+      justify-content:flex-start;
+    }
+
+    /* Call module */
     .callBox{
       margin-top:10px;
       border:1px solid rgba(255,255,255,0.10);
@@ -481,7 +595,7 @@
       flex-wrap:wrap;
     }
     .callTitle{
-      font-weight:900;
+      font-weight:950;
       letter-spacing:0.6px;
       text-transform:uppercase;
       font-size:12px;
@@ -520,20 +634,8 @@
     .callTime{
       font-size:12px;
       color: var(--muted);
-      min-width: 86px;
+      min-width: 96px;
       text-align:right;
-    }
-    .transcript{
-      margin-top:10px;
-      display:none;
-      border-radius:10px;
-      border:1px solid rgba(0,0,0,0.18);
-      background: var(--paper);
-      color: var(--ink);
-      padding:12px;
-      line-height:1.55;
-      font-size:13px;
-      white-space:pre-wrap;
     }
 
     .toast{
@@ -556,17 +658,107 @@
     }
     .toast.show{ opacity:1; }
 
-    /* RTL SUPPORT */
+    /* Modal */
+    .modal{
+      position:fixed;
+      inset:0;
+      z-index:9998;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      background:rgba(0,0,0,0.58);
+      backdrop-filter: blur(6px);
+    }
+    .modal.show{ display:flex; }
+    .modalPanel{
+      width:min(560px, 100%);
+      background: linear-gradient(180deg, rgba(26,28,40,0.92), rgba(12,12,18,0.92));
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:16px;
+      box-shadow: 0 18px 48px rgba(0,0,0,0.65);
+      overflow:hidden;
+    }
+    .modalPanel .ph{
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.22);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .modalPanel .content{ padding:14px; }
+    .modalTitle{
+      margin:0;
+      font-size:14px;
+      font-weight:950;
+      letter-spacing:0.2px;
+    }
+    .modalText{
+      margin:8px 0 0 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+    .modalBtns{
+      margin-top:12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    /* Page 0: Minecraft-simple layout using same design system */
+    body[data-bg="title"] .titlePanel{
+      width: min(520px, 92vw);
+    }
+
+    body[data-bg="title"] .titlePanel .content{
+      text-align: center;
+      padding: 18px;
+    }
+
+    body[data-bg="title"] .titleBig{
+      font-size: 40px;
+      letter-spacing: 0.2px;
+    }
+
+    body[data-bg="title"] .titleSub{
+      max-width: 40ch;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    body[data-bg="title"] .titleBtns{
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 340px;
+    }
+
+    body[data-bg="title"] .titleFoot{
+      justify-content: center;
+      text-align: center;
+    }
+
+    /* RTL */
     body[dir="rtl"]{ direction: rtl; }
     body[dir="rtl"] .topbar .left{ flex-direction: row-reverse; }
     body[dir="rtl"] .badge{ right:auto; left:12px; }
     body[dir="rtl"] .docRow{ flex-direction: row-reverse; }
-    body[dir="rtl"] .docMarks{ flex-direction: row-reverse; }
     body[dir="rtl"] .kv{ grid-template-columns: 1fr 120px; }
     body[dir="rtl"] .kv .k{ text-align:right; }
-    body[dir="rtl"] .titleBtns{ flex-direction: row-reverse; }
+    body[dir="rtl"] .titleBtns{ }
+    body[dir="rtl"] .titleFoot{ flex-direction: row-reverse; }
     body[dir="rtl"] .callProgressWrap{ flex-direction: row-reverse; }
     body[dir="rtl"] .callTime{ text-align:left; }
+    body[dir="rtl"] .viewStamp{ right:auto; left:10px; }
+    body[dir="rtl"] .modalBtns{ flex-direction: row-reverse; justify-content:flex-start; }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ transition:none !important; }
+    }
   </style>
 </head>
 
@@ -575,982 +767,1190 @@
     <div class="headerLeft">
       <div>
         <h1 id="titleText">Detective Demo</h1>
-        <div class="crumb" id="crumb">Home</div>
+        <div class="crumb" id="crumb">Entry</div>
       </div>
     </div>
 
     <div class="langWrap">
       <div class="langLabel" id="langLabel">Language</div>
-      <button class="btn" id="langBtn">AR</button>
+      <button class="btn" id="langBtn" type="button" aria-label="Toggle language">AR</button>
     </div>
   </header>
 
   <main id="app"></main>
-  <div class="toast" id="toast"></div>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <section class="modalPanel" role="document" aria-labelledby="modalTitle">
+      <div class="ph">
+        <h3 class="modalTitle" id="modalTitle">Start</h3>
+        <button class="btn" id="modalCloseBtn" type="button">×</button>
+      </div>
+      <div class="content">
+        <p class="modalText" id="modalText"></p>
+        <div class="modalBtns" id="modalBtns"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
-    /*
-      Local setup (same folder as index.html):
-        image0.jpg  (Page 0)
-        image2.jpg  (Pages 1-2)
-        image1.jpg  (Page 3+)
+/* ============================================================================
+  SINGLE FILE ENGINE
+============================================================================ */
 
-        case1_brief_call.m4a   (NEW: office call audio, Case 1 only)
+/* ---------- I18N ---------- */
+const UI = {
+  en: {
+    title: "Detective Demo",
+    language: "Language",
+    pause: "Pause",
+    resume: "Resume",
+    entry: "Archive Entry",
+    entryLine: "Archived case files. Access is logged.",
+    loopLine: "Briefing call, documents, contradictions.",
+    home: "Home",
+    chooseDifficulty: "Select difficulty",
+    review: "Review",
+    casesTitle: (d) => `${cap(d)} cases`,
+    back: "Back",
+    available: "Active file",
+    closed: "Locked",
+    sealed: "Locked",
+    sealedReason: (n) => {
+      const reasons = [
+        "Court injunction",
+        "Evidence audit",
+        "Pending transfer",
+        "Internal review",
+        "Redacted record",
+        "Jurisdiction dispute"
+      ];
+      return `LOCKED: ${reasons[(n - 1) % reasons.length]}`;
+    },
+    sealedToast: "Locked by order. No access.",
+    easy: "Easy",
+    medium: "Medium",
+    hard: "Hard",
+    easyDesc: "Guided entry. Clean chain of custody.",
+    mediumDesc: "Partial gaps. Conflicting timing.",
+    hardDesc: "Redactions. Misdirection. Unreliable records.",
+    caseIntake: "Case intake",
+    caseBrief: "Case brief",
+    confidential: "Confidential",
+    briefing: "Briefing call",
+    briefingPending: "Pending",
+    briefingInProgress: "In progress",
+    briefingLogged: "Briefing logged",
+    answer: "Answer call",
+    replayBriefing: "Replay briefing",
+    override: "Override protocol",
+    overrideToast: "Override will be logged.",
+    audioError: "Audio error. File missing?",
+    enterOffice: "Enter Detective Office",
+    briefingRequired: "Briefing required to proceed.",
+    detectiveOffice: "Detective Office",
+    documents: "Documents",
+    viewer: "Viewer",
+    emptyForNow: "No attachments on record.",
+    selectDoc: "Select a document.",
+    officeBtn: "Back",
+    openFull: "Open full image",
+    missing: "This file is not configured.",
+    imageLoadError: "Could not load this image.",
+    caseId: "Case ID",
+    status: "Status",
+    location: "Location",
+    opened: "Opened",
+    assigned: "Assigned",
+    classification: "Classification",
+    viewed: "Viewed",
+    openFile: "Open file",
+    unread: "unread",
+    unreadLabel: "Unread",
+    total: "total",
 
-        official_police_report.jpg
-        crime_scene_map.jpg
-        building_exterior.jpg
-        office_layout.jpg
-        investigation_index1.jpg
-        investigation_index2.jpg
-    */
+    startCase: "Start case",
+    startCaseText: (name) => `Choose how to start ${name}.`,
+    newGame: "New game",
+    oldGame: "Old game",
+    resetToast: "Progress reset.",
 
-    const I18N = {
-      en: {
-        title: "Detective Demo",
-        language: "Language",
+    play: "Play",
+    info: "Info",
+    demoNoticeTitle: "Demo notice",
+    demoNoticeText: "This is an early demo. One case is available. Content outside that case is inactive and labeled accordingly. The demo focuses on reviewing investigation materials from an office environment. It does not represent final scope, pacing, or content volume.",
+    close: "Close",
+    caseAvailable: "Case 1 available (Easy)"
+  },
 
-        entry: "Entry",
-        entryLine: "Archived case files. Access permitted. Proceed with care.",
-        start: "Start investigation",
-        credits: "Credits",
-        creditsLine: "Prototype interface for a single case. More files will be added.",
+  ar: {
+    title: "تجربة المحقق",
+    language: "اللغة",
+    pause: "إيقاف",
+    resume: "متابعة",
+    entry: "بوابة الأرشيف",
+    entryLine: "ملفات قضايا مؤرشفة. يتم تسجيل الوصول.",
+    loopLine: "مكالمة إحاطة، مستندات، تناقضات.",
+    home: "الرئيسية",
+    chooseDifficulty: "اختر الصعوبة",
+    review: "استعراض",
+    casesTitle: (d) => `قضايا ${capAr(d)}`,
+    back: "رجوع",
+    available: "ملف نشط",
+    closed: "مقفل",
+    sealed: "مقفل",
+    sealedReason: (n) => {
+      const reasons = [
+        "أمر قضائي",
+        "تدقيق الأدلة",
+        "بانتظار النقل",
+        "مراجعة داخلية",
+        "سجل محجوب",
+        "نزاع اختصاص"
+      ];
+      return `مقفل: ${reasons[(n - 1) % reasons.length]}`;
+    },
+    sealedToast: "الملف مقفل بأمر. لا يمكن الوصول.",
+    easy: "سهل",
+    medium: "متوسط",
+    hard: "صعب",
+    easyDesc: "دخول موجه وسلسلة حيازة واضحة.",
+    mediumDesc: "فجوات جزئية وتوقيت متضارب.",
+    hardDesc: "حجب جزئي وتضليل وسجلات غير موثوقة.",
+    caseIntake: "استلام القضية",
+    caseBrief: "ملخص القضية",
+    confidential: "سري",
+    briefing: "مكالمة الإحاطة",
+    briefingPending: "غير مسجلة",
+    briefingInProgress: "جارية",
+    briefingLogged: "تم تسجيل الإحاطة",
+    answer: "رد على المكالمة",
+    replayBriefing: "إعادة الإحاطة",
+    override: "تجاوز البروتوكول",
+    overrideToast: "سيتم تسجيل التجاوز.",
+    audioError: "خطأ صوتي. هل الملف مفقود؟",
+    enterOffice: "دخول مكتب المحقق",
+    briefingRequired: "يلزم تسجيل الإحاطة للمتابعة.",
+    detectiveOffice: "مكتب المحقق",
+    documents: "المستندات",
+    viewer: "المعاينة",
+    emptyForNow: "لا توجد مرفقات في السجل.",
+    selectDoc: "اختر مستندا.",
+    officeBtn: "رجوع",
+    openFull: "فتح الصورة كاملة",
+    missing: "هذا الملف غير مفعّل.",
+    imageLoadError: "تعذر تحميل الصورة.",
+    caseId: "رقم القضية",
+    status: "الحالة",
+    location: "الموقع",
+    opened: "تاريخ الفتح",
+    assigned: "المكلف",
+    classification: "التصنيف",
+    viewed: "تمت المراجعة",
+    openFile: "فتح الملف",
+    unread: "غير مقروء",
+    unreadLabel: "غير مقروء",
+    total: "الإجمالي",
 
-        home: "Home",
-        chooseDifficulty: "Select difficulty",
-        browse: "Browse",
-        casesTitle: (d) => `${cap(d)} cases`,
-        navigate: "Review and cross-check the file",
-        back: "Back",
-        homeBtn: "Home",
+    startCase: "بدء القضية",
+    startCaseText: (name) => `اختر طريقة البدء في ${name}.`,
+    newGame: "لعبة جديدة",
+    oldGame: "متابعة سابقة",
+    resetToast: "تمت إعادة الضبط.",
 
-        available: "Open",
-        closed: "Locked",
-        open: "Review",
-        locked: "Sealed",
-        notAvailable: "Sealed. Not available yet.",
-        openCaseFile: "Open the case file and begin review.",
-        closedToast: "Sealed. Not available yet.",
+    play: "لعب",
+    info: "معلومات",
+    demoNoticeTitle: "تنبيه النسخة التجريبية",
+    demoNoticeText: "هذه نسخة تجريبية مبكرة. تتوفر قضية واحدة فقط. المحتوى خارج تلك القضية غير نشط وموسوم وفقا لذلك. تركز النسخة على مراجعة مواد التحقيق من داخل بيئة مكتب. لا تمثل النطاق أو الإيقاع أو حجم المحتوى النهائي.",
+    close: "إغلاق",
+    caseAvailable: "القضية 1 متاحة (سهل)"
+  }
+};
 
-        detectiveOffice: "Detective Office",
-        openDrawer: "Open drawer",
+function cap(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : ""; }
+function capAr(d){
+  if (d === "easy") return "السهلة";
+  if (d === "medium") return "المتوسطة";
+  if (d === "hard") return "الصعبة";
+  return d || "";
+}
+function t(key, ...args){
+  const v = UI[state.lang][key];
+  return (typeof v === "function") ? v(...args) : v;
+}
+function txt(obj){ return obj && obj[state.lang] ? obj[state.lang] : (obj?.en ?? ""); }
+function escapeHtml(str){
+  return String(str ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
 
-        documents: "Documents",
-        viewer: "Viewer",
-        items: (n) => `${n} item(s)`,
-        emptyForNow: "Empty for now.",
-        selectDoc: "Select a document.",
-        officeBtn: "Office",
-        openFull: "Open full image",
-        missing: "This case is not configured yet.",
+/* ---------- STORAGE ---------- */
+const SK = {
+  lang: "detective_lang",
+  readDocs: "detective_read_docs_v1"
+};
+const loadJSON = (k, fb) => { try{ const r = localStorage.getItem(k); return r ? JSON.parse(r) : fb; }catch{ return fb; } };
+const saveJSON = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+const getBool = (k) => localStorage.getItem(k) === "1";
+const setBool = (k, v) => localStorage.setItem(k, v ? "1" : "0");
 
-        pin: "Pin",
-        unpin: "Unpin",
-        pinnedFirst: "Pinned first",
-
-        caseHeaderTitle: "Case Brief",
-        caseId: "Case ID",
-        status: "Status",
-        location: "Location",
-        opened: "Opened",
-        assigned: "Assigned",
-        classification: "Classification",
-        confidential: "Confidential",
-
-        /* Call module strings */
-        callTitle: "Incoming call",
-        callRinging: "Ringing",
-        callReady: "Ready",
-        callInProgress: "In call",
-        callPaused: "Paused",
-        callHeard: "Heard",
-        answer: "Answer",
-        play: "Play",
-        pause: "Pause",
-        stop: "Stop",
-        transcript: "Transcript",
-        hideTranscript: "Hide transcript",
-
-        /* Replace these later with your real transcript */
-        transcriptText:
-`[Transcript placeholder]
-Officer briefing content goes here.
-Replace this string when ready.`
-      },
-      ar: {
-        title: "لعبة المحقق",
-        language: "اللغة",
-
-        entry: "المدخل",
-        entryLine: "ملفات قضية مؤرشفة. تم السماح بالوصول. تابع بحذر.",
-        start: "ابدأ التحقيق",
-        credits: "الاعتمادات",
-        creditsLine: "واجهة تجريبية لقضية واحدة. ستُضاف ملفات لاحقا.",
-
-        home: "الرئيسية",
-        chooseDifficulty: "اختر مستوى الصعوبة",
-        browse: "تصفح",
-        casesTitle: (d) => `قضايا ${capAr(d)}`,
-        navigate: "راجع الملفات وقارن الأدلة",
-        back: "رجوع",
-        homeBtn: "الرئيسية",
-
-        available: "مفتوحة",
-        closed: "مقفلة",
-        open: "مراجعة",
-        locked: "مختومة",
-        notAvailable: "مختومة. غير متاحة حاليا.",
-        openCaseFile: "افتح ملف القضية وابدأ المراجعة.",
-        closedToast: "مختومة. غير متاحة حاليا.",
-
-        detectiveOffice: "مكتب المحقق",
-        openDrawer: "افتح الدرج",
-
-        documents: "المستندات",
-        viewer: "المعاينة",
-        items: (n) => `${n} عنصر`,
-        emptyForNow: "فارغة حاليا.",
-        selectDoc: "اختر مستندا.",
-        officeBtn: "المكتب",
-        openFull: "افتح الصورة كاملة",
-        missing: "هذه القضية غير مفعلة بعد.",
-
-        pin: "تثبيت",
-        unpin: "إلغاء التثبيت",
-        pinnedFirst: "المثبت أولا",
-
-        caseHeaderTitle: "ملخص القضية",
-        caseId: "رقم القضية",
-        status: "الحالة",
-        location: "الموقع",
-        opened: "تاريخ الفتح",
-        assigned: "المكلف",
-        classification: "التصنيف",
-        confidential: "سري",
-
-        /* Call module strings */
-        callTitle: "مكالمة واردة",
-        callRinging: "يرن",
-        callReady: "جاهز",
-        callInProgress: "أثناء المكالمة",
-        callPaused: "متوقف مؤقتا",
-        callHeard: "تم الاستماع",
-        answer: "رد",
-        play: "تشغيل",
-        pause: "إيقاف مؤقت",
-        stop: "إيقاف",
-        transcript: "النص",
-        hideTranscript: "إخفاء النص",
-
-        transcriptText:
-`[نص بديل]
-ضع نص البلاغ هنا.
-استبدل هذا النص لاحقا.`
-      }
-    };
-
-    function cap(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : ""; }
-    function capAr(d){
-      if (d === "easy") return "السهلة";
-      if (d === "medium") return "المتوسطة";
-      if (d === "hard") return "الصعبة";
-      return d || "";
+/* ---------- READ / UNREAD ---------- */
+const readState = loadJSON(SK.readDocs, {});
+const isRead = (id) => !!readState[id];
+function markRead(id){
+  if (!id) return;
+  readState[id] = true;
+  saveJSON(SK.readDocs, readState);
+}
+function clearReadsByPrefix(prefix){
+  let changed = false;
+  for (const k of Object.keys(readState)){
+    if (k.startsWith(prefix)){
+      delete readState[k];
+      changed = true;
     }
+  }
+  if (changed) saveJSON(SK.readDocs, readState);
+}
 
-    const storageKeyLang = "detective_lang";
-    const storageKeyRead = "detective_read_docs_v1";
-    const storageKeyPins = "detective_pins_v1";
-    const storageKeyPinnedFirst = "detective_pinned_first_v1";
+/* ---------- AUDIO MANAGER ---------- */
+const VOICE = {
+  audio: null,
+  src: null,
+  heardKey: null,
+  status: "idle",
+  duration: 0,
+  currentTime: 0,
+  onUpdate: null
+};
+const notifyVoice = () => (typeof VOICE.onUpdate === "function") && VOICE.onUpdate();
+const markBriefHeard = () => VOICE.heardKey && setBool(VOICE.heardKey, true);
 
-    /* Call state persistence (Case 1 only) */
-    const storageKeyCase1CallHeard = "detective_case1_call_heard_v1";
+function ensureVoice(){
+  if (VOICE.audio) return VOICE.audio;
+  const a = document.createElement("audio");
+  a.preload = "metadata";
 
-    const state = {
-      lang: (localStorage.getItem(storageKeyLang) === "ar") ? "ar" : "en",
-      view: "title",        // title | home | cases | office | section
-      difficulty: null,
-      caseId: null,
-      sectionId: null,
-      docId: null,
-      pinnedFirst: (localStorage.getItem(storageKeyPinnedFirst) === "1")
-    };
+  a.addEventListener("loadedmetadata", () => {
+    VOICE.duration = Number.isFinite(a.duration) ? a.duration : 0;
+    notifyVoice();
+  });
+  a.addEventListener("timeupdate", () => {
+    VOICE.currentTime = a.currentTime || 0;
+    const d = VOICE.duration || 0;
+    if (d > 0 && (VOICE.currentTime / d) > 0.92) markBriefHeard();
+    notifyVoice();
+  });
+  a.addEventListener("play", () => { VOICE.status = "playing"; notifyVoice(); });
+  a.addEventListener("pause", () => {
+    if (VOICE.status !== "ended") VOICE.status = "paused";
+    notifyVoice();
+  });
+  a.addEventListener("ended", () => { VOICE.status = "ended"; markBriefHeard(); notifyVoice(); });
+  a.addEventListener("error", () => { VOICE.status = "error"; notifyVoice(); });
 
-    function t(key, ...args){
-      const dict = I18N[state.lang];
-      const val = dict[key];
-      return (typeof val === "function") ? val(...args) : val;
+  VOICE.audio = a;
+  return a;
+}
+
+function voiceConfigure({ src, heardKey }){
+  const a = ensureVoice();
+  const changed = VOICE.src !== src;
+  VOICE.src = src;
+  VOICE.heardKey = heardKey;
+  if (changed){
+    VOICE.status = "idle";
+    VOICE.duration = 0;
+    VOICE.currentTime = 0;
+    a.src = src || "";
+    try{ a.load(); }catch{}
+  }
+  notifyVoice();
+}
+
+async function voicePlayFromStart(){
+  const a = ensureVoice();
+  try{
+    a.currentTime = 0;
+    VOICE.currentTime = 0;
+    await a.play();
+  }catch{
+    VOICE.status = "error";
+    notifyVoice();
+  }
+}
+function voicePause(){ VOICE.audio && VOICE.audio.pause(); }
+async function voiceResume(){
+  const a = ensureVoice();
+  try{ await a.play(); }catch{ VOICE.status = "error"; notifyVoice(); }
+}
+function voiceStop(){
+  if (!VOICE.audio) return;
+  VOICE.audio.pause();
+  VOICE.audio.currentTime = 0;
+  VOICE.currentTime = 0;
+  VOICE.status = "idle";
+  notifyVoice();
+}
+function formatTime(s){
+  const sec = Math.max(0, Math.floor(s || 0));
+  const m = Math.floor(sec / 60);
+  const r = sec % 60;
+  return `${m}:${String(r).padStart(2,"0")}`;
+}
+
+/* ---------- APP STATE ---------- */
+const state = {
+  lang: (localStorage.getItem(SK.lang) === "ar") ? "ar" : "en",
+  view: "title",
+  difficulty: null,
+  caseKey: null,
+  sectionId: null,
+  docId: null,
+  protocolOverride: false
+};
+
+/* ---------- DOM ---------- */
+const $ = (id) => document.getElementById(id);
+const rootHtml = $("rootHtml");
+const app = $("app");
+const crumb = $("crumb");
+const toastEl = $("toast");
+const titleText = $("titleText");
+const langLabel = $("langLabel");
+const langBtn = $("langBtn");
+
+const modal = $("modal");
+const modalTitle = $("modalTitle");
+const modalText = $("modalText");
+const modalBtns = $("modalBtns");
+const modalCloseBtn = $("modalCloseBtn");
+
+function showToast(msg){
+  toastEl.textContent = msg;
+  toastEl.classList.add("show");
+  window.clearTimeout(showToast._t);
+  showToast._t = window.setTimeout(() => toastEl.classList.remove("show"), 1400);
+}
+
+function makeClickable(el, onActivate, { disabled = false } = {}){
+  if (!el) return;
+  if (disabled){
+    el.setAttribute("aria-disabled", "true");
+    el.removeAttribute("tabindex");
+    el.removeAttribute("role");
+    return;
+  }
+  el.setAttribute("tabindex", "0");
+  el.setAttribute("role", "button");
+  el.addEventListener("click", onActivate);
+  el.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " "){
+      e.preventDefault();
+      onActivate();
     }
+  });
+}
 
-    function txt(obj){ return obj && obj[state.lang] ? obj[state.lang] : (obj?.en ?? ""); }
+function renderTopbar(titleRight, subtitle){
+  const left = `
+    <div class="left">
+      ${(state.view === "title") ? "" : `<button class="btn" id="backBtn" type="button">${escapeHtml(t("back"))}</button>`}
+      <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
+        <div style="font-weight:900;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+          ${escapeHtml(titleRight)}
+        </div>
+        ${subtitle ? `<div style="color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(subtitle)}</div>` : ""}
+      </div>
+    </div>
+  `;
+  return `<div class="topbar">${left}<div></div></div>`;
+}
 
-    function escapeHtml(str){
-      return String(str ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
+function setBackgroundForView(){
+  const v = state.view;
+  if (v === "title") document.body.setAttribute("data-bg", "title");
+  else if (v === "difficulty" || v === "cases") document.body.setAttribute("data-bg", "world");
+  else document.body.setAttribute("data-bg", "case");
+}
 
-    function loadJSON(key, fallback){
-      try{
-        const raw = localStorage.getItem(key);
-        if (!raw) return fallback;
-        return JSON.parse(raw);
-      }catch{
-        return fallback;
-      }
-    }
-    function saveJSON(key, val){
-      localStorage.setItem(key, JSON.stringify(val));
-    }
+function applyLang(){
+  const isAr = state.lang === "ar";
+  document.body.setAttribute("dir", isAr ? "rtl" : "ltr");
+  rootHtml.setAttribute("lang", isAr ? "ar" : "en");
+  titleText.textContent = t("title");
+  langLabel.textContent = t("language");
+  langBtn.textContent = isAr ? "EN" : "AR";
+  render();
+}
 
-    function getBool(key){
-      return localStorage.getItem(key) === "1";
-    }
-    function setBool(key, val){
-      localStorage.setItem(key, val ? "1" : "0");
-    }
+langBtn.addEventListener("click", () => {
+  state.lang = (state.lang === "en") ? "ar" : "en";
+  localStorage.setItem(SK.lang, state.lang);
+  applyLang();
+});
 
-    const readState = loadJSON(storageKeyRead, {});
-    const pinState = loadJSON(storageKeyPins, {});
+/* ---------- MODAL ---------- */
+let modalResolve = null;
+function openModal({ title, text, buttons }){
+  modalTitle.textContent = title;
+  modalText.textContent = text;
+  modalBtns.innerHTML = buttons.map(b => `
+    <button class="btn ${b.primary ? "btnPrimary" : ""}" data-key="${escapeHtml(b.key)}" type="button">
+      ${escapeHtml(b.label)}
+    </button>
+  `).join("");
 
-    function isRead(docId){ return !!readState[docId]; }
-    function markRead(docId){
-      if (!docId) return;
-      readState[docId] = true;
-      saveJSON(storageKeyRead, readState);
-    }
+  modal.classList.add("show");
+  modal.setAttribute("aria-hidden", "false");
 
-    function isPinned(docId){ return !!pinState[docId]; }
-    function togglePin(docId){
-      if (!docId) return;
-      pinState[docId] = !pinState[docId];
-      if (!pinState[docId]) delete pinState[docId];
-      saveJSON(storageKeyPins, pinState);
-      render();
-    }
+  modalBtns.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", () => closeModal(btn.dataset.key));
+  });
 
-    /* ---------- AUDIO MANAGER (single voice channel) ---------- */
-    const VOICE = {
-      audio: null,
-      src: "case1_brief_call.m4a",
-      status: "idle", // idle | playing | paused | ended | error
-      duration: 0,
-      currentTime: 0,
-      onUpdate: null
-    };
+  return new Promise((resolve) => {
+    modalResolve = resolve;
+  });
+}
 
-    function ensureVoice(){
-      if (VOICE.audio) return VOICE.audio;
+function closeModal(result){
+  modal.classList.remove("show");
+  modal.setAttribute("aria-hidden", "true");
+  const r = modalResolve;
+  modalResolve = null;
+  if (r) r(result);
+}
 
-      const a = document.createElement("audio");
-      a.preload = "metadata";
-      a.src = VOICE.src;
+modalCloseBtn.addEventListener("click", () => closeModal("cancel"));
+modal.addEventListener("click", (e) => { if (e.target === modal) closeModal("cancel"); });
 
-      a.addEventListener("loadedmetadata", () => {
-        VOICE.duration = Number.isFinite(a.duration) ? a.duration : 0;
-        notifyVoice();
-      });
+window.addEventListener("keydown", (e) => {
+  if (modal.classList.contains("show") && e.key === "Escape"){
+    e.preventDefault();
+    closeModal("cancel");
+  }
+});
 
-      a.addEventListener("timeupdate", () => {
-        VOICE.currentTime = a.currentTime || 0;
-        notifyVoice();
-      });
+/* ---------- NAV ---------- */
+function go(view, patch = {}){
+  state.view = view;
+  if ("difficulty" in patch) state.difficulty = patch.difficulty;
+  if ("caseKey" in patch) state.caseKey = patch.caseKey;
+  if ("sectionId" in patch) state.sectionId = patch.sectionId;
+  if ("docId" in patch) state.docId = patch.docId;
+  if ("protocolOverride" in patch) state.protocolOverride = patch.protocolOverride;
+  render();
+}
+function goTitle(){ go("title", { difficulty:null, caseKey:null, sectionId:null, docId:null, protocolOverride:false }); }
+function goDifficulty(){ go("difficulty", { difficulty:null, caseKey:null, sectionId:null, docId:null, protocolOverride:false }); }
+function goCases(difficulty){ go("cases", { difficulty, caseKey:null, sectionId:null, docId:null, protocolOverride:false }); }
+function goIntake(caseKey){ go("intake", { caseKey, sectionId:null, docId:null, protocolOverride:false }); }
+function goOffice(){ go("office", { sectionId:null, docId:null }); }
+function goSection(sectionId){ go("section", { sectionId, docId:null }); }
 
-      a.addEventListener("play", () => {
-        VOICE.status = "playing";
-        notifyVoice();
-      });
+function back(){
+  const v = state.view;
+  if (v === "section") { go("office", { sectionId:null, docId:null }); return; }
+  if (v === "office")  { go("intake", { sectionId:null, docId:null }); return; }
+  if (v === "intake")  { go("cases",  { caseKey:null, sectionId:null, protocolOverride:false }); return; }
+  if (v === "cases")   { go("difficulty", { difficulty:null, caseKey:null, sectionId:null }); return; }
+  if (v === "difficulty") { goTitle(); return; }
+  goTitle();
+}
+function wireBack(){
+  const b = $("backBtn");
+  b && b.addEventListener("click", back);
+}
+window.addEventListener("keydown", (e) => {
+  if (modal.classList.contains("show")) return;
+  if (e.key === "Escape"){ e.preventDefault(); back(); }
+});
 
-      a.addEventListener("pause", () => {
-        if (VOICE.status !== "ended") VOICE.status = "paused";
-        notifyVoice();
-      });
+/* ---------- GAME INDEX ---------- */
+const GAME_INDEX = {
+  difficulties: [
+    { id: "easy", titleKey: "easy", descKey: "easyDesc" },
+    { id: "medium", titleKey: "medium", descKey: "mediumDesc" },
+    { id: "hard", titleKey: "hard", descKey: "hardDesc" }
+  ],
+  casesByDifficulty: {
+    easy: Array.from({ length: 10 }, (_, i) => ({
+      key: `easy_case_${i+1}`,
+      label: { en: `Case ${i+1}`, ar: `القضية ${i+1}` },
+      status: (i === 0) ? "active" : "closed",
+      sealedN: i + 1,
+      packId: (i === 0) ? "easy_case_1" : null
+    })),
+    medium: Array.from({ length: 10 }, (_, i) => ({
+      key: `medium_case_${i+1}`,
+      label: { en: `Case ${i+1}`, ar: `القضية ${i+1}` },
+      status: "closed",
+      sealedN: i + 1,
+      packId: null
+    })),
+    hard: Array.from({ length: 10 }, (_, i) => ({
+      key: `hard_case_${i+1}`,
+      label: { en: `Case ${i+1}`, ar: `القضية ${i+1}` },
+      status: "closed",
+      sealedN: i + 1,
+      packId: null
+    }))
+  }
+};
 
-      a.addEventListener("ended", () => {
-        VOICE.status = "ended";
-        setBool(storageKeyCase1CallHeard, true);
-        notifyVoice();
-      });
+const countPackDocs = (pack) => {
+  const by = pack?.documents || {};
+  let n = 0;
+  for (const k of Object.keys(by)){
+    const arr = by[k];
+    n += Array.isArray(arr) ? arr.length : 0;
+  }
+  return n;
+};
+const hasBriefing = (pack) => !!pack?.briefing?.audioSrc;
 
-      a.addEventListener("error", () => {
-        VOICE.status = "error";
-        notifyVoice();
-      });
+/* ---------- CASE PACKS ---------- */
+const CASE_PACKS = {
+  easy_case_1: {
+    meta: {
+      caseId: { en: "E-01", ar: "E-01" },
+      status: { en: "Active file", ar: "ملف نشط" },
+      location: { en: "Old City, 3rd Precinct", ar: "المدينة القديمة، المركز الثالث" },
+      opened: { en: "1974-10-18", ar: "1974-10-18" },
+      assigned: { en: "Detective (You)", ar: "المحقق (أنت)" },
+      classification: { en: "Confidential", ar: "سري" }
+    },
 
-      VOICE.audio = a;
-      return a;
-    }
+    briefing: {
+      audioSrc: "case1_brief_call.m4a",
+      heardStorageKey: "detective_easy_case_1_brief_heard_v1"
+    },
 
-    function notifyVoice(){
-      if (typeof VOICE.onUpdate === "function") VOICE.onUpdate();
-    }
+    sections: [
+      { id: "objectives", title: { en: "Case objectives", ar: "أهداف القضية" } },
+      { id: "initial_report", title: { en: "Initial report", ar: "البلاغ الأولي" } },
+      { id: "first_file", title: { en: "First file", ar: "الملف الأول" } },
+      { id: "second_file", title: { en: "Second file", ar: "الملف الثاني" } },
+      { id: "additional_evidence", title: { en: "Additional evidence", ar: "أدلة إضافية" } }
+    ],
 
-    async function voicePlay(){
-      const a = ensureVoice();
-      try{
-        await a.play();
-      }catch{
-        VOICE.status = "error";
-        notifyVoice();
-      }
-    }
-
-    function voicePause(){
-      const a = ensureVoice();
-      a.pause();
-    }
-
-    function voiceStop(){
-      if (!VOICE.audio) return;
-      VOICE.audio.pause();
-      VOICE.audio.currentTime = 0;
-      VOICE.currentTime = 0;
-      VOICE.status = "idle";
-      notifyVoice();
-    }
-
-    function voiceTearDownIfNotInOffice(){
-      /* Prevent audio continuing when you navigate away */
-      if (state.view !== "office") voiceStop();
-    }
-
-    function formatTime(s){
-      const sec = Math.max(0, Math.floor(s || 0));
-      const m = Math.floor(sec / 60);
-      const r = sec % 60;
-      return `${m}:${String(r).padStart(2,"0")}`;
-    }
-
-    const GAME = {
-      difficulties: [
-        { id: "easy", title: { en: "Easy", ar: "سهل" }, desc: { en: "Clear trail. Minimal noise.", ar: "مسار واضح وضوضاء قليلة." } },
-        { id: "medium", title: { en: "Medium", ar: "متوسط" }, desc: { en: "Contradictions appear.", ar: "تظهر تناقضات." } },
-        { id: "hard", title: { en: "Hard", ar: "صعب" }, desc: { en: "Ambiguity and misdirection.", ar: "غموض وتضليل." } }
-      ],
-
-      casesByDifficulty: {
-        easy: Array.from({ length: 10 }, (_, i) => ({
-          id: `easy_case_${i+1}`,
-          label: { en: `Case ${i+1}`, ar: `القضية ${i+1}` },
-          status: (i === 0) ? "active" : "closed"
-        })),
-        medium: Array.from({ length: 10 }, (_, i) => ({
-          id: `med_case_${i+1}`,
-          label: { en: `Case ${i+1}`, ar: `القضية ${i+1}` },
-          status: "closed"
-        })),
-        hard: Array.from({ length: 10 }, (_, i) => ({
-          id: `hard_case_${i+1}`,
-          label: { en: `Case ${i+1}`, ar: `القضية ${i+1}` },
-          status: "closed"
-        }))
-      },
-
-      caseContent: {
-        easy_case_1: {
-          officeTitle: { en: "Detective Office", ar: "مكتب المحقق" },
-          caseMeta: {
-            caseId: { en: "E-01", ar: "E-01" },
-            status: { en: "Open", ar: "مفتوحة" },
-            location: { en: "Old City, 3rd Precinct", ar: "المدينة القديمة، الدائرة الثالثة" },
-            opened: { en: "1974-10-18", ar: "1974-10-18" },
-            assigned: { en: "Detective (You)", ar: "المحقق (أنت)" },
-            classification: { en: "Confidential", ar: "سري" }
-          },
-          sections: [
-            { id: "objectives", title: { en: "Case Objectives", ar: "أهداف القضية" } },
-            { id: "initial_report", title: { en: "Initial Report", ar: "البلاغ الأولي" } },
-            { id: "first_file", title: { en: "First File", ar: "الملف الأول" } },
-            { id: "second_file", title: { en: "Second File", ar: "الملف الثاني" } },
-            { id: "additional_evidence", title: { en: "Additional Evidence", ar: "أدلة إضافية" } }
-          ],
-          documents: {
-            objectives: [
-              {
-                id: "obj_1",
-                title: { en: "Objectives", ar: "الأهداف" },
-                meta:  { en: "Draft", ar: "مسودة" },
-                type: "text",
-                body: {
-                  en:
+    documents: {
+      objectives: [
+        {
+          id: "ec1_obj_1",
+          title: { en: "Objectives", ar: "الأهداف" },
+          meta:  { en: "Draft", ar: "مسودة" },
+          type: "text",
+          body: {
+            en:
 `1) Identify victim and last known movements.
 2) Establish timeline from witness accounts.
 3) Reconcile discrepancies between scene notes and photographs.
 4) Determine likely entry and exit routes.`,
-                  ar:
+            ar:
 `1) تحديد هوية الضحية وآخر تحركاتها.
 2) بناء خط زمني من إفادات الشهود.
-3) مقارنة التعارضات بين ملاحظات الموقع والصور.
-4) تحديد مسارات الدخول والخروج المحتملة.`
-                }
-              }
-            ],
-            initial_report: [
-              { id: "ir_police",  title: { en: "Official Police Report", ar: "محضر الشرطة" }, meta: { en: "Scan", ar: "صورة" }, type: "image", url: "official_police_report.jpg" },
-              { id: "ir_map",     title: { en: "Crime Scene Map", ar: "خريطة مواقع" },       meta: { en: "Sketch", ar: "صورة" }, type: "image", url: "crime_scene_map.jpg" },
-              { id: "ir_building",title: { en: "Building Exterior", ar: "الواجهة الخارجية" }, meta:{ en:"Photo", ar:"صورة" }, type:"image", url:"building_exterior.jpg" },
-              { id: "ir_layout",  title: { en: "Office Layout", ar: "مخطط المكتب" },        meta: { en: "Diagram", ar: "صورة" }, type: "image", url: "office_layout.jpg" },
-              { id: "ir_index_1", title: { en: "Investigation Index (1)", ar: "فهرس المستندات (1)" }, meta:{ en:"Index", ar:"صورة" }, type:"image", url:"investigation_index1.jpg" },
-              { id: "ir_index_2", title: { en: "Investigation Index (2)", ar: "فهرس المستندات (2)" }, meta:{ en:"Index", ar:"صورة" }, type:"image", url:"investigation_index2.jpg" }
-            ],
-            first_file: [
-              { id: "ff_placeholder", title: { en: "Witness Statements", ar: "إفادات الشهود" }, meta: { en: "Not added yet", ar: "غير مضافة بعد" }, type: "text",
-                body: { en: "No documents yet.", ar: "لا توجد مستندات بعد." } }
-            ],
-            second_file: [
-              { id: "sf_placeholder", title: { en: "Forensics", ar: "الأدلة الجنائية" }, meta: { en: "Not added yet", ar: "غير مضافة بعد" }, type: "text",
-                body: { en: "No documents yet.", ar: "لا توجد مستندات بعد." } }
-            ],
-            additional_evidence: [
-              { id: "ae_placeholder", title: { en: "Loose Ends", ar: "خيوط متفرقة" }, meta: { en: "Not added yet", ar: "غير مضافة بعد" }, type: "text",
-                body: { en: "No documents yet.", ar: "لا توجد مستندات بعد." } }
-            ]
+3) مطابقة التعارضات بين ملاحظات الموقع والصور.
+4) تحديد مسارات الدخول والخروج المرجحة.`
           }
         }
-      }
-    };
+      ],
 
-    const rootHtml = document.getElementById("rootHtml");
-    const app = document.getElementById("app");
-    const crumb = document.getElementById("crumb");
-    const toastEl = document.getElementById("toast");
-    const titleText = document.getElementById("titleText");
-    const langLabel = document.getElementById("langLabel");
-    const langBtn = document.getElementById("langBtn");
-
-    function applyLang(){
-      const isAr = state.lang === "ar";
-      document.body.setAttribute("dir", isAr ? "rtl" : "ltr");
-      rootHtml.setAttribute("lang", isAr ? "ar" : "en");
-
-      titleText.textContent = t("title");
-      langLabel.textContent = t("language");
-      langBtn.textContent = isAr ? "EN" : "AR";
-
-      render();
+      initial_report: [
+        { id: "ec1_ir_police",   title: { en: "Official police report", ar: "محضر الشرطة الرسمي" }, type: "image", meta: { en: "Scan", ar: "مسح ضوئي" }, url: "official_police_report.jpg" },
+        { id: "ec1_ir_map",      title: { en: "Crime scene map", ar: "خريطة موقع الجريمة" },       type: "image", meta: { en: "Sketch", ar: "رسم" }, url: "crime_scene_map.jpg" },
+        { id: "ec1_ir_building", title: { en: "Building exterior", ar: "الواجهة الخارجية للمبنى" }, type: "image", meta: { en: "Photo", ar: "صورة" }, url: "building_exterior.jpg" },
+        { id: "ec1_ir_layout",   title: { en: "Office layout", ar: "مخطط المكتب" },                type: "image", meta: { en: "Diagram", ar: "مخطط" }, url: "office_layout.jpg" },
+        { id: "ec1_ir_index_1",  title: { en: "Investigation index (1)", ar: "فهرس التحقيق (1)" }, type: "image", meta: { en: "Index", ar: "فهرس" }, url: "investigation_index1.jpg" },
+        { id: "ec1_ir_index_2",  title: { en: "Investigation index (2)", ar: "فهرس التحقيق (2)" }, type: "image", meta: { en: "Index", ar: "فهرس" }, url: "investigation_index2.jpg" }
+      ],
     }
+  }
+};
 
-    langBtn.addEventListener("click", () => {
-      state.lang = (state.lang === "en") ? "ar" : "en";
-      localStorage.setItem(storageKeyLang, state.lang);
-      applyLang();
+/* ---------- HELPERS ---------- */
+function getCaseItem(difficulty, caseKey){
+  const list = GAME_INDEX.casesByDifficulty[difficulty] || [];
+  return list.find(c => c.key === caseKey) || null;
+}
+function getPackForCaseKey(difficulty, caseKey){
+  const item = getCaseItem(difficulty, caseKey);
+  if (!item || !item.packId) return null;
+  return CASE_PACKS[item.packId] || null;
+}
+function diffName(id){
+  const d = GAME_INDEX.difficulties.find(x => x.id === id);
+  return d ? t(d.titleKey) : "";
+}
+
+function setCrumb(){
+  if (state.view === "title") { crumb.textContent = t("entry"); return; }
+  if (state.view === "difficulty") { crumb.textContent = t("home"); return; }
+
+  const dName = diffName(state.difficulty);
+  if (state.view === "cases") { crumb.textContent = `${t("home")} / ${dName}`; return; }
+
+  const caseItem = getCaseItem(state.difficulty, state.caseKey);
+  const caseLabel = caseItem ? txt(caseItem.label) : "";
+  if (state.view === "intake") { crumb.textContent = `${t("home")} / ${dName} / ${caseLabel} / ${t("caseIntake")}`; return; }
+  if (state.view === "office") { crumb.textContent = `${t("home")} / ${dName} / ${caseLabel} / ${t("detectiveOffice")}`; return; }
+  if (state.view === "section"){
+    const pack = getPackForCaseKey(state.difficulty, state.caseKey);
+    const sec = pack?.sections?.find(s => s.id === state.sectionId);
+    const secTitle = sec ? txt(sec.title) : "";
+    crumb.textContent = `${t("home")} / ${dName} / ${caseLabel} / ${t("detectiveOffice")} / ${secTitle}`;
+    return;
+  }
+  crumb.textContent = t("home");
+}
+
+const sectionDocCount = (pack, sectionId) => (pack?.documents?.[sectionId] || []).length;
+const sectionUnreadCount = (pack, sectionId) => (pack?.documents?.[sectionId] || []).reduce((n,d) => n + (!isRead(d.id) ? 1 : 0), 0);
+
+function flashViewerStamp(label){
+  const stamp = $("viewStamp");
+  if (!stamp) return;
+  stamp.textContent = label;
+  stamp.classList.add("show");
+  window.clearTimeout(flashViewerStamp._t);
+  flashViewerStamp._t = window.setTimeout(() => stamp.classList.remove("show"), 900);
+}
+
+function protocolAllowsOffice(pack){
+  const heardKey = pack?.briefing?.heardStorageKey;
+  const heard = heardKey ? getBool(heardKey) : false;
+  return heard || state.protocolOverride;
+}
+
+/* ---------- NEW/OLD GAME FLOW ---------- */
+function caseReadPrefix(packId){
+  if (packId === "easy_case_1") return "ec1_";
+  return packId + "_";
+}
+function resetCaseProgress(packId){
+  const pack = CASE_PACKS[packId];
+  if (!pack) return;
+
+  clearReadsByPrefix(caseReadPrefix(packId));
+
+  const hk = pack.briefing?.heardStorageKey;
+  if (hk) setBool(hk, false);
+
+  showToast(t("resetToast"));
+}
+
+async function promptStartCase(caseItem){
+  const packId = caseItem.packId;
+  const label = txt(caseItem.label);
+
+  const choice = await openModal({
+    title: t("startCase"),
+    text: t("startCaseText", label),
+    buttons: [
+      { key: "new", label: t("newGame"), primary: true },
+      { key: "old", label: t("oldGame"), primary: false }
+    ]
+  });
+
+  if (choice === "cancel") return;
+
+  if (choice === "new") resetCaseProgress(packId);
+  goIntake(caseItem.key);
+}
+
+/* ---------- RENDERERS ---------- */
+function renderTitle(){
+  app.innerHTML = `
+    <div class="titleWrap">
+      <section class="titlePanel">
+        <div class="content">
+          <h2 class="titleBig">${escapeHtml(t("title"))}</h2>
+          <p class="titleSub">${escapeHtml(t("entryLine"))}</p>
+
+          <div class="titleBtns">
+            <button class="btn btnPrimary" id="playBtn" type="button">${escapeHtml(t("play"))}</button>
+            <button class="btn" id="infoBtn" type="button">${escapeHtml(t("info"))}</button>
+          </div>
+
+          <div class="titleFoot">
+            <span class="mono" style="color:var(--muted);font-size:12px;">${escapeHtml(t("caseAvailable"))}</span>
+            <span></span>
+          </div>
+        </div>
+      </section>
+    </div>
+  `;
+
+  $("playBtn")?.addEventListener("click", goDifficulty);
+
+  $("infoBtn")?.addEventListener("click", async () => {
+    await openModal({
+      title: t("demoNoticeTitle"),
+      text: t("demoNoticeText"),
+      buttons: [{ key: "ok", label: t("close"), primary: true }]
     });
+  });
+}
 
-    function showToast(msg){
-      toastEl.textContent = msg;
-      toastEl.classList.add("show");
-      window.clearTimeout(showToast._t);
-      showToast._t = window.setTimeout(() => toastEl.classList.remove("show"), 1400);
-    }
+function renderDifficulty(){
+  app.innerHTML = `
+    ${renderTopbar(t("chooseDifficulty"))}
+    <div class="grid cols-3">
+      ${GAME_INDEX.difficulties.map(d => `
+        <div class="card" data-diff="${d.id}">
+          <h2>${escapeHtml(t(d.titleKey))}</h2>
+          <p>${escapeHtml(t(d.descKey))}</p>
+          <div class="pill">${escapeHtml(t("review"))}</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+  wireBack();
+  app.querySelectorAll(".card").forEach(el => makeClickable(el, () => goCases(el.dataset.diff)));
+}
 
-    function goTitle(){
-      state.view = "title";
-      state.difficulty = null;
-      state.caseId = null;
-      state.sectionId = null;
-      state.docId = null;
-      render();
-    }
+function renderCases(){
+  const list = GAME_INDEX.casesByDifficulty[state.difficulty] || [];
+  app.innerHTML = `
+    ${renderTopbar(t("casesTitle", state.difficulty))}
+    <div class="grid cols-5">
+      ${list.map(c => {
+        const isActive = c.status === "active";
+        const badgeClass = isActive ? "active" : "closed";
+        const badgeText = isActive ? t("available") : t("closed");
 
-    function goHome(){
-      state.view = "home";
-      state.difficulty = null;
-      state.caseId = null;
-      state.sectionId = null;
-      state.docId = null;
-      render();
-    }
+        const pack = (c.packId && CASE_PACKS[c.packId]) ? CASE_PACKS[c.packId] : null;
+        const docsN = pack ? countPackDocs(pack) : 0;
+        const callsN = (pack && hasBriefing(pack)) ? 1 : 0;
 
-    function goCases(difficulty){
-      state.view = "cases";
-      state.difficulty = difficulty;
-      state.caseId = null;
-      state.sectionId = null;
-      state.docId = null;
-      render();
-    }
+        const detail = isActive
+          ? `${docsN} documents, ${callsN} call`
+          : t("sealedReason", c.sealedN);
 
-    function goOffice(caseId){
-      state.view = "office";
-      state.caseId = caseId;
-      state.sectionId = null;
-      state.docId = null;
-      render();
-    }
+        const pillText = isActive ? t("openFile") : t("sealed");
 
-    function goSection(sectionId){
-      state.view = "section";
-      state.sectionId = sectionId;
-      state.docId = null;
-      render();
-    }
+        return `
+          <div class="card" data-case="${c.key}" data-status="${c.status}" aria-label="${escapeHtml(txt(c.label))}">
+            <div class="badge ${badgeClass}">${escapeHtml(badgeText)}</div>
+            <h2>${escapeHtml(txt(c.label))}</h2>
+            <p>${escapeHtml(detail)}</p>
+            <div class="pill">${escapeHtml(pillText)}</div>
+          </div>
+        `;
+      }).join("")}
+    </div>
+  `;
+  wireBack();
 
-    function back(){
-      if (state.view === "section") { state.view = "office"; state.sectionId = null; state.docId = null; render(); return; }
-      if (state.view === "office") { state.view = "cases"; state.caseId = null; render(); return; }
-      if (state.view === "cases") { goHome(); return; }
-      if (state.view === "home") { goTitle(); return; }
-      goTitle();
-    }
+  app.querySelectorAll(".card").forEach(el => {
+    const disabled = el.dataset.status !== "active";
+    makeClickable(el, async () => {
+      if (disabled) { showToast(t("sealedToast")); return; }
+      const caseItem = getCaseItem(state.difficulty, el.dataset.case);
+      if (!caseItem) return;
+      await promptStartCase(caseItem);
+    }, { disabled });
+  });
+}
 
-    function renderTopbar(titleRight){
-      const left = `
-        <div class="left">
-          ${(state.view === "title") ? "" : `<button class="btn" id="backBtn">${escapeHtml(t("back"))}</button>`}
-          <div style="display:flex;flex-direction:column;gap:2px;">
-            <div style="font-weight:850;font-size:14px;">${escapeHtml(titleRight)}</div>
-            <div style="color:var(--muted);font-size:12px;">${escapeHtml(t("navigate"))}</div>
+function renderIntake(){
+  const pack = getPackForCaseKey(state.difficulty, state.caseKey);
+  if (!pack){
+    app.innerHTML = `
+      ${renderTopbar(t("caseIntake"))}
+      <div class="panel">
+        <div class="ph"><h3>${escapeHtml(t("caseIntake"))}</h3></div>
+        <div class="content" style="color:var(--muted);font-size:13px;line-height:1.4;">
+          ${escapeHtml(t("missing"))}
+        </div>
+      </div>
+    `;
+    wireBack();
+    return;
+  }
+
+  const heardKey = pack.briefing?.heardStorageKey;
+  const heard = heardKey ? getBool(heardKey) : false;
+  const allowed = protocolAllowsOffice(pack);
+
+  voiceConfigure({ src: pack.briefing?.audioSrc || null, heardKey: heardKey || null });
+
+  app.innerHTML = `
+    ${renderTopbar(t("caseIntake"))}
+
+    <div class="caseHeader">
+      <section class="panel">
+        <div class="ph">
+          <h3>${escapeHtml(t("caseBrief"))}</h3>
+          <span class="stamp"><span class="mono">${escapeHtml(t("confidential"))}</span></span>
+        </div>
+        <div class="content">
+          <div class="kv">
+            <div class="k">${escapeHtml(t("caseId"))}</div><div class="v mono">${escapeHtml(txt(pack.meta.caseId))}</div>
+            <div class="k">${escapeHtml(t("status"))}</div><div class="v">${escapeHtml(txt(pack.meta.status))}</div>
+            <div class="k">${escapeHtml(t("location"))}</div><div class="v">${escapeHtml(txt(pack.meta.location))}</div>
+            <div class="k">${escapeHtml(t("opened"))}</div><div class="v mono">${escapeHtml(txt(pack.meta.opened))}</div>
+            <div class="k">${escapeHtml(t("assigned"))}</div><div class="v">${escapeHtml(txt(pack.meta.assigned))}</div>
+            <div class="k">${escapeHtml(t("classification"))}</div><div class="v">${escapeHtml(txt(pack.meta.classification))}</div>
           </div>
         </div>
-      `;
-      const right = `
-        <div style="display:flex;gap:10px;align-items:center;">
-          ${state.view === "section" ? `
-            <button class="btn" id="pinnedFirstBtn">${escapeHtml(t("pinnedFirst"))}: ${state.pinnedFirst ? "ON" : "OFF"}</button>
-          ` : ""}
-          ${state.view === "title" ? "" : `<button class="btn" id="homeBtn">${escapeHtml(t("homeBtn"))}</button>`}
+      </section>
+
+      <section class="panel">
+        <div class="ph">
+          <h3>${escapeHtml(t("briefing"))}</h3>
+          <span style="color:var(--muted);font-size:12px;" class="mono">${escapeHtml(txt(pack.meta.caseId))}</span>
         </div>
-      `;
-      return `<div class="topbar">${left}${right}</div>`;
-    }
 
-    function wireCommonButtons(){
-      const backBtn = document.getElementById("backBtn");
-      if (backBtn) backBtn.addEventListener("click", () => { voiceTearDownIfNotInOffice(); back(); });
-
-      const homeBtn = document.getElementById("homeBtn");
-      if (homeBtn) homeBtn.addEventListener("click", () => { voiceTearDownIfNotInOffice(); goHome(); });
-
-      const pinnedFirstBtn = document.getElementById("pinnedFirstBtn");
-      if (pinnedFirstBtn){
-        pinnedFirstBtn.addEventListener("click", () => {
-          state.pinnedFirst = !state.pinnedFirst;
-          localStorage.setItem(storageKeyPinnedFirst, state.pinnedFirst ? "1" : "0");
-          render();
-        });
-      }
-    }
-
-    function setBackgroundForView(){
-      if (state.view === "title") document.body.setAttribute("data-bg", "title");
-      else if (state.view === "home" || state.view === "cases") document.body.setAttribute("data-bg", "world");
-      else document.body.setAttribute("data-bg", "case");
-    }
-
-    function setCrumb(){
-      const diffObj = GAME.difficulties.find(d => d.id === state.difficulty);
-      const diffName = diffObj ? txt(diffObj.title) : "";
-
-      if (state.view === "title") crumb.textContent = t("entry");
-      if (state.view === "home") crumb.textContent = t("home");
-      if (state.view === "cases") crumb.textContent = `${t("home")} / ${diffName}`;
-      if (state.view === "office") crumb.textContent = `${t("home")} / ${diffName} / ${txt({en:"Case 1", ar:"القضية 1"})} / ${t("detectiveOffice")}`;
-      if (state.view === "section") {
-        const c = GAME.caseContent[state.caseId];
-        const sec = c ? c.sections.find(s => s.id === state.sectionId) : null;
-        crumb.textContent = `${t("home")} / ${diffName} / ${txt({en:"Case 1", ar:"القضية 1"})} / ${t("detectiveOffice")} / ${sec ? txt(sec.title) : ""}`;
-      }
-    }
-
-    function render(){
-      setBackgroundForView();
-      setCrumb();
-
-      /* Stop voice if not in office (prevents leakage) */
-      if (state.view !== "office") voiceStop();
-
-      /* ---------- PAGE 0 ---------- */
-      if (state.view === "title"){
-        app.innerHTML = `
-          <div class="titleWrap">
-            <section class="titlePanel">
-              <div class="ph">
-                <div class="stamp"><span class="mono">${escapeHtml(t("entry"))}</span></div>
-                <div class="mono" style="color:var(--muted);font-size:12px;">v0.1</div>
+        <div class="content">
+          <div class="callBox">
+            <div class="callTop">
+              <div>
+                <div class="callTitle">${escapeHtml(t("briefing"))}</div>
+                <div class="callStatus" id="callStatus">${escapeHtml(heard ? t("briefingLogged") : t("briefingPending"))}</div>
               </div>
-
-              <div class="content">
-                <h2 class="titleBig">${escapeHtml(t("title"))}</h2>
-                <p class="titleSub">${escapeHtml(t("entryLine"))}</p>
-
-                <div class="titleBtns">
-                  <button class="btn btnPrimary" id="startBtn">${escapeHtml(t("start"))}</button>
-                  <button class="btn" id="creditsBtn">${escapeHtml(t("credits"))}</button>
-                </div>
-
-                <div id="creditsBox" style="display:none;margin-top:12px;color:var(--muted);font-size:13px;line-height:1.5;">
-                  ${escapeHtml(t("creditsLine"))}
-                </div>
-              </div>
-            </section>
-          </div>
-        `;
-
-        document.getElementById("startBtn").addEventListener("click", goHome);
-        document.getElementById("creditsBtn").addEventListener("click", () => {
-          const box = document.getElementById("creditsBox");
-          box.style.display = (box.style.display === "none") ? "block" : "none";
-        });
-        return;
-      }
-
-      /* ---------- PAGE 1: DIFFICULTY ---------- */
-      if (state.view === "home"){
-        app.innerHTML = `
-          ${renderTopbar(t("chooseDifficulty"))}
-          <div class="grid cols-3">
-            ${GAME.difficulties.map(d => `
-              <div class="card" data-diff="${d.id}">
-                <h2>${escapeHtml(txt(d.title))}</h2>
-                <p>${escapeHtml(txt(d.desc))}</p>
-                <div class="pill">${escapeHtml(t("browse"))}</div>
-              </div>
-            `).join("")}
-          </div>
-        `;
-        wireCommonButtons();
-        app.querySelectorAll(".card").forEach(el => el.addEventListener("click", () => goCases(el.dataset.diff)));
-        return;
-      }
-
-      /* ---------- PAGE 2: CASES ---------- */
-      if (state.view === "cases"){
-        const list = GAME.casesByDifficulty[state.difficulty] || [];
-        app.innerHTML = `
-          ${renderTopbar(t("casesTitle", state.difficulty))}
-          <div class="grid cols-5">
-            ${list.map(c => `
-              <div class="card" data-case="${c.id}" data-status="${c.status}">
-                <div class="badge ${c.status}">${escapeHtml(c.status === "active" ? t("available") : t("closed"))}</div>
-                <h2>${escapeHtml(txt(c.label))}</h2>
-                <p>${escapeHtml(c.status === "active" ? t("openCaseFile") : t("notAvailable"))}</p>
-                <div class="pill">${escapeHtml(c.status === "active" ? t("open") : t("locked"))}</div>
-              </div>
-            `).join("")}
-          </div>
-        `;
-        wireCommonButtons();
-        app.querySelectorAll(".card").forEach(el => {
-          el.addEventListener("click", () => {
-            if (el.dataset.status !== "active") { showToast(t("closedToast")); return; }
-            goOffice(el.dataset.case);
-          });
-        });
-        return;
-      }
-
-      /* ---------- PAGE 3: OFFICE ---------- */
-      if (state.view === "office"){
-        const c = GAME.caseContent[state.caseId];
-        if (!c){
-          app.innerHTML = `
-            ${renderTopbar(t("detectiveOffice"))}
-            <div class="panel">
-              <div class="ph"><h3>${escapeHtml(t("detectiveOffice"))}</h3></div>
-              <div class="content" style="color:var(--muted);font-size:13px;line-height:1.4;">
-                ${escapeHtml(t("missing"))}
+              <div class="mono" style="color:var(--muted);font-size:12px;" id="callSideLabel">
+                ${escapeHtml(heard ? t("briefingLogged") : t("briefingPending"))}
               </div>
             </div>
-          `;
-          wireCommonButtons();
-          return;
-        }
 
-        const meta = c.caseMeta;
+            <div class="callControls">
+              <button class="btn btnPrimary" id="callBtn" type="button">
+                ${escapeHtml(heard ? t("replayBriefing") : t("answer"))}
+              </button>
 
-        const callHeard = getBool(storageKeyCase1CallHeard);
-        const callStateLabel = callHeard ? t("callHeard") : t("callRinging");
+              <button class="btn" id="pauseBtn" type="button" disabled>
+                ${escapeHtml(t("pause"))}
+              </button>
 
-        app.innerHTML = `
-          ${renderTopbar(txt(c.officeTitle))}
+              ${allowed ? "" : `<button class="btn" id="overrideBtn" type="button">${escapeHtml(t("override"))}</button>`}
+            </div>
 
-          <div class="caseHeader">
-            <section class="panel">
-              <div class="ph">
-                <h3>${escapeHtml(t("caseHeaderTitle"))}</h3>
-                <span class="stamp"><span class="mono">${escapeHtml(t("confidential"))}</span></span>
-              </div>
-              <div class="content">
-                <div class="kv">
-                  <div class="k">${escapeHtml(t("caseId"))}</div><div class="v mono">${escapeHtml(txt(meta.caseId))}</div>
-                  <div class="k">${escapeHtml(t("status"))}</div><div class="v">${escapeHtml(txt(meta.status))}</div>
-                  <div class="k">${escapeHtml(t("location"))}</div><div class="v">${escapeHtml(txt(meta.location))}</div>
-                  <div class="k">${escapeHtml(t("opened"))}</div><div class="v mono">${escapeHtml(txt(meta.opened))}</div>
-                  <div class="k">${escapeHtml(t("assigned"))}</div><div class="v">${escapeHtml(txt(meta.assigned))}</div>
-                  <div class="k">${escapeHtml(t("classification"))}</div><div class="v">${escapeHtml(txt(meta.classification))}</div>
-                </div>
-              </div>
-            </section>
-
-            <!-- Detective Office panel (call module is here) -->
-            <section class="panel">
-              <div class="ph">
-                <h3>${escapeHtml(t("detectiveOffice"))}</h3>
-                <span style="color:var(--muted);font-size:12px;" class="mono">${escapeHtml(txt(meta.caseId))}</span>
-              </div>
-
-              <div class="content">
-                <div style="color:var(--muted);font-size:13px;line-height:1.45;">
-                  ${escapeHtml(state.lang === "en"
-                    ? "Before you touch the file: take the call. The department’s version comes first."
-                    : "قبل فتح الملفات: استمع إلى المكالمة. رواية القسم تأتي أولا."
-                  )}
-                </div>
-
-                <div class="callBox" id="callBox">
-                  <div class="callTop">
-                    <div>
-                      <div class="callTitle">${escapeHtml(t("callTitle"))}</div>
-                      <div class="callStatus" id="callStatus">${escapeHtml(callStateLabel)}</div>
-                    </div>
-                    <div class="mono" style="color:var(--muted);font-size:12px;">
-                      ${escapeHtml(callHeard ? t("callHeard") : t("callRinging"))}
-                    </div>
-                  </div>
-
-                  <div class="callControls">
-                    <button class="btn btnPrimary" id="callAnswerBtn">${escapeHtml(callHeard ? t("play") : t("answer"))}</button>
-                    <button class="btn" id="callPauseBtn">${escapeHtml(t("pause"))}</button>
-                    <button class="btn" id="callStopBtn">${escapeHtml(t("stop"))}</button>
-                    <button class="btn" id="callTranscriptBtn">${escapeHtml(t("transcript"))}</button>
-                  </div>
-
-                  <div class="callProgressWrap">
-                    <div class="callBar"><div class="callFill" id="callFill"></div></div>
-                    <div class="callTime mono" id="callTime">0:00 / 0:00</div>
-                  </div>
-
-                  <div class="transcript" id="callTranscript">
-                    ${escapeHtml(t("transcriptText"))}
-                  </div>
-                </div>
-              </div>
-            </section>
+            <div class="callProgressWrap">
+              <div class="callBar"><div class="callFill" id="callFill"></div></div>
+              <div class="callTime mono" id="callTime">0:00 / 0:00</div>
+            </div>
           </div>
 
-          <div class="grid cols-5">
-            ${c.sections.map(s => `
-              <div class="card" data-section="${s.id}">
-                <div class="badge active">${escapeHtml(t("open"))}</div>
-                <h2>${escapeHtml(txt(s.title))}</h2>
-                <p>${escapeHtml(t("openDrawer"))}</p>
-                <div class="pill">${escapeHtml(t("open"))}</div>
-              </div>
-            `).join("")}
+          <div style="margin-top:12px;display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
+            <button class="btn btnPrimary" id="enterOfficeBtn" type="button" ${allowed ? "" : "disabled"}>${escapeHtml(t("enterOffice"))}</button>
+          </div>
+
+          ${allowed ? "" : `<div style="margin-top:8px;color:var(--muted);font-size:12px;">${escapeHtml(t("briefingRequired"))}</div>`}
+        </div>
+      </section>
+    </div>
+  `;
+
+  wireBack();
+
+  const callBtn = $("callBtn");
+  const pauseBtn = $("pauseBtn");
+  const overrideBtn = $("overrideBtn");
+  const statusEl = $("callStatus");
+  const sideLabelEl = $("callSideLabel");
+  const fillEl = $("callFill");
+  const timeEl = $("callTime");
+  const enterOfficeBtn = $("enterOfficeBtn");
+
+  callBtn.addEventListener("click", async () => { await voicePlayFromStart(); });
+
+  pauseBtn.addEventListener("click", async () => {
+    if (VOICE.status === "playing") voicePause();
+    else if (VOICE.status === "paused") await voiceResume();
+  });
+
+  overrideBtn && overrideBtn.addEventListener("click", () => {
+    state.protocolOverride = true;
+    showToast(t("overrideToast"));
+    render();
+  });
+
+  enterOfficeBtn.addEventListener("click", () => {
+    if (!protocolAllowsOffice(pack)){
+      showToast(t("briefingRequired"));
+      return;
+    }
+    goOffice();
+  });
+
+  VOICE.onUpdate = () => {
+    const heardNow = heardKey ? getBool(heardKey) : false;
+
+    let label = heardNow ? t("briefingLogged") : t("briefingPending");
+    if (VOICE.status === "playing") label = t("briefingInProgress");
+    if (VOICE.status === "error") label = t("audioError");
+
+    statusEl.textContent = label;
+    sideLabelEl.textContent = label;
+    callBtn.textContent = heardNow ? t("replayBriefing") : t("answer");
+
+    const d = VOICE.duration || (VOICE.audio ? VOICE.audio.duration : 0) || 0;
+    const c = VOICE.currentTime || (VOICE.audio ? VOICE.audio.currentTime : 0) || 0;
+    const pct = d > 0 ? Math.min(100, Math.max(0, (c / d) * 100)) : 0;
+
+    fillEl.style.width = pct.toFixed(1) + "%";
+    timeEl.textContent = `${formatTime(c)} / ${formatTime(d)}`;
+
+    if (VOICE.status === "playing"){
+      pauseBtn.disabled = false;
+      pauseBtn.textContent = t("pause");
+    } else if (VOICE.status === "paused"){
+      pauseBtn.disabled = false;
+      pauseBtn.textContent = t("resume");
+    } else {
+      pauseBtn.disabled = true;
+      pauseBtn.textContent = t("pause");
+    }
+
+    enterOfficeBtn.disabled = !protocolAllowsOffice(pack);
+  };
+
+  ensureVoice();
+  notifyVoice();
+}
+
+function renderOffice(){
+  const pack = getPackForCaseKey(state.difficulty, state.caseKey);
+  if (!pack){
+    app.innerHTML = `
+      ${renderTopbar(t("detectiveOffice"))}
+      <div class="panel">
+        <div class="ph"><h3>${escapeHtml(t("detectiveOffice"))}</h3></div>
+        <div class="content" style="color:var(--muted);font-size:13px;line-height:1.4;">
+          ${escapeHtml(t("missing"))}
+        </div>
+      </div>
+    `;
+    wireBack();
+    return;
+  }
+
+  app.innerHTML = `
+    ${renderTopbar(t("detectiveOffice"))}
+    <div class="grid cols-5" id="sectionGrid">
+      ${pack.sections.map(s => {
+        const total = sectionDocCount(pack, s.id);
+        const unread = sectionUnreadCount(pack, s.id);
+        const pill = `${total} · ${unread} ${t("unread")}`;
+        return `
+          <div class="card" data-section="${s.id}" data-status="active">
+            <h2>${escapeHtml(txt(s.title))}</h2>
+            <p>${escapeHtml(pill)}</p>
           </div>
         `;
+      }).join("")}
+    </div>
+  `;
+  wireBack();
 
-        wireCommonButtons();
+  $("sectionGrid").querySelectorAll(".card").forEach(el => {
+    makeClickable(el, () => goSection(el.dataset.section));
+  });
+}
 
-        /* Call UI wiring (office only) */
-        const answerBtn = document.getElementById("callAnswerBtn");
-        const pauseBtn = document.getElementById("callPauseBtn");
-        const stopBtn = document.getElementById("callStopBtn");
-        const transcriptBtn = document.getElementById("callTranscriptBtn");
-        const transcriptEl = document.getElementById("callTranscript");
-        const statusEl = document.getElementById("callStatus");
-        const fillEl = document.getElementById("callFill");
-        const timeEl = document.getElementById("callTime");
+function renderSection(){
+  const pack = getPackForCaseKey(state.difficulty, state.caseKey);
+  const sec = pack?.sections?.find(s => s.id === state.sectionId);
 
-        transcriptBtn.addEventListener("click", () => {
-          const open = transcriptEl.style.display === "block";
-          transcriptEl.style.display = open ? "none" : "block";
-          transcriptBtn.textContent = open ? t("transcript") : t("hideTranscript");
-        });
+  if (!pack || !sec){
+    app.innerHTML = `
+      ${renderTopbar(t("detectiveOffice"))}
+      <div class="panel">
+        <div class="ph"><h3>${escapeHtml(t("detectiveOffice"))}</h3></div>
+        <div class="content" style="color:var(--muted);font-size:13px;line-height:1.4;">
+          ${escapeHtml(t("missing"))}
+        </div>
+      </div>
+    `;
+    wireBack();
+    return;
+  }
 
-        answerBtn.addEventListener("click", async () => {
-          ensureVoice();
-          await voicePlay();
-        });
+  const docs = (pack.documents?.[state.sectionId] || []).slice();
+  docs.sort((a,b) => {
+    const A = (a.title?.[state.lang] ?? a.title?.en ?? "");
+    const B = (b.title?.[state.lang] ?? b.title?.en ?? "");
+    return A.localeCompare(B, state.lang);
+  });
 
-        pauseBtn.addEventListener("click", () => voicePause());
-        stopBtn.addEventListener("click", () => voiceStop());
+  const selected = state.docId ? docs.find(d => d.id === state.docId) : (docs[0] || null);
+  if (!state.docId && selected) state.docId = selected.id;
 
-        /* UI refresh loop via VOICE.onUpdate */
-        VOICE.onUpdate = () => {
-          const heardNow = getBool(storageKeyCase1CallHeard);
+  const unreadCount = docs.reduce((n,d) => n + (!isRead(d.id) ? 1 : 0), 0);
 
-          let label = t("callReady");
-          if (!heardNow && (VOICE.status === "idle" || VOICE.status === "paused")) label = t("callRinging");
-          if (VOICE.status === "playing") label = t("callInProgress");
-          if (VOICE.status === "paused") label = t("callPaused");
-          if (heardNow && (VOICE.status === "idle" || VOICE.status === "ended")) label = t("callHeard");
-          if (VOICE.status === "error") label = "Audio error";
-
-          statusEl.textContent = label;
-          answerBtn.textContent = heardNow ? t("play") : t("answer");
-
-          const d = VOICE.duration || (VOICE.audio ? VOICE.audio.duration : 0) || 0;
-          const cTime = VOICE.currentTime || (VOICE.audio ? VOICE.audio.currentTime : 0) || 0;
-
-          const pct = d > 0 ? Math.min(100, Math.max(0, (cTime / d) * 100)) : 0;
-          fillEl.style.width = pct.toFixed(1) + "%";
-          timeEl.textContent = `${formatTime(cTime)} / ${formatTime(d)}`;
-
-          /* Disable/enable buttons cleanly */
-          pauseBtn.disabled = !(VOICE.status === "playing");
-          stopBtn.disabled = !(VOICE.status === "playing" || VOICE.status === "paused");
-        };
-
-        /* Initialize UI once */
-        ensureVoice();
-        notifyVoice();
-
-        app.querySelectorAll(".card").forEach(el => el.addEventListener("click", () => goSection(el.dataset.section)));
-        return;
-      }
-
-      /* ---------- PAGE 3A+: SECTION VIEWER ---------- */
-      if (state.view === "section"){
-        const c = GAME.caseContent[state.caseId];
-        const sec = c.sections.find(s => s.id === state.sectionId);
-
-        let docs = (c.documents[state.sectionId] || []).slice();
-
-        if (state.pinnedFirst){
-          docs.sort((a,b) => {
-            const ap = isPinned(a.id) ? 1 : 0;
-            const bp = isPinned(b.id) ? 1 : 0;
-            if (ap !== bp) return bp - ap;
-            return (a.title?.en || "").localeCompare(b.title?.en || "");
-          });
-        }
-
-        const selected = state.docId ? docs.find(d => d.id === state.docId) : (docs[0] || null);
-        if (!state.docId && selected) state.docId = selected.id;
-
-        app.innerHTML = `
-          ${renderTopbar(txt(sec.title))}
-          <div class="split">
-            <section class="panel">
-              <div class="ph">
-                <h3>${escapeHtml(t("documents"))}</h3>
-                <span style="color:var(--muted);font-size:12px;">${escapeHtml(t("items", docs.length))}</span>
-              </div>
-              <div class="content">
-                <div class="list">
-                  ${docs.length ? docs.map(d => {
+  app.innerHTML = `
+    ${renderTopbar(txt(sec.title))}
+    <div class="split">
+      <section class="panel">
+        <div class="ph">
+          <h3>${escapeHtml(t("documents"))}</h3>
+          <span style="color:var(--muted);font-size:12px;">
+            ${escapeHtml(`${docs.length} ${t("total")} · ${unreadCount} ${t("unread")}`)}
+          </span>
+        </div>
+        <div class="content">
+          <div class="list" id="docList">
+            ${
+              docs.length
+                ? docs.map(d => {
                     const unread = !isRead(d.id);
-                    const pinned = isPinned(d.id);
-                    const active = (d.id === state.docId);
+                    const active = d.id === state.docId;
                     return `
                       <div class="doc ${unread ? "unread" : ""} ${active ? "active" : ""}" data-doc="${d.id}">
                         <div class="docRow">
-                          <div>
+                          <div style="min-width:0;">
                             <div class="title">${escapeHtml(txt(d.title))}</div>
                             <div class="meta mono">${escapeHtml(txt(d.meta || {en:"", ar:""}))}</div>
                           </div>
-                          <div class="docMarks">
-                            <span class="unreadDot" title="Unread"></span>
-                            <button class="pinBtn ${pinned ? "pinned" : ""}" data-pin="${d.id}" title="${escapeHtml(pinned ? t("unpin") : t("pin"))}">✦</button>
-                          </div>
+                          <span class="unreadDot" title="${escapeHtml(t("unreadLabel"))}"></span>
                         </div>
                       </div>
                     `;
-                  }).join("") : `
-                    <div style="color:var(--muted);font-size:13px;line-height:1.4;">
-                      ${escapeHtml(t("emptyForNow"))}
-                    </div>
-                  `}
-                </div>
-              </div>
-            </section>
-
-            <section class="panel">
-              <div class="ph">
-                <h3>${escapeHtml(t("viewer"))}</h3>
-                <div style="display:flex;gap:8px;align-items:center;">
-                  <a class="btn" id="openFullBtn" href="#" target="_blank" rel="noopener noreferrer">${escapeHtml(t("openFull"))}</a>
-                  <button class="btn" id="officeBtn">${escapeHtml(t("officeBtn"))}</button>
-                </div>
-              </div>
-              <div class="content">
-                <div class="viewerBody" id="viewerBody"></div>
-              </div>
-            </section>
-          </div>
-        `;
-
-        wireCommonButtons();
-        document.getElementById("officeBtn").addEventListener("click", () => { back(); });
-
-        app.querySelectorAll("[data-pin]").forEach(btn => {
-          btn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            togglePin(btn.dataset.pin);
-          });
-        });
-
-        app.querySelectorAll(".doc").forEach(el => {
-          el.addEventListener("click", () => {
-            state.docId = el.dataset.doc;
-            markRead(state.docId);
-            renderViewer(docs);
-
-            app.querySelectorAll(".doc").forEach(dEl => {
-              dEl.classList.toggle("active", dEl.dataset.doc === state.docId);
-              dEl.classList.toggle("unread", !isRead(dEl.dataset.doc));
-            });
-          });
-        });
-
-        if (state.docId) markRead(state.docId);
-        renderViewer(docs);
-
-        function renderViewer(docsList){
-          const body = document.getElementById("viewerBody");
-          const openFullBtn = document.getElementById("openFullBtn");
-          const doc = docsList.find(d => d.id === state.docId) || null;
-
-          if (!doc){
-            body.innerHTML = `<div style="color:var(--muted);font-size:13px;">${escapeHtml(t("selectDoc"))}</div>`;
-            openFullBtn.style.display = "none";
-            return;
-          }
-
-          body.classList.add("loading");
-          window.clearTimeout(renderViewer._t);
-          renderViewer._t = window.setTimeout(() => {
-            openFullBtn.style.display = "none";
-            openFullBtn.href = "#";
-
-            if (doc.type === "image"){
-              openFullBtn.style.display = "inline-flex";
-              openFullBtn.href = doc.url;
-
-              body.innerHTML = `
-                <h4 style="margin:0 0 6px 0;font-size:16px;">${escapeHtml(txt(doc.title))}</h4>
-                <div style="color:var(--muted);font-size:12px;margin-bottom:10px;"
-
-                <div style="color:var(--muted);font-size:12px;margin-bottom:10px;" class="mono">${escapeHtml(txt(doc.meta || {en:"", ar:""}))}</div>
-                <div class="imgWrap">
-                  <img src="${escapeHtml(doc.url)}" alt="${escapeHtml(txt(doc.title))}" />
-                </div>
-                <div class="hint mono">${escapeHtml(doc.url)}</div>
-              `;
-              body.classList.remove("loading");
-              return;
+                  }).join("")
+                : `<div style="color:var(--muted);font-size:13px;line-height:1.4;">${escapeHtml(t("emptyForNow"))}</div>`
             }
+          </div>
+        </div>
+      </section>
 
-            const text = doc.body?.[state.lang] ?? doc.body?.en ?? "";
-            body.innerHTML = `
-              <h4 style="margin:0 0 6px 0;font-size:16px;">${escapeHtml(txt(doc.title))}</h4>
-              <div style="color:var(--muted);font-size:12px;margin-bottom:10px;" class="mono">${escapeHtml(txt(doc.meta || {en:"", ar:""}))}</div>
-              <div class="imgWrap" style="padding:14px;color:var(--ink);">
-                <div style="white-space:pre-wrap;line-height:1.6;font-size:13px;">${escapeHtml(text)}</div>
-              </div>
-            `;
-            body.classList.remove("loading");
-          }, 140);
-        }
+      <section class="panel">
+        <div class="ph">
+          <h3>${escapeHtml(t("viewer"))}</h3>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <a class="btn" id="openFullBtn" href="#" target="_blank" rel="noopener noreferrer">${escapeHtml(t("openFull"))}</a>
+            <button class="btn" id="officeBtn" type="button">${escapeHtml(t("officeBtn"))}</button>
+          </div>
+        </div>
+        <div class="content">
+          <div class="viewerBody" id="viewerBody">
+            <div class="viewStamp" id="viewStamp"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  `;
 
-        return;
-      }
+  wireBack();
+  $("officeBtn").addEventListener("click", back);
+
+  const setViewerLoading = (on) => $("viewerBody").classList.toggle("loading", !!on);
+
+  function renderViewer(){
+    const body = $("viewerBody");
+    const openFullBtn = $("openFullBtn");
+    const doc = docs.find(d => d.id === state.docId) || null;
+
+    if (!doc){
+      body.innerHTML = `
+        <div class="viewStamp" id="viewStamp"></div>
+        <div style="color:var(--muted);font-size:13px;">${escapeHtml(t("selectDoc"))}</div>
+      `;
+      openFullBtn.style.display = "none";
+      setViewerLoading(false);
+      return;
     }
 
-    applyLang();
+    setViewerLoading(true);
+    openFullBtn.style.display = "none";
+    openFullBtn.href = "#";
+
+    if (doc.type === "image"){
+      openFullBtn.style.display = "inline-flex";
+      openFullBtn.href = doc.url;
+
+      const img = new Image();
+      img.onload = () => {
+        body.innerHTML = `
+          <div class="viewStamp" id="viewStamp"></div>
+          <h4 style="margin:0 0 6px 0;font-size:16px;font-weight:950;">${escapeHtml(txt(doc.title))}</h4>
+          <div style="color:var(--muted);font-size:12px;margin-bottom:10px;" class="mono">
+            ${escapeHtml(txt(doc.meta || {en:"", ar:""}))}
+          </div>
+          <div class="imgWrap">
+            <img src="${escapeHtml(doc.url)}" alt="${escapeHtml(txt(doc.title))}" />
+          </div>
+          <div class="hint mono">${escapeHtml(doc.url)}</div>
+        `;
+        setViewerLoading(false);
+        flashViewerStamp(t("viewed"));
+      };
+      img.onerror = () => {
+        body.innerHTML = `
+          <div class="viewStamp" id="viewStamp"></div>
+          <h4 style="margin:0 0 6px 0;font-size:16px;font-weight:950;">${escapeHtml(txt(doc.title))}</h4>
+          <div style="color:var(--muted);font-size:12px;margin-bottom:10px;" class="mono">
+            ${escapeHtml(txt(doc.meta || {en:"", ar:""}))}
+          </div>
+          <div style="color:var(--muted);font-size:13px;line-height:1.4;">
+            ${escapeHtml(t("imageLoadError"))}
+          </div>
+          <div class="hint mono">${escapeHtml(doc.url)}</div>
+        `;
+        setViewerLoading(false);
+      };
+      img.src = doc.url;
+      return;
+    }
+
+    const text = doc.body?.[state.lang] ?? doc.body?.en ?? "";
+    body.innerHTML = `
+      <div class="viewStamp" id="viewStamp"></div>
+      <h4 style="margin:0 0 6px 0;font-size:16px;font-weight:950;">${escapeHtml(txt(doc.title))}</h4>
+      <div style="color:var(--muted);font-size:12px;margin-bottom:10px;" class="mono">
+        ${escapeHtml(txt(doc.meta || {en:"", ar:""}))}
+      </div>
+      <div class="imgWrap" style="padding:14px;color:var(--ink);">
+        <div style="white-space:pre-wrap;line-height:1.6;font-size:13px;">${escapeHtml(text)}</div>
+      </div>
+    `;
+    setViewerLoading(false);
+    flashViewerStamp(t("viewed"));
+  }
+
+  const listRoot = $("docList");
+  listRoot.querySelectorAll(".doc").forEach(el => {
+    makeClickable(el, () => {
+      state.docId = el.dataset.doc;
+      markRead(state.docId);
+      renderViewer();
+      listRoot.querySelectorAll(".doc").forEach(dEl => {
+        dEl.classList.toggle("active", dEl.dataset.doc === state.docId);
+        dEl.classList.toggle("unread", !isRead(dEl.dataset.doc));
+      });
+    });
+  });
+
+  if (state.docId) markRead(state.docId);
+  renderViewer();
+}
+
+/* ---------- MAIN RENDER ---------- */
+function render(){
+  setBackgroundForView();
+  setCrumb();
+
+  if (state.view !== "intake") voiceStop();
+
+  if (state.view === "title") { renderTitle(); return; }
+  if (state.view === "difficulty") { renderDifficulty(); return; }
+  if (state.view === "cases") { renderCases(); return; }
+  if (state.view === "intake") { renderIntake(); return; }
+  if (state.view === "office") { renderOffice(); return; }
+  if (state.view === "section") { renderSection(); return; }
+
+  goTitle();
+}
+
+/* ---------- BOOT ---------- */
+(function boot(){
+  applyLang();
+})();
   </script>
 </body>
 </html>
