@@ -117,7 +117,6 @@
       backdrop-filter: blur(8px);
     }
 
-    /* Title page keeps the same system header, just quieter */
     body[data-bg="title"] header{
       background: rgba(0,0,0,0.18);
       border-bottom:1px solid rgba(255,255,255,0.06);
@@ -210,39 +209,15 @@
       outline-offset: 2px;
     }
 
-    /* quiet link-style control */
-    .btnLink{
-      border:1px solid transparent;
-      background: transparent;
-      padding:6px 8px;
-      border-radius:10px;
-      color:var(--muted);
-      cursor:pointer;
-      font-size:13px;
-      text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      transition: border-color .08s ease, background .08s ease, color .08s ease, transform .08s ease;
-      user-select:none;
-    }
-    .btnLink:hover{
-      color:var(--text);
-      border-color: rgba(255,255,255,0.10);
-      background: rgba(0,0,0,0.20);
-      transform: translateY(-1px);
-    }
-    .btnLink:active{ transform: translateY(0px) scale(0.99); }
-    .btnLink:focus-visible{
-      outline: var(--focus);
-      outline-offset: 2px;
-    }
-
     .grid{ display:grid; gap:14px; }
+    .grid.cols-2{ grid-template-columns:repeat(2,minmax(0,1fr)); }
     .grid.cols-3{ grid-template-columns:repeat(3,minmax(0,1fr)); }
     .grid.cols-5{ grid-template-columns:repeat(5,minmax(0,1fr)); }
 
-    @media (max-width:950px){ .grid.cols-5{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
+    @media (max-width:950px){
+      .grid.cols-5{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+      .grid.cols-2{ grid-template-columns:1fr; }
+    }
     @media (max-width:650px){
       .grid.cols-3{ grid-template-columns:1fr; }
       .grid.cols-5{ grid-template-columns:1fr; }
@@ -498,7 +473,6 @@
     }
 
     /* Title screen */
-
     .titleWrap{
       min-height: calc(100vh - 64px);
       display:flex;
@@ -506,8 +480,6 @@
       justify-content:center;
       padding: 18px 0 40px;
     }
-
-    /* If header grows taller on small screens, keep title centered correctly */
     @media (max-width: 650px){
       .titleWrap{ min-height: calc(100vh - 92px); }
     }
@@ -521,62 +493,42 @@
       backdrop-filter: blur(8px);
       overflow:hidden;
     }
-    .titlePanel .ph{
-      padding:14px 16px;
-      border-bottom:1px solid rgba(255,255,255,0.08);
-      background: rgba(0,0,0,0.22);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-    .titlePanel .content{ padding:16px; }
+    .titlePanel .content{ padding:16px; text-align:center; }
+
     .titleBig{
       margin:0;
-      font-size:34px;
-      letter-spacing:0.6px;
+      font-size:40px;
+      letter-spacing:0.2px;
       font-weight:950;
       line-height:1.1;
     }
     .titleSub{
-      margin:10px 0 0 0;
+      margin:10px auto 0;
       color:var(--muted);
       font-size:14px;
       line-height:1.45;
-      max-width: 64ch;
+      max-width: 40ch;
     }
     .titleBtns{
-      margin-top:16px;
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
+      margin:18px auto 0;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+      max-width: 340px;
+    }
+    .titleBtns .btn{
+      width:100%;
+      padding:12px 14px;
+      font-size:15px;
     }
     .titleFoot{
       margin-top:10px;
       display:flex;
       align-items:center;
-      justify-content:space-between;
+      justify-content:center;
       gap:10px;
       flex-wrap:wrap;
-    }
-
-    /* Title page layout: same design system, Minecraft-simple behavior */
-    body[data-bg="title"] .titleBtns{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:12px;
-      margin-top:18px;
-      max-width: 360px;
-    }
-    body[data-bg="title"] .titleBtns .btn{
-      width:100%;
-      padding:12px 14px;
-      font-size:15px;
-    }
-    body[data-bg="title"] .titleFoot{
-      justify-content:flex-start;
+      text-align:center;
     }
 
     /* Call module */
@@ -636,6 +588,28 @@
       color: var(--muted);
       min-width: 96px;
       text-align:right;
+    }
+
+    /* Briefing video (ADD THIS HERE) */
+    .briefVid{
+      margin-top:10px;
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:12px;
+      overflow:hidden;
+      background: rgba(0,0,0,0.22);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .briefVidInner{
+      position:relative;
+      width:100%;
+      aspect-ratio: 16 / 9;  /* change to 9 / 16 if your video is vertical */
+      background: rgba(0,0,0,0.28);
+    }
+    .briefVidInner video{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit: cover;     /* change to contain if you want no cropping */
     }
 
     .toast{
@@ -710,36 +684,20 @@
       justify-content:flex-end;
     }
 
-    /* Page 0: Minecraft-simple layout using same design system */
-    body[data-bg="title"] .titlePanel{
-      width: min(520px, 92vw);
+    /* Portrait cards (for interrogation rooms) */
+    .portraitImg{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:12px;
+      outline:1px solid rgba(255,255,255,0.08);
+      margin-bottom:10px;
+      background:#111;
     }
-
-    body[data-bg="title"] .titlePanel .content{
-      text-align: center;
-      padding: 18px;
-    }
-
-    body[data-bg="title"] .titleBig{
-      font-size: 40px;
-      letter-spacing: 0.2px;
-    }
-
-    body[data-bg="title"] .titleSub{
-      max-width: 40ch;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    body[data-bg="title"] .titleBtns{
-      margin-left: auto;
-      margin-right: auto;
-      max-width: 340px;
-    }
-
-    body[data-bg="title"] .titleFoot{
-      justify-content: center;
-      text-align: center;
+    .portraitMeta{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:8px;
     }
 
     /* RTL */
@@ -749,7 +707,6 @@
     body[dir="rtl"] .docRow{ flex-direction: row-reverse; }
     body[dir="rtl"] .kv{ grid-template-columns: 1fr 120px; }
     body[dir="rtl"] .kv .k{ text-align:right; }
-    body[dir="rtl"] .titleBtns{ }
     body[dir="rtl"] .titleFoot{ flex-direction: row-reverse; }
     body[dir="rtl"] .callProgressWrap{ flex-direction: row-reverse; }
     body[dir="rtl"] .callTime{ text-align:left; }
@@ -881,7 +838,13 @@ const UI = {
     demoNoticeTitle: "Demo notice",
     demoNoticeText: "This is an early demo. One case is available. Content outside that case is inactive and labeled accordingly. The demo focuses on reviewing investigation materials from an office environment. It does not represent final scope, pacing, or content volume.",
     close: "Close",
-    caseAvailable: "Case 1 available (Easy)"
+    caseAvailable: "Case 1 available (Easy)",
+
+    profiles: "profiles",
+    witnessRoomHint: "Select a witness to open their file.",
+    suspectRoomHint: "Select a suspect to open their file.",
+    personFile: "File",
+    notReady: "Content not implemented yet."
   },
 
   ar: {
@@ -964,7 +927,13 @@ const UI = {
     demoNoticeTitle: "تنبيه النسخة التجريبية",
     demoNoticeText: "هذه نسخة تجريبية مبكرة. تتوفر قضية واحدة فقط. المحتوى خارج تلك القضية غير نشط وموسوم وفقا لذلك. تركز النسخة على مراجعة مواد التحقيق من داخل بيئة مكتب. لا تمثل النطاق أو الإيقاع أو حجم المحتوى النهائي.",
     close: "إغلاق",
-    caseAvailable: "القضية 1 متاحة (سهل)"
+    caseAvailable: "القضية 1 متاحة (سهل)",
+
+    profiles: "ملفات",
+    witnessRoomHint: "اختر شاهدا لفتح ملفه.",
+    suspectRoomHint: "اختر متهما لفتح ملفه.",
+    personFile: "ملف",
+    notReady: "المحتوى غير جاهز بعد."
   }
 };
 
@@ -1018,9 +987,9 @@ function clearReadsByPrefix(prefix){
   if (changed) saveJSON(SK.readDocs, readState);
 }
 
-/* ---------- AUDIO MANAGER ---------- */
+/* ---------- MEDIA MANAGER (VIDEO) ---------- */
 const VOICE = {
-  audio: null,
+  el: null,           // HTMLVideoElement
   src: null,
   heardKey: null,
   status: "idle",
@@ -1028,81 +997,97 @@ const VOICE = {
   currentTime: 0,
   onUpdate: null
 };
+
 const notifyVoice = () => (typeof VOICE.onUpdate === "function") && VOICE.onUpdate();
 const markBriefHeard = () => VOICE.heardKey && setBool(VOICE.heardKey, true);
 
 function ensureVoice(){
-  if (VOICE.audio) return VOICE.audio;
-  const a = document.createElement("audio");
-  a.preload = "metadata";
+  if (VOICE.el) return VOICE.el;
 
-  a.addEventListener("loadedmetadata", () => {
-    VOICE.duration = Number.isFinite(a.duration) ? a.duration : 0;
+  const v = document.createElement("video");
+  v.preload = "metadata";
+  v.playsInline = true;
+  v.controls = false;
+
+  // Do NOT mute, you want the same audio to play.
+  v.muted = false;
+
+  v.addEventListener("loadedmetadata", () => {
+    VOICE.duration = Number.isFinite(v.duration) ? v.duration : 0;
     notifyVoice();
   });
-  a.addEventListener("timeupdate", () => {
-    VOICE.currentTime = a.currentTime || 0;
+
+  v.addEventListener("timeupdate", () => {
+    VOICE.currentTime = v.currentTime || 0;
     const d = VOICE.duration || 0;
     if (d > 0 && (VOICE.currentTime / d) > 0.92) markBriefHeard();
     notifyVoice();
   });
-  a.addEventListener("play", () => { VOICE.status = "playing"; notifyVoice(); });
-  a.addEventListener("pause", () => {
+
+  v.addEventListener("play", () => { VOICE.status = "playing"; notifyVoice(); });
+  v.addEventListener("pause", () => {
     if (VOICE.status !== "ended") VOICE.status = "paused";
     notifyVoice();
   });
-  a.addEventListener("ended", () => { VOICE.status = "ended"; markBriefHeard(); notifyVoice(); });
-  a.addEventListener("error", () => { VOICE.status = "error"; notifyVoice(); });
+  v.addEventListener("ended", () => { VOICE.status = "ended"; markBriefHeard(); notifyVoice(); });
+  v.addEventListener("error", () => { VOICE.status = "error"; notifyVoice(); });
 
-  VOICE.audio = a;
-  return a;
+  VOICE.el = v;
+  return v;
 }
 
 function voiceConfigure({ src, heardKey }){
-  const a = ensureVoice();
+  const v = ensureVoice();
   const changed = VOICE.src !== src;
   VOICE.src = src;
   VOICE.heardKey = heardKey;
+
   if (changed){
     VOICE.status = "idle";
     VOICE.duration = 0;
     VOICE.currentTime = 0;
-    a.src = src || "";
-    try{ a.load(); }catch{}
+    v.src = src || "";
+    try{ v.load(); }catch{}
   }
+
   notifyVoice();
 }
 
 async function voicePlayFromStart(){
-  const a = ensureVoice();
+  const v = ensureVoice();
   try{
-    a.currentTime = 0;
+    v.currentTime = 0;
     VOICE.currentTime = 0;
-    await a.play();
+    await v.play();
   }catch{
     VOICE.status = "error";
     notifyVoice();
   }
 }
-function voicePause(){ VOICE.audio && VOICE.audio.pause(); }
+
+function voicePause(){ VOICE.el && VOICE.el.pause(); }
+
 async function voiceResume(){
-  const a = ensureVoice();
-  try{ await a.play(); }catch{ VOICE.status = "error"; notifyVoice(); }
+  const v = ensureVoice();
+  try{ await v.play(); }catch{ VOICE.status = "error"; notifyVoice(); }
 }
+
 function voiceStop(){
-  if (!VOICE.audio) return;
-  VOICE.audio.pause();
-  VOICE.audio.currentTime = 0;
+  if (!VOICE.el) return;
+  VOICE.el.pause();
+  VOICE.el.currentTime = 0;
   VOICE.currentTime = 0;
   VOICE.status = "idle";
   notifyVoice();
 }
+
 function formatTime(s){
   const sec = Math.max(0, Math.floor(s || 0));
   const m = Math.floor(sec / 60);
   const r = sec % 60;
   return `${m}:${String(r).padStart(2,"0")}`;
 }
+
 
 /* ---------- APP STATE ---------- */
 const state = {
@@ -1111,6 +1096,7 @@ const state = {
   difficulty: null,
   caseKey: null,
   sectionId: null,
+  personId: null,
   docId: null,
   protocolOverride: false
 };
@@ -1242,23 +1228,26 @@ function go(view, patch = {}){
   if ("difficulty" in patch) state.difficulty = patch.difficulty;
   if ("caseKey" in patch) state.caseKey = patch.caseKey;
   if ("sectionId" in patch) state.sectionId = patch.sectionId;
+  if ("personId" in patch) state.personId = patch.personId;
   if ("docId" in patch) state.docId = patch.docId;
   if ("protocolOverride" in patch) state.protocolOverride = patch.protocolOverride;
   render();
 }
-function goTitle(){ go("title", { difficulty:null, caseKey:null, sectionId:null, docId:null, protocolOverride:false }); }
-function goDifficulty(){ go("difficulty", { difficulty:null, caseKey:null, sectionId:null, docId:null, protocolOverride:false }); }
-function goCases(difficulty){ go("cases", { difficulty, caseKey:null, sectionId:null, docId:null, protocolOverride:false }); }
-function goIntake(caseKey){ go("intake", { caseKey, sectionId:null, docId:null, protocolOverride:false }); }
-function goOffice(){ go("office", { sectionId:null, docId:null }); }
-function goSection(sectionId){ go("section", { sectionId, docId:null }); }
+function goTitle(){ go("title", { difficulty:null, caseKey:null, sectionId:null, personId:null, docId:null, protocolOverride:false }); }
+function goDifficulty(){ go("difficulty", { difficulty:null, caseKey:null, sectionId:null, personId:null, docId:null, protocolOverride:false }); }
+function goCases(difficulty){ go("cases", { difficulty, caseKey:null, sectionId:null, personId:null, docId:null, protocolOverride:false }); }
+function goIntake(caseKey){ go("intake", { caseKey, sectionId:null, personId:null, docId:null, protocolOverride:false }); }
+function goOffice(){ go("office", { sectionId:null, personId:null, docId:null }); }
+function goSection(sectionId){ go("section", { sectionId, personId:null, docId:null }); }
+function goPersonFile(personId){ go("person", { personId, docId:null }); }
 
 function back(){
   const v = state.view;
-  if (v === "section") { go("office", { sectionId:null, docId:null }); return; }
-  if (v === "office")  { go("intake", { sectionId:null, docId:null }); return; }
-  if (v === "intake")  { go("cases",  { caseKey:null, sectionId:null, protocolOverride:false }); return; }
-  if (v === "cases")   { go("difficulty", { difficulty:null, caseKey:null, sectionId:null }); return; }
+  if (v === "person")  { go("section", { personId:null, docId:null }); return; }
+  if (v === "section") { go("office", { sectionId:null, personId:null, docId:null }); return; }
+  if (v === "office")  { go("intake", { sectionId:null, personId:null, docId:null }); return; }
+  if (v === "intake")  { go("cases",  { caseKey:null, sectionId:null, personId:null, protocolOverride:false }); return; }
+  if (v === "cases")   { go("difficulty", { difficulty:null, caseKey:null, sectionId:null, personId:null }); return; }
   if (v === "difficulty") { goTitle(); return; }
   goTitle();
 }
@@ -1305,14 +1294,20 @@ const GAME_INDEX = {
 
 const countPackDocs = (pack) => {
   const by = pack?.documents || {};
+  const pf = pack?.personFiles || {};
   let n = 0;
+
   for (const k of Object.keys(by)){
     const arr = by[k];
     n += Array.isArray(arr) ? arr.length : 0;
   }
+  for (const pid of Object.keys(pf)){
+    const arr = pf[pid];
+    n += Array.isArray(arr) ? arr.length : 0;
+  }
   return n;
 };
-const hasBriefing = (pack) => !!pack?.briefing?.audioSrc;
+const hasBriefing = (pack) => !!pack?.briefing?.mediaSrc;
 
 /* ---------- CASE PACKS ---------- */
 const CASE_PACKS = {
@@ -1327,17 +1322,29 @@ const CASE_PACKS = {
     },
 
     briefing: {
-      audioSrc: "case1_brief_call.m4a",
+      mediaSrc: "vid.mp4",
       heardStorageKey: "detective_easy_case_1_brief_heard_v1"
     },
 
     sections: [
       { id: "objectives", title: { en: "Case objectives", ar: "أهداف القضية" } },
-      { id: "initial_report", title: { en: "Initial report", ar: "البلاغ الأولي" } },
-      { id: "first_file", title: { en: "First file", ar: "الملف الأول" } },
-      { id: "second_file", title: { en: "Second file", ar: "الملف الثاني" } },
+      { id: "Forensic evidence report", title: { en: "Forensic evidence report", ar: "تقرير الأدلة الجنائية" } },
+      { id: "Witness interrogation room", title: { en: "Witness interrogation room", ar: "غرفة التحقيق مع الشهود" } },
+      { id: "Suspect interrogation room", title: { en: "Suspect interrogation room", ar: "غرفة التحقيق مع المتهمين" } },
       { id: "additional_evidence", title: { en: "Additional evidence", ar: "أدلة إضافية" } }
     ],
+
+    people: {
+      witnesses: [
+        { id: "w_ahmed",   name: { en: "Ahmed", ar: "أحمد" },           image: "person1.jpg" },
+        { id: "w_brother", name: { en: "Victim's brother", ar: "أخو المقتول" }, image: "person2.jpg" },
+        { id: "w_wife",    name: { en: "Victim's wife", ar: "زوجة المقتول" },  image: "person3.jpg" }
+      ],
+      suspects: [
+        { id: "s_rival",   name: { en: "Rival", ar: "المنافس" },        image: "person4.jpg" },
+        { id: "s_killer",  name: { en: "Killer", ar: "القاتل" },        image: "person5.jpg" }
+      ]
+    },
 
     documents: {
       objectives: [
@@ -1368,12 +1375,79 @@ const CASE_PACKS = {
         { id: "ec1_ir_layout",   title: { en: "Office layout", ar: "مخطط المكتب" },                type: "image", meta: { en: "Diagram", ar: "مخطط" }, url: "office_layout.jpg" },
         { id: "ec1_ir_index_1",  title: { en: "Investigation index (1)", ar: "فهرس التحقيق (1)" }, type: "image", meta: { en: "Index", ar: "فهرس" }, url: "investigation_index1.jpg" },
         { id: "ec1_ir_index_2",  title: { en: "Investigation index (2)", ar: "فهرس التحقيق (2)" }, type: "image", meta: { en: "Index", ar: "فهرس" }, url: "investigation_index2.jpg" }
+      ]
+    },
+
+    /* Person files: clicking a portrait lands in the same "documents + viewer" layout */
+    personFiles: {
+      w_ahmed: [
+        {
+          id: "ec1_p_w_ahmed_1",
+          title: { en: "Interview record (placeholder)", ar: "سجل التحقيق (مؤقت)" },
+          meta:  { en: "Transcript", ar: "تفريغ" },
+          type: "text",
+          body: {
+            en: "Placeholder. This will contain Ahmed's interrogation transcript, follow-up notes, and contradiction flags.",
+            ar: "مؤقت. هنا سيتم وضع تفريغ تحقيق أحمد وملاحظات المتابعة وعلامات التناقض."
+          }
+        }
       ],
+      w_brother: [
+        {
+          id: "ec1_p_w_brother_1",
+          title: { en: "Interview record (placeholder)", ar: "سجل التحقيق (مؤقت)" },
+          meta:  { en: "Transcript", ar: "تفريغ" },
+          type: "text",
+          body: {
+            en: "Placeholder. This will contain the victim's brother interrogation materials.",
+            ar: "مؤقت. هنا سيتم وضع مواد تحقيق أخو المقتول."
+          }
+        }
+      ],
+      w_wife: [
+        {
+          id: "ec1_p_w_wife_1",
+          title: { en: "Interview record (placeholder)", ar: "سجل التحقيق (مؤقت)" },
+          meta:  { en: "Transcript", ar: "تفريغ" },
+          type: "text",
+          body: {
+            en: "Placeholder. This will contain the victim's wife interrogation materials.",
+            ar: "مؤقت. هنا سيتم وضع مواد تحقيق زوجة المقتول."
+          }
+        }
+      ],
+      s_rival: [
+        {
+          id: "ec1_p_s_rival_1",
+          title: { en: "Interrogation record (placeholder)", ar: "سجل التحقيق (مؤقت)" },
+          meta:  { en: "Transcript", ar: "تفريغ" },
+          type: "text",
+          body: {
+            en: "Placeholder. This will contain the rival interrogation transcript, pressure points, and inconsistencies.",
+            ar: "مؤقت. هنا سيتم وضع تفريغ تحقيق المنافس ونقاط الضغط والتناقضات."
+          }
+        }
+      ],
+      s_killer: [
+        {
+          id: "ec1_p_s_killer_1",
+          title: { en: "Interrogation record (placeholder)", ar: "سجل التحقيق (مؤقت)" },
+          meta:  { en: "Transcript", ar: "تفريغ" },
+          type: "text",
+          body: {
+            en: "Placeholder. This will contain the killer interrogation transcript and evidence confrontations.",
+            ar: "مؤقت. هنا سيتم وضع تفريغ تحقيق القاتل ومواجهة الأدلة."
+          }
+        }
+      ]
     }
   }
 };
 
 /* ---------- HELPERS ---------- */
+function isInterrogationSection(id){
+  return id === "Witness interrogation room" || id === "Suspect interrogation room";
+}
 function getCaseItem(difficulty, caseKey){
   const list = GAME_INDEX.casesByDifficulty[difficulty] || [];
   return list.find(c => c.key === caseKey) || null;
@@ -1387,6 +1461,17 @@ function diffName(id){
   const d = GAME_INDEX.difficulties.find(x => x.id === id);
   return d ? t(d.titleKey) : "";
 }
+function findPerson(pack, personId){
+  if (!pack || !personId) return null;
+  const all = [...(pack.people?.witnesses || []), ...(pack.people?.suspects || [])];
+  return all.find(p => p.id === personId) || null;
+}
+function peopleForSection(pack, sectionId){
+  if (!pack) return [];
+  if (sectionId === "Witness interrogation room") return pack.people?.witnesses || [];
+  if (sectionId === "Suspect interrogation room") return pack.people?.suspects || [];
+  return [];
+}
 
 function setCrumb(){
   if (state.view === "title") { crumb.textContent = t("entry"); return; }
@@ -1397,8 +1482,10 @@ function setCrumb(){
 
   const caseItem = getCaseItem(state.difficulty, state.caseKey);
   const caseLabel = caseItem ? txt(caseItem.label) : "";
+
   if (state.view === "intake") { crumb.textContent = `${t("home")} / ${dName} / ${caseLabel} / ${t("caseIntake")}`; return; }
   if (state.view === "office") { crumb.textContent = `${t("home")} / ${dName} / ${caseLabel} / ${t("detectiveOffice")}`; return; }
+
   if (state.view === "section"){
     const pack = getPackForCaseKey(state.difficulty, state.caseKey);
     const sec = pack?.sections?.find(s => s.id === state.sectionId);
@@ -1406,11 +1493,19 @@ function setCrumb(){
     crumb.textContent = `${t("home")} / ${dName} / ${caseLabel} / ${t("detectiveOffice")} / ${secTitle}`;
     return;
   }
+
+  if (state.view === "person"){
+    const pack = getPackForCaseKey(state.difficulty, state.caseKey);
+    const sec = pack?.sections?.find(s => s.id === state.sectionId);
+    const secTitle = sec ? txt(sec.title) : "";
+    const p = findPerson(pack, state.personId);
+    const pName = p ? txt(p.name) : "";
+    crumb.textContent = `${t("home")} / ${dName} / ${caseLabel} / ${t("detectiveOffice")} / ${secTitle} / ${pName}`;
+    return;
+  }
+
   crumb.textContent = t("home");
 }
-
-const sectionDocCount = (pack, sectionId) => (pack?.documents?.[sectionId] || []).length;
-const sectionUnreadCount = (pack, sectionId) => (pack?.documents?.[sectionId] || []).reduce((n,d) => n + (!isRead(d.id) ? 1 : 0), 0);
 
 function flashViewerStamp(label){
   const stamp = $("viewStamp");
@@ -1578,7 +1673,7 @@ function renderIntake(){
   const heard = heardKey ? getBool(heardKey) : false;
   const allowed = protocolAllowsOffice(pack);
 
-  voiceConfigure({ src: pack.briefing?.audioSrc || null, heardKey: heardKey || null });
+  voiceConfigure({ src: pack.briefing?.mediaSrc || null, heardKey: heardKey || null });
 
   app.innerHTML = `
     ${renderTopbar(t("caseIntake"))}
@@ -1618,6 +1713,11 @@ function renderIntake(){
                 ${escapeHtml(heard ? t("briefingLogged") : t("briefingPending"))}
               </div>
             </div>
+
+            <div class="briefVid">
+              <div class="briefVidInner" id="briefVidMount"></div>
+            </div>
+
 
             <div class="callControls">
               <button class="btn btnPrimary" id="callBtn" type="button">
@@ -1679,37 +1779,53 @@ function renderIntake(){
     goOffice();
   });
 
-  VOICE.onUpdate = () => {
-    const heardNow = heardKey ? getBool(heardKey) : false;
+VOICE.onUpdate = () => {
+  const heardNow = heardKey ? getBool(heardKey) : false;
 
-    let label = heardNow ? t("briefingLogged") : t("briefingPending");
-    if (VOICE.status === "playing") label = t("briefingInProgress");
-    if (VOICE.status === "error") label = t("audioError");
+  let label = heardNow ? t("briefingLogged") : t("briefingPending");
+  if (VOICE.status === "playing") label = t("briefingInProgress");
+  if (VOICE.status === "error") label = t("audioError");
 
-    statusEl.textContent = label;
-    sideLabelEl.textContent = label;
-    callBtn.textContent = heardNow ? t("replayBriefing") : t("answer");
+  statusEl.textContent = label;
+  sideLabelEl.textContent = label;
+  callBtn.textContent = heardNow ? t("replayBriefing") : t("answer");
 
-    const d = VOICE.duration || (VOICE.audio ? VOICE.audio.duration : 0) || 0;
-    const c = VOICE.currentTime || (VOICE.audio ? VOICE.audio.currentTime : 0) || 0;
-    const pct = d > 0 ? Math.min(100, Math.max(0, (c / d) * 100)) : 0;
+  const d = VOICE.duration || (VOICE.el ? VOICE.el.duration : 0) || 0;
+  const c = VOICE.currentTime || (VOICE.el ? VOICE.el.currentTime : 0) || 0;
+  const pct = d > 0 ? Math.min(100, Math.max(0, (c / d) * 100)) : 0;
 
-    fillEl.style.width = pct.toFixed(1) + "%";
-    timeEl.textContent = `${formatTime(c)} / ${formatTime(d)}`;
+  fillEl.style.width = pct.toFixed(1) + "%";
+  timeEl.textContent = `${formatTime(c)} / ${formatTime(d)}`;
 
-    if (VOICE.status === "playing"){
-      pauseBtn.disabled = false;
-      pauseBtn.textContent = t("pause");
-    } else if (VOICE.status === "paused"){
-      pauseBtn.disabled = false;
-      pauseBtn.textContent = t("resume");
-    } else {
-      pauseBtn.disabled = true;
-      pauseBtn.textContent = t("pause");
+  if (VOICE.status === "playing"){
+    pauseBtn.disabled = false;
+    pauseBtn.textContent = t("pause");
+  } else if (VOICE.status === "paused"){
+    pauseBtn.disabled = false;
+    pauseBtn.textContent = t("resume");
+  } else {
+    pauseBtn.disabled = true;
+    pauseBtn.textContent = t("pause");
+  }
+
+  enterOfficeBtn.disabled = !protocolAllowsOffice(pack);
+};
+
+  // Mount the video element into the intake UI  (PUT OPTIONAL HERE)
+  const mount = $("briefVidMount");
+  if (mount){
+    const v = ensureVoice();
+
+    // OPTIONAL: force correct sizing and show first frame
+    v.style.width = "100%";
+    v.style.height = "100%";
+    v.playsInline = true;
+
+    if (!mount.contains(v)){
+      mount.innerHTML = "";
+      mount.appendChild(v);
     }
-
-    enterOfficeBtn.disabled = !protocolAllowsOffice(pack);
-  };
+  }
 
   ensureVoice();
   notifyVoice();
@@ -1735,9 +1851,17 @@ function renderOffice(){
     ${renderTopbar(t("detectiveOffice"))}
     <div class="grid cols-5" id="sectionGrid">
       ${pack.sections.map(s => {
-        const total = sectionDocCount(pack, s.id);
-        const unread = sectionUnreadCount(pack, s.id);
-        const pill = `${total} · ${unread} ${t("unread")}`;
+        let pill = "";
+
+        if (isInterrogationSection(s.id)){
+          const ppl = peopleForSection(pack, s.id);
+          pill = `${ppl.length} · ${t("profiles")}`;
+        } else {
+          const total = (pack?.documents?.[s.id] || []).length;
+          const unread = (pack?.documents?.[s.id] || []).reduce((n,d) => n + (!isRead(d.id) ? 1 : 0), 0);
+          pill = `${total} · ${unread} ${t("unread")}`;
+        }
+
         return `
           <div class="card" data-section="${s.id}" data-status="active">
             <h2>${escapeHtml(txt(s.title))}</h2>
@@ -1754,38 +1878,37 @@ function renderOffice(){
   });
 }
 
-function renderSection(){
-  const pack = getPackForCaseKey(state.difficulty, state.caseKey);
-  const sec = pack?.sections?.find(s => s.id === state.sectionId);
+function renderInterrogationRoom(pack, sec){
+  const list = peopleForSection(pack, sec.id);
+  const hint = (sec.id === "Witness interrogation room") ? t("witnessRoomHint") : t("suspectRoomHint");
 
-  if (!pack || !sec){
-    app.innerHTML = `
-      ${renderTopbar(t("detectiveOffice"))}
-      <div class="panel">
-        <div class="ph"><h3>${escapeHtml(t("detectiveOffice"))}</h3></div>
-        <div class="content" style="color:var(--muted);font-size:13px;line-height:1.4;">
-          ${escapeHtml(t("missing"))}
+  app.innerHTML = `
+    ${renderTopbar(txt(sec.title), hint)}
+    <div class="grid cols-3" id="peopleGrid">
+      ${list.map(p => `
+        <div class="card" data-person="${p.id}">
+          <img class="portraitImg" src="${escapeHtml(p.image)}" alt="${escapeHtml(txt(p.name))}" />
+          <h2>${escapeHtml(txt(p.name))}</h2>
+          <div class="portraitMeta mono">${escapeHtml(t("personFile"))}</div>
         </div>
-      </div>
-    `;
-    wireBack();
-    return;
-  }
+      `).join("")}
+    </div>
+  `;
 
-  const docs = (pack.documents?.[state.sectionId] || []).slice();
-  docs.sort((a,b) => {
-    const A = (a.title?.[state.lang] ?? a.title?.en ?? "");
-    const B = (b.title?.[state.lang] ?? b.title?.en ?? "");
-    return A.localeCompare(B, state.lang);
+  wireBack();
+
+  $("peopleGrid").querySelectorAll(".card").forEach(el => {
+    makeClickable(el, () => {
+      goPersonFile(el.dataset.person);
+    });
   });
+}
 
-  const selected = state.docId ? docs.find(d => d.id === state.docId) : (docs[0] || null);
-  if (!state.docId && selected) state.docId = selected.id;
-
+function renderDocViewerLayout({ title, docs, onBackButtonLabel }){
   const unreadCount = docs.reduce((n,d) => n + (!isRead(d.id) ? 1 : 0), 0);
 
   app.innerHTML = `
-    ${renderTopbar(txt(sec.title))}
+    ${renderTopbar(title)}
     <div class="split">
       <section class="panel">
         <div class="ph">
@@ -1824,7 +1947,7 @@ function renderSection(){
           <h3>${escapeHtml(t("viewer"))}</h3>
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
             <a class="btn" id="openFullBtn" href="#" target="_blank" rel="noopener noreferrer">${escapeHtml(t("openFull"))}</a>
-            <button class="btn" id="officeBtn" type="button">${escapeHtml(t("officeBtn"))}</button>
+            <button class="btn" id="officeBtn" type="button">${escapeHtml(onBackButtonLabel || t("officeBtn"))}</button>
           </div>
         </div>
         <div class="content">
@@ -1930,6 +2053,83 @@ function renderSection(){
   renderViewer();
 }
 
+function renderSection(){
+  const pack = getPackForCaseKey(state.difficulty, state.caseKey);
+  const sec = pack?.sections?.find(s => s.id === state.sectionId);
+
+  if (!pack || !sec){
+    app.innerHTML = `
+      ${renderTopbar(t("detectiveOffice"))}
+      <div class="panel">
+        <div class="ph"><h3>${escapeHtml(t("detectiveOffice"))}</h3></div>
+        <div class="content" style="color:var(--muted);font-size:13px;line-height:1.4;">
+          ${escapeHtml(t("missing"))}
+        </div>
+      </div>
+    `;
+    wireBack();
+    return;
+  }
+
+  /* Interrogation rooms: show portraits. Clicking a portrait opens the same viewer-layout */
+  if (isInterrogationSection(sec.id)){
+    renderInterrogationRoom(pack, sec);
+    return;
+  }
+
+  const docs = (pack.documents?.[state.sectionId] || []).slice();
+  docs.sort((a,b) => {
+    const A = (a.title?.[state.lang] ?? a.title?.en ?? "");
+    const B = (b.title?.[state.lang] ?? b.title?.en ?? "");
+    return A.localeCompare(B, state.lang);
+  });
+
+  if (!state.docId && docs[0]) state.docId = docs[0].id;
+
+  renderDocViewerLayout({
+    title: txt(sec.title),
+    docs,
+    onBackButtonLabel: t("officeBtn")
+  });
+}
+
+function renderPerson(){
+  const pack = getPackForCaseKey(state.difficulty, state.caseKey);
+  const p = findPerson(pack, state.personId);
+  if (!pack || !p){
+    app.innerHTML = `
+      ${renderTopbar(t("missing"))}
+      <div class="panel">
+        <div class="ph"><h3>${escapeHtml(t("missing"))}</h3></div>
+        <div class="content" style="color:var(--muted);font-size:13px;line-height:1.4;">
+          ${escapeHtml(t("missing"))}
+        </div>
+      </div>
+    `;
+    wireBack();
+    return;
+  }
+
+  const docs = (pack.personFiles?.[p.id] || []).slice();
+  docs.sort((a,b) => {
+    const A = (a.title?.[state.lang] ?? a.title?.en ?? "");
+    const B = (b.title?.[state.lang] ?? b.title?.en ?? "");
+    return A.localeCompare(B, state.lang);
+  });
+
+  if (!docs.length){
+    showToast(t("notReady"));
+  }
+
+  if (!state.docId && docs[0]) state.docId = docs[0].id;
+
+  renderDocViewerLayout({
+    title: txt(p.name),
+    docs,
+    onBackButtonLabel: t("back")
+  });
+}
+
 /* ---------- MAIN RENDER ---------- */
 function render(){
   setBackgroundForView();
@@ -1943,6 +2143,7 @@ function render(){
   if (state.view === "intake") { renderIntake(); return; }
   if (state.view === "office") { renderOffice(); return; }
   if (state.view === "section") { renderSection(); return; }
+  if (state.view === "person") { renderPerson(); return; }
 
   goTitle();
 }
