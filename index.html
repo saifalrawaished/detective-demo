@@ -7,13 +7,13 @@
 
   <style>
     :root{
-      --bg:#0b0c10;
+      --bg:#141824;
 
-      --cardTop: rgba(30,34,46,0.92);
-      --cardBot: rgba(18,20,30,0.92);
+      --cardTop: rgba(46,52,70,0.92);
+      --cardBot: rgba(30,34,50,0.92);
 
-      --panelTop: rgba(34,38,54,0.92);
-      --panelBot: rgba(20,22,34,0.92);
+      --panelTop: rgba(50,56,78,0.92);
+      --panelBot: rgba(32,36,56,0.92);
 
       --text:#e8e6dc;
       --muted:#b6b1a2;
@@ -55,17 +55,17 @@
     /* ---------- BACKGROUNDS ---------- */
     body[data-bg="title"]{
       background:
-        linear-gradient(rgba(0,0,0,0.42), rgba(0,0,0,0.78)),
+        linear-gradient(rgba(0,0,0,0.18), rgba(0,0,0,0.40)),
         url("image0.jpg") center / cover no-repeat;
     }
     body[data-bg="world"]{
       background:
-        linear-gradient(rgba(0,0,0,0.34), rgba(0,0,0,0.62)),
+        linear-gradient(rgba(0,0,0,0.14), rgba(0,0,0,0.34)),
         url("image2.jpg") center / cover no-repeat;
     }
     body[data-bg="case"]{
       background:
-        linear-gradient(rgba(0,0,0,0.18), rgba(0,0,0,0.44)),
+        linear-gradient(rgba(0,0,0,0.10), rgba(0,0,0,0.26)),
         url("image1.jpg") center / cover no-repeat;
     }
 
@@ -78,13 +78,13 @@
       z-index:0;
       background:
         radial-gradient(circle at 50% 35%,
-          rgba(0,0,0,0.00) 35%,
-          rgba(0,0,0,0.55) 92%
+          rgba(0,0,0,0.00) 55%,
+          rgba(0,0,0,0.55) 100%
         ),
         repeating-linear-gradient(
           0deg,
-          rgba(255,255,255,0.008),
-          rgba(255,255,255,0.008) 1px,
+          rgba(255,255,255,0.004),
+          rgba(255,255,255,0.004) 1px,
           transparent 1px,
           transparent 4px
         );
@@ -113,7 +113,7 @@
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      background:rgba(0,0,0,0.30);
+      background:rgba(10,12,18,0.22);
       backdrop-filter: blur(8px);
     }
 
@@ -590,7 +590,7 @@
       text-align:right;
     }
 
-    /* Briefing video (ADD THIS HERE) */
+    /* Briefing video */
     .briefVid{
       margin-top:10px;
       border:1px solid rgba(255,255,255,0.10);
@@ -602,14 +602,36 @@
     .briefVidInner{
       position:relative;
       width:100%;
-      aspect-ratio: 16 / 9;  /* change to 9 / 16 if your video is vertical */
+      aspect-ratio: 16 / 9;
       background: rgba(0,0,0,0.28);
     }
     .briefVidInner video{
       width:100%;
       height:100%;
       display:block;
-      object-fit: cover;     /* change to contain if you want no cropping */
+      object-fit: cover;
+    }
+
+    /* Compound interrogation package video */
+    .compoundVideo{
+      margin-top:12px;
+      border:1px solid rgba(255,255,255,0.10);
+      border-radius:12px;
+      overflow:hidden;
+      background: rgba(0,0,0,0.22);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .compoundVideoInner{
+      position:relative;
+      width:100%;
+      aspect-ratio: 16 / 9;
+      background: rgba(0,0,0,0.28);
+    }
+    .compoundVideoInner video{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit: cover;
     }
 
     .toast{
@@ -698,6 +720,31 @@
       color:var(--muted);
       font-size:12px;
       margin-top:8px;
+      line-height:1.35;
+    }
+    .portraitMeta b{
+      color: var(--text);
+      font-weight:900;
+    }
+    .portraitMeta .row{
+      display:flex;
+      gap:8px;
+      align-items:baseline;
+      justify-content:space-between;
+    }
+    .portraitMeta .k{
+      color: var(--muted);
+      font-size:12px;
+      flex: 0 0 auto;
+    }
+    .portraitMeta .v{
+      color: var(--text);
+      font-size:12px;
+      text-align:right;
+      flex: 1 1 auto;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
     }
 
     /* RTL */
@@ -712,6 +759,7 @@
     body[dir="rtl"] .callTime{ text-align:left; }
     body[dir="rtl"] .viewStamp{ right:auto; left:10px; }
     body[dir="rtl"] .modalBtns{ flex-direction: row-reverse; justify-content:flex-start; }
+    body[dir="rtl"] .portraitMeta .v{ text-align:left; }
 
     @media (prefers-reduced-motion: reduce){
       *{ transition:none !important; }
@@ -765,7 +813,6 @@ const UI = {
     resume: "Resume",
     entry: "Archive Entry",
     entryLine: "Archived case files. Access is logged.",
-    loopLine: "Briefing call, documents, contradictions.",
     home: "Home",
     chooseDifficulty: "Select difficulty",
     review: "Review",
@@ -844,7 +891,21 @@ const UI = {
     witnessRoomHint: "Select a witness to open their file.",
     suspectRoomHint: "Select a suspect to open their file.",
     personFile: "File",
-    notReady: "Content not implemented yet."
+    notReady: "Content not implemented yet.",
+
+    /* profile fields */
+    job: "Job",
+    age: "Age",
+    blood: "Blood",
+    nationality: "Nationality",
+    relationship: "Relationship",
+    years: "years",
+
+    /* compound package */
+    packageTitle: "Interrogation package",
+    packageMeta: "Document + video",
+    watch: "Watch",
+    document: "Document"
   },
 
   ar: {
@@ -854,7 +915,6 @@ const UI = {
     resume: "متابعة",
     entry: "بوابة الأرشيف",
     entryLine: "ملفات قضايا مؤرشفة. يتم تسجيل الوصول.",
-    loopLine: "مكالمة إحاطة، مستندات، تناقضات.",
     home: "الرئيسية",
     chooseDifficulty: "اختر الصعوبة",
     review: "استعراض",
@@ -933,7 +993,21 @@ const UI = {
     witnessRoomHint: "اختر شاهدا لفتح ملفه.",
     suspectRoomHint: "اختر متهما لفتح ملفه.",
     personFile: "ملف",
-    notReady: "المحتوى غير جاهز بعد."
+    notReady: "المحتوى غير جاهز بعد.",
+
+    /* profile fields */
+    job: "الوظيفة",
+    age: "العمر",
+    blood: "فصيلة الدم",
+    nationality: "الجنسية",
+    relationship: "صلة بالضحية",
+    years: "سنة",
+
+    /* compound package */
+    packageTitle: "ملف التحقيق",
+    packageMeta: "مستند + فيديو",
+    watch: "مشاهدة",
+    document: "المستند"
   }
 };
 
@@ -987,9 +1061,9 @@ function clearReadsByPrefix(prefix){
   if (changed) saveJSON(SK.readDocs, readState);
 }
 
-/* ---------- MEDIA MANAGER (VIDEO) ---------- */
+/* ---------- MEDIA MANAGER (BRIEFING VIDEO ONLY) ---------- */
 const VOICE = {
-  el: null,           // HTMLVideoElement
+  el: null,
   src: null,
   heardKey: null,
   status: "idle",
@@ -1008,8 +1082,6 @@ function ensureVoice(){
   v.preload = "metadata";
   v.playsInline = true;
   v.controls = false;
-
-  // Do NOT mute, you want the same audio to play.
   v.muted = false;
 
   v.addEventListener("loadedmetadata", () => {
@@ -1087,7 +1159,6 @@ function formatTime(s){
   const r = sec % 60;
   return `${m}:${String(r).padStart(2,"0")}`;
 }
-
 
 /* ---------- APP STATE ---------- */
 const state = {
@@ -1247,6 +1318,29 @@ function back(){
   if (v === "section") { go("office", { sectionId:null, personId:null, docId:null }); return; }
   if (v === "office")  { go("intake", { sectionId:null, personId:null, docId:null }); return; }
   if (v === "intake")  { go("cases",  { caseKey:null, sectionId:null, personId:null, protocolOverride:false }); return; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   if (v === "cases")   { go("difficulty", { difficulty:null, caseKey:null, sectionId:null, personId:null }); return; }
   if (v === "difficulty") { goTitle(); return; }
   goTitle();
@@ -1294,15 +1388,9 @@ const GAME_INDEX = {
 
 const countPackDocs = (pack) => {
   const by = pack?.documents || {};
-  const pf = pack?.personFiles || {};
   let n = 0;
-
   for (const k of Object.keys(by)){
     const arr = by[k];
-    n += Array.isArray(arr) ? arr.length : 0;
-  }
-  for (const pid of Object.keys(pf)){
-    const arr = pf[pid];
     n += Array.isArray(arr) ? arr.length : 0;
   }
   return n;
@@ -1328,21 +1416,148 @@ const CASE_PACKS = {
 
     sections: [
       { id: "objectives", title: { en: "Case objectives", ar: "أهداف القضية" } },
-      { id: "Forensic evidence report", title: { en: "Forensic evidence report", ar: "تقرير الأدلة الجنائية" } },
-      { id: "Witness interrogation room", title: { en: "Witness interrogation room", ar: "غرفة التحقيق مع الشهود" } },
-      { id: "Suspect interrogation room", title: { en: "Suspect interrogation room", ar: "غرفة التحقيق مع المتهمين" } },
-      { id: "additional_evidence", title: { en: "Additional evidence", ar: "أدلة إضافية" } }
+      { id: "forensic", title: { en: "Forensic evidence report", ar: "تقرير الادلة الجنائية" } },
+      { id: "witness_room", title: { en: "Witness interrogation room", ar: "غرفة التحقيق مع الشهود" } },
+      { id: "suspect_room", title: { en: "Suspect interrogation room", ar: "غرفة التحقيق مع المتهمين" } },
+      { id: "additional", title: { en: "Additional evidence", ar: "أدلة أضافية" } }
     ],
 
     people: {
       witnesses: [
-        { id: "w_ahmed",   name: { en: "Ahmed", ar: "أحمد" },           image: "person1.jpg" },
-        { id: "w_brother", name: { en: "Victim's brother", ar: "أخو المقتول" }, image: "person2.jpg" },
-        { id: "w_wife",    name: { en: "Victim's wife", ar: "زوجة المقتول" },  image: "person3.jpg" }
+        {
+          id: "w_ahmed",
+          name: { en: "Ahmed", ar: "أحمد" },
+          image: "person1.jpg",
+          profile: {
+            job: { en: "Security", ar: "حارس أمن" },
+            age: 36,
+            blood: "O+",
+            nationality: { en: "Sudanese", ar: "سوداني" },
+            relationship: { en: "Employee", ar: "موظف" }
+          },
+          package: {
+            docId: "ec1_pkg_w_ahmed_doc",
+            vidId: "ec1_pkg_w_ahmed_vid",
+            docTitle: { en: "Statement document", ar: "مستند الإفادة" },
+            docMeta: { en: "Scan", ar: "مسح ضوئي" },
+            docUrl: "doc1.jpg",
+            vidTitle: { en: "Interrogation video", ar: "فيديو التحقيق" },
+            vidMeta: { en: "Recorded", ar: "مسجل" },
+            vidSrc: "vid1.mp4"
+          }
+        },
+        {
+          id: "w_osama",
+          name: { en: "Osama", ar: "أسامة" },
+          image: "person2.jpg",
+          profile: {
+            job: { en: "Teacher", ar: "معلم" },
+            age: 29,
+            blood: "B+",
+            nationality: { en: "Kuwaiti", ar: "كويتي" },
+            relationship: { en: "Brother", ar: "أخو المقتول" }
+          },
+          package: {
+            docId: "ec1_pkg_w_osama_doc",
+            vidId: "ec1_pkg_w_osama_vid",
+            docTitle: { en: "Statement document", ar: "مستند الإفادة" },
+            docMeta: { en: "Scan", ar: "مسح ضوئي" },
+            docUrl: "doc2.jpg",
+            vidTitle: { en: "Interrogation video", ar: "فيديو التحقيق" },
+            vidMeta: { en: "Recorded", ar: "مسجل" },
+            vidSrc: "vid2.mp4"
+          }
+        },
+        {
+          id: "w_aseel",
+          name: { en: "Aseel", ar: "أسيل" },
+          image: "person3.jpg",
+          profile: {
+            job: { en: "Nurse", ar: "ممرضة" },
+            age: 27,
+            blood: "O+",
+            nationality: { en: "Kuwaiti", ar: "كويتية" },
+            relationship: { en: "Wife", ar: "زوجة المقتول" }
+          },
+          package: {
+            docId: "ec1_pkg_w_aseel_doc",
+            vidId: "ec1_pkg_w_aseel_vid",
+            docTitle: { en: "Statement document", ar: "مستند الإفادة" },
+            docMeta: { en: "Scan", ar: "مسح ضوئي" },
+            docUrl: "doc3.jpg",
+            vidTitle: { en: "Interrogation video", ar: "فيديو التحقيق" },
+            vidMeta: { en: "Recorded", ar: "مسجل" },
+            vidSrc: "vid3.mp4"
+          }
+        }
       ],
       suspects: [
-        { id: "s_rival",   name: { en: "Rival", ar: "المنافس" },        image: "person4.jpg" },
-        { id: "s_killer",  name: { en: "Killer", ar: "القاتل" },        image: "person5.jpg" }
+        {
+          id: "s_khalid",
+          name: { en: "Khalid", ar: "خالد" },
+          image: "person4.jpg",
+          profile: {
+            job: { en: "Lawyer", ar: "محامي" },
+            age: 31,
+            blood: "B+",
+            nationality: { en: "Kuwaiti", ar: "كويتي" },
+            relationship: { en: "Rival lawyer", ar: "محامي منافس" }
+          },
+          package: {
+            docId: "ec1_pkg_s_khalid_doc",
+            vidId: "ec1_pkg_s_khalid_vid",
+            docTitle: { en: "Statement document", ar: "مستند الإفادة" },
+            docMeta: { en: "Scan", ar: "مسح ضوئي" },
+            docUrl: "doc4.jpg",
+            vidTitle: { en: "Interrogation video", ar: "فيديو التحقيق" },
+            vidMeta: { en: "Recorded", ar: "مسجل" },
+            vidSrc: "vid4.mp4"
+          }
+        },
+        {
+          id: "s_zaid",
+          name: { en: "Zaid", ar: "زيد" },
+          image: "person5.jpg",
+          profile: {
+            job: { en: "Unemployed", ar: "عاطل" },
+            age: 48,
+            blood: "O+",
+            nationality: { en: "Kuwaiti", ar: "كويتي" },
+            relationship: { en: "", ar: "" }
+          },
+          package: {
+            docId: "ec1_pkg_s_zaid_doc",
+            vidId: "ec1_pkg_s_zaid_vid",
+            docTitle: { en: "Statement document", ar: "مستند الإفادة" },
+            docMeta: { en: "Scan", ar: "مسح ضوئي" },
+            docUrl: "doc5.jpg",
+            vidTitle: { en: "Interrogation video", ar: "فيديو التحقيق" },
+            vidMeta: { en: "Recorded", ar: "مسجل" },
+            vidSrc: "vid5.mp4"
+          }
+        },
+        {
+          id: "s_ahmed2",
+          name: { en: "Ahmed", ar: "أحمد" },
+          image: "person1.jpg",
+          profile: {
+            job: { en: "Security", ar: "حارس أمن" },
+            age: 36,
+            blood: "O+",
+            nationality: { en: "Sudanese", ar: "سوداني" },
+            relationship: { en: "Employee", ar: "موظف" }
+          },
+          package: {
+            docId: "ec1_pkg_s_ahmed2_doc",
+            vidId: "ec1_pkg_s_ahmed2_vid",
+            docTitle: { en: "Statement document", ar: "مستند الإفادة" },
+            docMeta: { en: "Scan", ar: "مسح ضوئي" },
+            docUrl: "doc6.jpg",
+            vidTitle: { en: "Interrogation video", ar: "فيديو التحقيق" },
+            vidMeta: { en: "Recorded", ar: "مسجل" },
+            vidSrc: "vid6.mp4"
+          }
+        }
       ]
     },
 
@@ -1368,77 +1583,20 @@ const CASE_PACKS = {
         }
       ],
 
-      initial_report: [
-        { id: "ec1_ir_police",   title: { en: "Official police report", ar: "محضر الشرطة الرسمي" }, type: "image", meta: { en: "Scan", ar: "مسح ضوئي" }, url: "official_police_report.jpg" },
-        { id: "ec1_ir_map",      title: { en: "Crime scene map", ar: "خريطة موقع الجريمة" },       type: "image", meta: { en: "Sketch", ar: "رسم" }, url: "crime_scene_map.jpg" },
-        { id: "ec1_ir_building", title: { en: "Building exterior", ar: "الواجهة الخارجية للمبنى" }, type: "image", meta: { en: "Photo", ar: "صورة" }, url: "building_exterior.jpg" },
-        { id: "ec1_ir_layout",   title: { en: "Office layout", ar: "مخطط المكتب" },                type: "image", meta: { en: "Diagram", ar: "مخطط" }, url: "office_layout.jpg" },
-        { id: "ec1_ir_index_1",  title: { en: "Investigation index (1)", ar: "فهرس التحقيق (1)" }, type: "image", meta: { en: "Index", ar: "فهرس" }, url: "investigation_index1.jpg" },
-        { id: "ec1_ir_index_2",  title: { en: "Investigation index (2)", ar: "فهرس التحقيق (2)" }, type: "image", meta: { en: "Index", ar: "فهرس" }, url: "investigation_index2.jpg" }
-      ]
-    },
+      forensic: [
+        { id: "ec1_for_1", title: { en: "Death report", ar: "تقرير الوفاة" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence1.jpg" },
+        { id: "ec1_for_2", title: { en: "Weapon report and photo", ar: "تقرير السلاح وصورة عنه" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence2.jpg" },
+        { id: "ec1_for_3", title: { en: "Fingerprints report", ar: "تقرير البصمات" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence3.jpg" }
+      ],
 
-    /* Person files: clicking a portrait lands in the same "documents + viewer" layout */
-    personFiles: {
-      w_ahmed: [
-        {
-          id: "ec1_p_w_ahmed_1",
-          title: { en: "Interview record (placeholder)", ar: "سجل التحقيق (مؤقت)" },
-          meta:  { en: "Transcript", ar: "تفريغ" },
-          type: "text",
-          body: {
-            en: "Placeholder. This will contain Ahmed's interrogation transcript, follow-up notes, and contradiction flags.",
-            ar: "مؤقت. هنا سيتم وضع تفريغ تحقيق أحمد وملاحظات المتابعة وعلامات التناقض."
-          }
-        }
-      ],
-      w_brother: [
-        {
-          id: "ec1_p_w_brother_1",
-          title: { en: "Interview record (placeholder)", ar: "سجل التحقيق (مؤقت)" },
-          meta:  { en: "Transcript", ar: "تفريغ" },
-          type: "text",
-          body: {
-            en: "Placeholder. This will contain the victim's brother interrogation materials.",
-            ar: "مؤقت. هنا سيتم وضع مواد تحقيق أخو المقتول."
-          }
-        }
-      ],
-      w_wife: [
-        {
-          id: "ec1_p_w_wife_1",
-          title: { en: "Interview record (placeholder)", ar: "سجل التحقيق (مؤقت)" },
-          meta:  { en: "Transcript", ar: "تفريغ" },
-          type: "text",
-          body: {
-            en: "Placeholder. This will contain the victim's wife interrogation materials.",
-            ar: "مؤقت. هنا سيتم وضع مواد تحقيق زوجة المقتول."
-          }
-        }
-      ],
-      s_rival: [
-        {
-          id: "ec1_p_s_rival_1",
-          title: { en: "Interrogation record (placeholder)", ar: "سجل التحقيق (مؤقت)" },
-          meta:  { en: "Transcript", ar: "تفريغ" },
-          type: "text",
-          body: {
-            en: "Placeholder. This will contain the rival interrogation transcript, pressure points, and inconsistencies.",
-            ar: "مؤقت. هنا سيتم وضع تفريغ تحقيق المنافس ونقاط الضغط والتناقضات."
-          }
-        }
-      ],
-      s_killer: [
-        {
-          id: "ec1_p_s_killer_1",
-          title: { en: "Interrogation record (placeholder)", ar: "سجل التحقيق (مؤقت)" },
-          meta:  { en: "Transcript", ar: "تفريغ" },
-          type: "text",
-          body: {
-            en: "Placeholder. This will contain the killer interrogation transcript and evidence confrontations.",
-            ar: "مؤقت. هنا سيتم وضع تفريغ تحقيق القاتل ومواجهة الأدلة."
-          }
-        }
+      additional: [
+        { id: "ec1_add_4",  title: { en: "Left glove", ar: "قفاز يسار" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence4.jpg" },
+        { id: "ec1_add_5",  title: { en: "Ahmed call log", ar: "سجل مكالمات احمد" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence5.jpg" },
+        { id: "ec1_add_6",  title: { en: "Victim call log", ar: "سجل مكالمات المقتول" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence6.jpg" },
+        { id: "ec1_add_7",  title: { en: "Chat screenshot: Ahmed and rival", ar: "صورة محادثة بين أحمد والمنافس" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence7.jpg" },
+        { id: "ec1_add_8",  title: { en: "Prior case against killer's brother", ar: "قضية سابقة ضذ اخو القاتل" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence8.jpg" },
+        { id: "ec1_add_9",  title: { en: "Rival criminal record", ar: "الصحيفة الجنائية لمنافس" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence9.jpg" },
+        { id: "ec1_add_10", title: { en: "Killer criminal record", ar: "الصحيفة الجنائية للقاتل" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence10.jpg" }
       ]
     }
   }
@@ -1446,7 +1604,7 @@ const CASE_PACKS = {
 
 /* ---------- HELPERS ---------- */
 function isInterrogationSection(id){
-  return id === "Witness interrogation room" || id === "Suspect interrogation room";
+  return id === "witness_room" || id === "suspect_room";
 }
 function getCaseItem(difficulty, caseKey){
   const list = GAME_INDEX.casesByDifficulty[difficulty] || [];
@@ -1468,8 +1626,8 @@ function findPerson(pack, personId){
 }
 function peopleForSection(pack, sectionId){
   if (!pack) return [];
-  if (sectionId === "Witness interrogation room") return pack.people?.witnesses || [];
-  if (sectionId === "Suspect interrogation room") return pack.people?.suspects || [];
+  if (sectionId === "witness_room") return pack.people?.witnesses || [];
+  if (sectionId === "suspect_room") return pack.people?.suspects || [];
   return [];
 }
 
@@ -1684,6 +1842,45 @@ function renderIntake(){
           <h3>${escapeHtml(t("caseBrief"))}</h3>
           <span class="stamp"><span class="mono">${escapeHtml(t("confidential"))}</span></span>
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <div class="content">
           <div class="kv">
             <div class="k">${escapeHtml(t("caseId"))}</div><div class="v mono">${escapeHtml(txt(pack.meta.caseId))}</div>
@@ -1717,7 +1914,6 @@ function renderIntake(){
             <div class="briefVid">
               <div class="briefVidInner" id="briefVidMount"></div>
             </div>
-
 
             <div class="callControls">
               <button class="btn btnPrimary" id="callBtn" type="button">
@@ -1779,44 +1975,42 @@ function renderIntake(){
     goOffice();
   });
 
-VOICE.onUpdate = () => {
-  const heardNow = heardKey ? getBool(heardKey) : false;
+  VOICE.onUpdate = () => {
+    const heardNow = heardKey ? getBool(heardKey) : false;
 
-  let label = heardNow ? t("briefingLogged") : t("briefingPending");
-  if (VOICE.status === "playing") label = t("briefingInProgress");
-  if (VOICE.status === "error") label = t("audioError");
+    let label = heardNow ? t("briefingLogged") : t("briefingPending");
+    if (VOICE.status === "playing") label = t("briefingInProgress");
+    if (VOICE.status === "error") label = t("audioError");
 
-  statusEl.textContent = label;
-  sideLabelEl.textContent = label;
-  callBtn.textContent = heardNow ? t("replayBriefing") : t("answer");
+    statusEl.textContent = label;
+    sideLabelEl.textContent = label;
+    callBtn.textContent = heardNow ? t("replayBriefing") : t("answer");
 
-  const d = VOICE.duration || (VOICE.el ? VOICE.el.duration : 0) || 0;
-  const c = VOICE.currentTime || (VOICE.el ? VOICE.el.currentTime : 0) || 0;
-  const pct = d > 0 ? Math.min(100, Math.max(0, (c / d) * 100)) : 0;
+    const d = VOICE.duration || (VOICE.el ? VOICE.el.duration : 0) || 0;
+    const c = VOICE.currentTime || (VOICE.el ? VOICE.el.currentTime : 0) || 0 || 0;
+    const pct = d > 0 ? Math.min(100, Math.max(0, (c / d) * 100)) : 0;
 
-  fillEl.style.width = pct.toFixed(1) + "%";
-  timeEl.textContent = `${formatTime(c)} / ${formatTime(d)}`;
+    fillEl.style.width = pct.toFixed(1) + "%";
+    timeEl.textContent = `${formatTime(c)} / ${formatTime(d)}`;
 
-  if (VOICE.status === "playing"){
-    pauseBtn.disabled = false;
-    pauseBtn.textContent = t("pause");
-  } else if (VOICE.status === "paused"){
-    pauseBtn.disabled = false;
-    pauseBtn.textContent = t("resume");
-  } else {
-    pauseBtn.disabled = true;
-    pauseBtn.textContent = t("pause");
-  }
+    if (VOICE.status === "playing"){
+      pauseBtn.disabled = false;
+      pauseBtn.textContent = t("pause");
+    } else if (VOICE.status === "paused"){
+      pauseBtn.disabled = false;
+      pauseBtn.textContent = t("resume");
+    } else {
+      pauseBtn.disabled = true;
+      pauseBtn.textContent = t("pause");
+    }
 
-  enterOfficeBtn.disabled = !protocolAllowsOffice(pack);
-};
+    enterOfficeBtn.disabled = !protocolAllowsOffice(pack);
+  };
 
-  // Mount the video element into the intake UI  (PUT OPTIONAL HERE)
+  // Mount the video element into the intake UI
   const mount = $("briefVidMount");
   if (mount){
     const v = ensureVoice();
-
-    // OPTIONAL: force correct sizing and show first frame
     v.style.width = "100%";
     v.style.height = "100%";
     v.playsInline = true;
@@ -1831,6 +2025,7 @@ VOICE.onUpdate = () => {
   notifyVoice();
 }
 
+/* ---------- OFFICE + SECTIONS ---------- */
 function renderOffice(){
   const pack = getPackForCaseKey(state.difficulty, state.caseKey);
   if (!pack){
@@ -1878,9 +2073,33 @@ function renderOffice(){
   });
 }
 
+function renderProfileMeta(p){
+  const prof = p?.profile || null;
+  if (!prof) return "";
+
+  const rows = [
+    [t("job"), txt(prof.job)],
+    [t("age"), `${prof.age ?? ""} ${t("years")}`.trim()],
+    [t("blood"), prof.blood ?? ""],
+    [t("nationality"), txt(prof.nationality)],
+    [t("relationship"), txt(prof.relationship)]
+  ].filter(([_, v]) => String(v || "").trim().length > 0);
+
+  return `
+    <div class="portraitMeta mono">
+      ${rows.map(([k,v]) => `
+        <div class="row">
+          <span class="k">${escapeHtml(k)}</span>
+          <span class="v">${escapeHtml(v)}</span>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
 function renderInterrogationRoom(pack, sec){
   const list = peopleForSection(pack, sec.id);
-  const hint = (sec.id === "Witness interrogation room") ? t("witnessRoomHint") : t("suspectRoomHint");
+  const hint = (sec.id === "witness_room") ? t("witnessRoomHint") : t("suspectRoomHint");
 
   app.innerHTML = `
     ${renderTopbar(txt(sec.title), hint)}
@@ -1888,7 +2107,8 @@ function renderInterrogationRoom(pack, sec){
       ${list.map(p => `
         <div class="card" data-person="${p.id}">
           <img class="portraitImg" src="${escapeHtml(p.image)}" alt="${escapeHtml(txt(p.name))}" />
-          <h2>${escapeHtml(txt(p.name))}</h2>
+          ${renderProfileMeta(p)}
+          <h2 style="margin-top:10px;">${escapeHtml(txt(p.name))}</h2>
           <div class="portraitMeta mono">${escapeHtml(t("personFile"))}</div>
         </div>
       `).join("")}
@@ -1898,9 +2118,7 @@ function renderInterrogationRoom(pack, sec){
   wireBack();
 
   $("peopleGrid").querySelectorAll(".card").forEach(el => {
-    makeClickable(el, () => {
-      goPersonFile(el.dataset.person);
-    });
+    makeClickable(el, () => { goPersonFile(el.dataset.person); });
   });
 }
 
@@ -2071,7 +2289,6 @@ function renderSection(){
     return;
   }
 
-  /* Interrogation rooms: show portraits. Clicking a portrait opens the same viewer-layout */
   if (isInterrogationSection(sec.id)){
     renderInterrogationRoom(pack, sec);
     return;
@@ -2093,6 +2310,7 @@ function renderSection(){
   });
 }
 
+/* ---------- COMPOUND PERSON VIEW ---------- */
 function renderPerson(){
   const pack = getPackForCaseKey(state.difficulty, state.caseKey);
   const p = findPerson(pack, state.personId);
@@ -2110,24 +2328,111 @@ function renderPerson(){
     return;
   }
 
-  const docs = (pack.personFiles?.[p.id] || []).slice();
-  docs.sort((a,b) => {
-    const A = (a.title?.[state.lang] ?? a.title?.en ?? "");
-    const B = (b.title?.[state.lang] ?? b.title?.en ?? "");
-    return A.localeCompare(B, state.lang);
-  });
-
-  if (!docs.length){
+  const pkg = p.package || null;
+  if (!pkg){
     showToast(t("notReady"));
+    back();
+    return;
   }
 
-  if (!state.docId && docs[0]) state.docId = docs[0].id;
+  // Mark both parts as read as soon as the player opens the package
+  if (pkg.docId) markRead(pkg.docId);
+  if (pkg.vidId) markRead(pkg.vidId);
 
-  renderDocViewerLayout({
-    title: txt(p.name),
-    docs,
-    onBackButtonLabel: t("back")
+  const docTitle = pkg.docTitle ? txt(pkg.docTitle) : t("document");
+  const docMeta = pkg.docMeta ? txt(pkg.docMeta) : t("packageMeta");
+  const vidTitle = pkg.vidTitle ? txt(pkg.vidTitle) : t("watch");
+  const vidMeta = pkg.vidMeta ? txt(pkg.vidMeta) : t("packageMeta");
+
+  app.innerHTML = `
+    ${renderTopbar(txt(p.name))}
+    <div class="split">
+      <section class="panel">
+        <div class="ph">
+          <h3>${escapeHtml(t("packageTitle"))}</h3>
+          <span style="color:var(--muted);font-size:12px;" class="mono">${escapeHtml(t("packageMeta"))}</span>
+        </div>
+        <div class="content">
+          <img class="portraitImg" src="${escapeHtml(p.image)}" alt="${escapeHtml(txt(p.name))}" />
+          ${renderProfileMeta(p)}
+          <div style="margin-top:10px;color:var(--muted);font-size:12px;" class="mono">
+            ${escapeHtml(isRead(pkg.docId) && isRead(pkg.vidId) ? t("viewed") : "")}
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="ph">
+          <h3>${escapeHtml(t("viewer"))}</h3>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+            <a class="btn" id="openFullBtn" href="${escapeHtml(pkg.docUrl || "#")}" target="_blank" rel="noopener noreferrer">${escapeHtml(t("openFull"))}</a>
+            <button class="btn" id="officeBtn" type="button">${escapeHtml(t("back"))}</button>
+          </div>
+        </div>
+
+        <div class="content">
+          <div class="viewerBody" id="viewerBody">
+            <div class="viewStamp" id="viewStamp"></div>
+
+            <h4 style="margin:0 0 6px 0;font-size:16px;font-weight:950;">${escapeHtml(docTitle)}</h4>
+            <div style="color:var(--muted);font-size:12px;margin-bottom:10px;" class="mono">
+              ${escapeHtml(docMeta)}
+            </div>
+
+            <div class="imgWrap" id="pkgDocWrap">
+              <img id="pkgDocImg" src="${escapeHtml(pkg.docUrl)}" alt="${escapeHtml(docTitle)}" />
+            </div>
+
+            <div class="compoundVideo">
+              <div class="compoundVideoInner">
+                <video id="pkgVideo" src="${escapeHtml(pkg.vidSrc)}" controls playsinline preload="metadata"></video>
+              </div>
+            </div>
+
+            <div style="margin-top:8px;">
+              <div style="margin:0 0 6px 0;font-size:14px;font-weight:950;">${escapeHtml(vidTitle)}</div>
+              <div style="color:var(--muted);font-size:12px;" class="mono">${escapeHtml(vidMeta)}</div>
+            </div>
+
+            <div class="hint mono" style="margin-top:10px;">
+              ${escapeHtml(pkg.docUrl)}<br/>
+              ${escapeHtml(pkg.vidSrc)}
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  `;
+
+  wireBack();
+  $("officeBtn").addEventListener("click", back);
+
+  const imgEl = $("pkgDocImg");
+  const openFullBtn = $("openFullBtn");
+  imgEl.addEventListener("error", () => {
+    const wrap = $("pkgDocWrap");
+    wrap.innerHTML = `<div style="color:var(--muted);font-size:13px;line-height:1.4;">${escapeHtml(t("imageLoadError"))}</div>`;
+    openFullBtn.style.display = "none";
   });
+
+  const videoEl = $("pkgVideo");
+  if (videoEl){
+    const vidId = pkg.vidId;
+    videoEl.addEventListener("timeupdate", () => {
+      // Consider "viewed" once the player reaches 15% of the video
+      const d = videoEl.duration || 0;
+      const c = videoEl.currentTime || 0;
+      if (d > 0 && (c / d) > 0.15){
+        if (vidId) markRead(vidId);
+      }
+    });
+    videoEl.addEventListener("ended", () => {
+      if (vidId) markRead(vidId);
+      flashViewerStamp(t("viewed"));
+    });
+  }
+
+  flashViewerStamp(t("viewed"));
 }
 
 /* ---------- MAIN RENDER ---------- */
@@ -2155,6 +2460,11 @@ function render(){
   </script>
 </body>
 </html>
+
+
+
+
+
 
 
 
