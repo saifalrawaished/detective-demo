@@ -235,7 +235,7 @@
       position:relative;
       overflow:hidden;
       min-height:96px;
-      backdrop-filter: blur(6px);
+      backdrop-filter: blur(3px);
     }
     .card:hover{
       transform: translateY(-3px);
@@ -368,6 +368,137 @@
     @media (max-width:900px){ .split{ grid-template-columns:1fr; } }
 
     .list{ display:flex; flex-direction:column; gap:10px; }
+
+    /* Office layout: evidence grid + rooms strip */
+    .officeWrap{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+
+    .officeDivider{
+      height:1px;
+      background: rgba(255,255,255,0.08);
+      margin: 2px 0;
+    }
+
+    .roomsGrid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:14px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    @media (max-width:650px){
+      .roomsGrid{ grid-template-columns: 1fr; max-width: 520px; }
+    }
+
+    /* focus well behind interrogation room cards */
+    .roomsLane{
+      position: relative;
+    }
+
+    .roomsLane::before{
+      content:"";
+      position:absolute;
+      inset:-20px -40px;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(2px);
+      pointer-events:none;
+    }
+
+
+    /* ---------- INTERROGATION ROOM CARDS (ONLY PLACE .roomCard IS DEFINED) ---------- */
+    .roomCard{
+      position: relative;
+      overflow: hidden;
+
+      min-height: 170px;
+      padding: 20px;
+
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: var(--radius);
+
+      background: rgba(0,0,0,0.22);
+      box-shadow: var(--shadow);
+    }
+
+    /* image + vignette layer */
+    .roomCard::before{
+      content:"";
+      position:absolute;
+      inset:0;
+
+      background:
+        radial-gradient(circle at 50% 42%,
+          rgba(255,255,255,0.06) 0%,
+          rgba(0,0,0,0.44) 45%,
+          rgba(0,0,0,0.88) 100%
+        ),
+        url("option.jpg") center / cover no-repeat;
+
+      opacity: 0.75;
+      filter: contrast(1.15) brightness(0.82) saturate(0.95);
+      pointer-events:none;
+    }
+
+    /* keep text above the image */
+    .roomCard > *{
+      position: relative;
+      z-index: 1;
+    }
+
+    .roomCard:hover{
+      border-color: rgba(201,162,77,0.65);
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.55);
+    }
+
+    .roomCard h2{
+      font-size: 18px;
+    }
+
+    .roomCard .pill{
+      padding: 6px 10px;
+      font-size: 12px;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    .roomTag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 12px;
+      border-radius:999px;
+      border:1px dashed rgba(201,162,77,0.55);
+      color: rgba(201,162,77,0.95);
+      background: rgba(0,0,0,0.55);
+      font-weight:900;
+      letter-spacing:1.2px;
+      text-transform:uppercase;
+      font-size:12px;
+    }
+
+
+
+
+
 
     .doc{
       border:1px solid rgba(255,255,255,0.10);
@@ -705,6 +836,14 @@
       flex-wrap:wrap;
       justify-content:flex-end;
     }
+
+
+
+
+
+
+
+
 
     /* Portrait cards (for interrogation rooms) */
     .portraitImg{
@@ -2026,6 +2165,7 @@ function renderIntake(){
 }
 
 /* ---------- OFFICE + SECTIONS ---------- */
+
 function renderOffice(){
   const pack = getPackForCaseKey(state.difficulty, state.caseKey);
   if (!pack){
@@ -2042,36 +2182,80 @@ function renderOffice(){
     return;
   }
 
+  const evidenceOrder = ["objectives", "forensic", "additional"];
+  const roomOrder = ["witness_room", "suspect_room"];
+
+  const evidenceSections = evidenceOrder
+    .map(id => pack.sections.find(s => s.id === id))
+    .filter(Boolean);
+
+  const roomSections = roomOrder
+    .map(id => pack.sections.find(s => s.id === id))
+    .filter(Boolean);
+
+  const evidenceCardsHtml = evidenceSections.map(s => {
+    const total = (pack?.documents?.[s.id] || []).length;
+    const unread = (pack?.documents?.[s.id] || []).reduce(
+      (n,d) => n + (!isRead(d.id) ? 1 : 0), 0
+    );
+    const pill = `${total} · ${unread} ${t("unread")}`;
+
+    return `
+      <div class="card" data-section="${s.id}" data-status="active">
+        <h2>${escapeHtml(txt(s.title))}</h2>
+        <p>${escapeHtml(pill)}</p>
+      </div>
+    `;
+  }).join("");
+
+  const roomCardsHtml = roomSections.map(s => {
+    const ppl = peopleForSection(pack, s.id);
+    const pill = `${ppl.length} · ${t("profiles")}`;
+
+    return `
+      <div class="card roomCard" data-section="${s.id}" data-status="active">
+        <h2 style="margin:0 0 6px 0;font-weight:950;">
+          ${escapeHtml(txt(s.title))}
+        </h2>
+        <div class="roomTag">${escapeHtml(t("personFile"))}</div>
+        <p style="margin-top:10px;">${escapeHtml(pill)}</p>
+      </div>
+    `;
+  }).join("");
+
   app.innerHTML = `
     ${renderTopbar(t("detectiveOffice"))}
-    <div class="grid cols-5" id="sectionGrid">
-      ${pack.sections.map(s => {
-        let pill = "";
 
-        if (isInterrogationSection(s.id)){
-          const ppl = peopleForSection(pack, s.id);
-          pill = `${ppl.length} · ${t("profiles")}`;
-        } else {
-          const total = (pack?.documents?.[s.id] || []).length;
-          const unread = (pack?.documents?.[s.id] || []).reduce((n,d) => n + (!isRead(d.id) ? 1 : 0), 0);
-          pill = `${total} · ${unread} ${t("unread")}`;
-        }
+    <div class="officeWrap">
 
-        return `
-          <div class="card" data-section="${s.id}" data-status="active">
-            <h2>${escapeHtml(txt(s.title))}</h2>
-            <p>${escapeHtml(pill)}</p>
-          </div>
-        `;
-      }).join("")}
+      <div class="grid cols-3" id="evidenceGrid">
+        ${evidenceCardsHtml}
+      </div>
+
+      <div class="officeDivider"></div>
+
+      <div class="roomsLane">
+        <div class="roomsGrid" id="roomsGrid">
+          ${roomCardsHtml}
+        </div>
+      </div>
+
     </div>
   `;
+
   wireBack();
 
-  $("sectionGrid").querySelectorAll(".card").forEach(el => {
+  $("evidenceGrid")?.querySelectorAll(".card").forEach(el => {
+    makeClickable(el, () => goSection(el.dataset.section));
+  });
+
+  $("roomsGrid")?.querySelectorAll(".card").forEach(el => {
     makeClickable(el, () => goSection(el.dataset.section));
   });
 }
+
+
+
 
 function renderProfileMeta(p){
   const prof = p?.profile || null;
@@ -2460,7 +2644,6 @@ function render(){
   </script>
 </body>
 </html>
-
 
 
 
