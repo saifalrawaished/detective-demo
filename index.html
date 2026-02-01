@@ -180,6 +180,7 @@
       align-items:center;
       justify-content:center;
       text-decoration:none;
+      line-height:1;
     }
     .btn:hover{
       border-color: var(--accentSoft);
@@ -207,6 +208,38 @@
     .btn:focus-visible{
       outline: var(--focus);
       outline-offset: 2px;
+    }
+
+    /* Fix #1: Back button larger and unmistakable */
+    .btnBack{
+      padding:12px 14px;
+      font-size:15px;
+      font-weight:950;
+      border-color: rgba(201,162,77,0.35);
+      background: rgba(0,0,0,0.30);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.25);
+      min-width: 92px;
+    }
+    .btnBack:hover{
+      border-color: rgba(201,162,77,0.60);
+      background: rgba(0,0,0,0.38);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.35);
+    }
+
+    /* Fix #3: Enter office button larger and primary */
+    .btnCTA{
+      padding:14px 16px;
+      font-size:16px;
+      font-weight:950;
+      border-radius:12px;
+      border-color: rgba(201,162,77,0.70);
+      background: rgba(0,0,0,0.36);
+      box-shadow: 0 16px 34px rgba(0,0,0,0.45);
+    }
+    .btnCTA:hover{
+      border-color: rgba(201,162,77,0.90);
+      background: rgba(0,0,0,0.46);
+      box-shadow: 0 20px 44px rgba(0,0,0,0.58);
     }
 
     .grid{ display:grid; gap:14px; }
@@ -369,47 +402,26 @@
 
     .list{ display:flex; flex-direction:column; gap:10px; }
 
-    /* Office layout: evidence grid + rooms strip */
+    /* Office layout */
     .officeWrap{
       display:flex;
       flex-direction:column;
       gap:14px;
     }
 
-    .officeDivider{
-      height:1px;
-      background: rgba(255,255,255,0.08);
-      margin: 2px 0;
-    }
-
-    .roomsGrid{
+    /* unified office grid */
+    .officeGrid{
       display:grid;
       grid-template-columns: repeat(2, minmax(0,1fr));
       gap:14px;
-      max-width: 720px;
+      max-width: 820px;
       margin: 0 auto;
     }
-
     @media (max-width:650px){
-      .roomsGrid{ grid-template-columns: 1fr; max-width: 520px; }
+      .officeGrid{ grid-template-columns: 1fr; max-width: 520px; }
     }
 
-    /* focus well behind interrogation room cards */
-    .roomsLane{
-      position: relative;
-    }
-
-    .roomsLane::before{
-      content:"";
-      position:absolute;
-      inset:-20px -40px;
-      background: rgba(0,0,0,0.35);
-      backdrop-filter: blur(2px);
-      pointer-events:none;
-    }
-
-
-    /* ---------- INTERROGATION ROOM CARDS (ONLY PLACE .roomCard IS DEFINED) ---------- */
+    /* ---------- ROOM STYLE CARDS (used by ALL office cards) ---------- */
     .roomCard{
       position: relative;
       overflow: hidden;
@@ -424,7 +436,6 @@
       box-shadow: var(--shadow);
     }
 
-    /* image + vignette layer */
     .roomCard::before{
       content:"";
       position:absolute;
@@ -436,14 +447,13 @@
           rgba(0,0,0,0.44) 45%,
           rgba(0,0,0,0.88) 100%
         ),
-        url("option.jpg") center / cover no-repeat;
+        var(--room-bg, url("option.jpg")) center / cover no-repeat;
 
-      opacity: 0.75;
+      opacity: 0.78;
       filter: contrast(1.15) brightness(0.82) saturate(0.95);
       pointer-events:none;
     }
 
-    /* keep text above the image */
     .roomCard > *{
       position: relative;
       z-index: 1;
@@ -457,28 +467,8 @@
 
     .roomCard h2{
       font-size: 18px;
+      font-weight: 950;
     }
-
-    .roomCard .pill{
-      padding: 6px 10px;
-      font-size: 12px;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     .roomTag{
       display:inline-flex;
@@ -493,12 +483,8 @@
       letter-spacing:1.2px;
       text-transform:uppercase;
       font-size:12px;
+      margin-top:6px;
     }
-
-
-
-
-
 
     .doc{
       border:1px solid rgba(255,255,255,0.10);
@@ -837,24 +823,45 @@
       justify-content:flex-end;
     }
 
-
-
-
-
-
-
-
-
-    /* Portrait cards (for interrogation rooms) */
+    /* Portrait cards */
+    .portraitImgWrap{
+      position:relative;
+      border-radius:12px;
+      overflow:hidden;
+      outline:1px solid rgba(255,255,255,0.08);
+      background:#111;
+      margin-bottom:10px;
+    }
     .portraitImg{
       width:100%;
       height:auto;
       display:block;
-      border-radius:12px;
-      outline:1px solid rgba(255,255,255,0.08);
-      margin-bottom:10px;
-      background:#111;
     }
+
+    /* Fix #2: clear labeled enter button on portrait cards */
+    .btnEnterCard{
+      position:absolute;
+      bottom:10px;
+      right:10px;
+      padding:10px 12px;
+      font-size:13px;
+      font-weight:950;
+      border-radius:12px;
+      border-color: rgba(201,162,77,0.75);
+      background: rgba(0,0,0,0.62);
+      box-shadow: 0 12px 26px rgba(0,0,0,0.55);
+      backdrop-filter: blur(6px);
+    }
+    .btnEnterCard:hover{
+      border-color: rgba(201,162,77,0.95);
+      background: rgba(0,0,0,0.72);
+      box-shadow: 0 16px 34px rgba(0,0,0,0.65);
+    }
+    body[dir="rtl"] .btnEnterCard{
+      right:auto;
+      left:10px;
+    }
+
     .portraitMeta{
       color:var(--muted);
       font-size:12px;
@@ -1356,7 +1363,11 @@ function makeClickable(el, onActivate, { disabled = false } = {}){
 function renderTopbar(titleRight, subtitle){
   const left = `
     <div class="left">
-      ${(state.view === "title") ? "" : `<button class="btn" id="backBtn" type="button">${escapeHtml(t("back"))}</button>`}
+      ${
+        (state.view === "title")
+          ? ""
+          : `<button class="btn btnBack" id="backBtn" type="button">${escapeHtml(t("back"))}</button>`
+      }
       <div style="display:flex;flex-direction:column;gap:2px;min-width:0;">
         <div style="font-weight:900;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
           ${escapeHtml(titleRight)}
@@ -1457,29 +1468,6 @@ function back(){
   if (v === "section") { go("office", { sectionId:null, personId:null, docId:null }); return; }
   if (v === "office")  { go("intake", { sectionId:null, personId:null, docId:null }); return; }
   if (v === "intake")  { go("cases",  { caseKey:null, sectionId:null, personId:null, protocolOverride:false }); return; }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   if (v === "cases")   { go("difficulty", { difficulty:null, caseKey:null, sectionId:null, personId:null }); return; }
   if (v === "difficulty") { goTitle(); return; }
   goTitle();
@@ -1553,8 +1541,8 @@ const CASE_PACKS = {
       heardStorageKey: "detective_easy_case_1_brief_heard_v1"
     },
 
+    /* Fix #4: remove objectives from office flow by removing the section entry */
     sections: [
-      { id: "objectives", title: { en: "Case objectives", ar: "أهداف القضية" } },
       { id: "forensic", title: { en: "Forensic evidence report", ar: "تقرير الادلة الجنائية" } },
       { id: "witness_room", title: { en: "Witness interrogation room", ar: "غرفة التحقيق مع الشهود" } },
       { id: "suspect_room", title: { en: "Suspect interrogation room", ar: "غرفة التحقيق مع المتهمين" } },
@@ -1701,6 +1689,7 @@ const CASE_PACKS = {
     },
 
     documents: {
+      /* objectives remain in data (harmless), but no longer reachable through sections */
       objectives: [
         {
           id: "ec1_obj_1",
@@ -1724,18 +1713,19 @@ const CASE_PACKS = {
 
       forensic: [
         { id: "ec1_for_1", title: { en: "Death report", ar: "تقرير الوفاة" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence1.jpg" },
-        { id: "ec1_for_2", title: { en: "Weapon report and photo", ar: "تقرير السلاح وصورة عنه" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence2.jpg" },
-        { id: "ec1_for_3", title: { en: "Fingerprints report", ar: "تقرير البصمات" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence3.jpg" }
+        { id: "ec1_for_2", title: { en: "Criminal Evidence Seizure Form", ar: "أستمارة حرز جنائي" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence2.jpg" },
+        { id: "ec1_for_3", title: { en: "Fingerprints report", ar: "تقرير البصمات" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence3.jpg" },
+        { id: "ec1_add_4", title: { en: "Left glove and gun", ar: " قفاز يسار وفرد" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence4.jpg" }
       ],
 
       additional: [
-        { id: "ec1_add_4",  title: { en: "Left glove", ar: "قفاز يسار" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence4.jpg" },
         { id: "ec1_add_5",  title: { en: "Ahmed call log", ar: "سجل مكالمات احمد" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence5.jpg" },
-        { id: "ec1_add_6",  title: { en: "Victim call log", ar: "سجل مكالمات المقتول" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence6.jpg" },
+        { id: "ec1_add_6",  title: { en: "Victim call log", ar: "سجل مكالمات الضحية يعقوب" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence6.jpg" },
         { id: "ec1_add_7",  title: { en: "Chat screenshot: Ahmed and rival", ar: "صورة محادثة بين أحمد والمنافس" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence7.jpg" },
         { id: "ec1_add_8",  title: { en: "Prior case against killer's brother", ar: "قضية سابقة ضذ اخو القاتل" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence8.jpg" },
-        { id: "ec1_add_9",  title: { en: "Rival criminal record", ar: "الصحيفة الجنائية لمنافس" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence9.jpg" },
-        { id: "ec1_add_10", title: { en: "Killer criminal record", ar: "الصحيفة الجنائية للقاتل" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence10.jpg" }
+        { id: "ec1_add_9",  title: { en: "Khalid criminal record", ar: "الصحيفة الجنائية لخالد" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence9.jpg" },
+        { id: "ec1_add_10", title: { en: "Zaid criminal record", ar: "الصحيفة الجنائية لزيد" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence10.jpg" },
+        { id: "ec1_add_11", title: { en: "Ahmad criminal record", ar: "الصحيفة الجنائية لأحمد" }, type: "image", meta: { en: "Evidence", ar: "دليل" }, url: "evidence11.jpg" }
       ]
     }
   }
@@ -1982,44 +1972,6 @@ function renderIntake(){
           <span class="stamp"><span class="mono">${escapeHtml(t("confidential"))}</span></span>
         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         <div class="content">
           <div class="kv">
             <div class="k">${escapeHtml(t("caseId"))}</div><div class="v mono">${escapeHtml(txt(pack.meta.caseId))}</div>
@@ -2072,11 +2024,13 @@ function renderIntake(){
             </div>
           </div>
 
-          <div style="margin-top:12px;display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
-            <button class="btn btnPrimary" id="enterOfficeBtn" type="button" ${allowed ? "" : "disabled"}>${escapeHtml(t("enterOffice"))}</button>
+          <div style="margin-top:14px;display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
+            <button class="btn btnPrimary btnCTA" id="enterOfficeBtn" type="button" ${allowed ? "" : "disabled"}>
+              ${escapeHtml(t("enterOffice"))}
+            </button>
           </div>
 
-          ${allowed ? "" : `<div style="margin-top:8px;color:var(--muted);font-size:12px;">${escapeHtml(t("briefingRequired"))}</div>`}
+          ${allowed ? "" : `<div style="margin-top:10px;color:var(--muted);font-size:12px;">${escapeHtml(t("briefingRequired"))}</div>`}
         </div>
       </section>
     </div>
@@ -2146,7 +2100,6 @@ function renderIntake(){
     enterOfficeBtn.disabled = !protocolAllowsOffice(pack);
   };
 
-  // Mount the video element into the intake UI
   const mount = $("briefVidMount");
   if (mount){
     const v = ensureVoice();
@@ -2182,80 +2135,69 @@ function renderOffice(){
     return;
   }
 
-  const evidenceOrder = ["objectives", "forensic", "additional"];
-  const roomOrder = ["witness_room", "suspect_room"];
+  /* Fix #5 and #6: single unified office grid, rooms first, all cards use roomCard with images */
+  const officeOrder = ["witness_room", "suspect_room", "forensic", "additional"];
 
-  const evidenceSections = evidenceOrder
+  const orderedSections = officeOrder
     .map(id => pack.sections.find(s => s.id === id))
     .filter(Boolean);
 
-  const roomSections = roomOrder
-    .map(id => pack.sections.find(s => s.id === id))
-    .filter(Boolean);
+  const cardBgForSection = (id) => {
+    if (id === "forensic") return "option1.jpg";     /* user-provided */
+    if (id === "additional") return "option2.jpg";   /* user-provided */
+    if (id === "witness_room") return "option3.jpg";  
+    if (id === "suspect_room") return "option4.jpg";  
+    return "option.jpg";
+  };
 
-  const evidenceCardsHtml = evidenceSections.map(s => {
+  const tagForSection = (id) => {
+    if (id === "witness_room" || id === "suspect_room") return t("personFile");
+    return t("documents");
+  };
+
+  const pillForSection = (s) => {
+    if (isInterrogationSection(s.id)){
+      const ppl = peopleForSection(pack, s.id);
+      return `${ppl.length} · ${t("profiles")}`;
+    }
     const total = (pack?.documents?.[s.id] || []).length;
-    const unread = (pack?.documents?.[s.id] || []).reduce(
-      (n,d) => n + (!isRead(d.id) ? 1 : 0), 0
-    );
-    const pill = `${total} · ${unread} ${t("unread")}`;
+    const unread = (pack?.documents?.[s.id] || []).reduce((n,d) => n + (!isRead(d.id) ? 1 : 0), 0);
+    return `${total} · ${unread} ${t("unread")}`;
+  };
+
+  const cardsHtml = orderedSections.map(s => {
+    const pill = pillForSection(s);
+    const bg = cardBgForSection(s.id);
+    const tag = tagForSection(s.id);
 
     return `
-      <div class="card" data-section="${s.id}" data-status="active">
-        <h2>${escapeHtml(txt(s.title))}</h2>
-        <p>${escapeHtml(pill)}</p>
-      </div>
-    `;
-  }).join("");
-
-  const roomCardsHtml = roomSections.map(s => {
-    const ppl = peopleForSection(pack, s.id);
-    const pill = `${ppl.length} · ${t("profiles")}`;
-
-    return `
-      <div class="card roomCard" data-section="${s.id}" data-status="active">
-        <h2 style="margin:0 0 6px 0;font-weight:950;">
-          ${escapeHtml(txt(s.title))}
-        </h2>
-        <div class="roomTag">${escapeHtml(t("personFile"))}</div>
+      <div class="card roomCard"
+           data-section="${s.id}"
+           data-status="active"
+           style="--room-bg: url('${escapeHtml(bg)}')">
+        <h2 style="margin:0 0 6px 0;">${escapeHtml(txt(s.title))}</h2>
+        <div class="roomTag">${escapeHtml(tag)}</div>
         <p style="margin-top:10px;">${escapeHtml(pill)}</p>
+        <div class="pill">${escapeHtml(t("openFile"))}</div>
       </div>
     `;
   }).join("");
 
   app.innerHTML = `
     ${renderTopbar(t("detectiveOffice"))}
-
     <div class="officeWrap">
-
-      <div class="grid cols-3" id="evidenceGrid">
-        ${evidenceCardsHtml}
+      <div class="officeGrid" id="officeGrid">
+        ${cardsHtml}
       </div>
-
-      <div class="officeDivider"></div>
-
-      <div class="roomsLane">
-        <div class="roomsGrid" id="roomsGrid">
-          ${roomCardsHtml}
-        </div>
-      </div>
-
     </div>
   `;
 
   wireBack();
 
-  $("evidenceGrid")?.querySelectorAll(".card").forEach(el => {
-    makeClickable(el, () => goSection(el.dataset.section));
-  });
-
-  $("roomsGrid")?.querySelectorAll(".card").forEach(el => {
+  $("officeGrid")?.querySelectorAll(".card").forEach(el => {
     makeClickable(el, () => goSection(el.dataset.section));
   });
 }
-
-
-
 
 function renderProfileMeta(p){
   const prof = p?.profile || null;
@@ -2290,8 +2232,15 @@ function renderInterrogationRoom(pack, sec){
     <div class="grid cols-3" id="peopleGrid">
       ${list.map(p => `
         <div class="card" data-person="${p.id}">
-          <img class="portraitImg" src="${escapeHtml(p.image)}" alt="${escapeHtml(txt(p.name))}" />
+          <div class="portraitImgWrap">
+            <img class="portraitImg" src="${escapeHtml(p.image)}" alt="${escapeHtml(txt(p.name))}" />
+            <button class="btn btnPrimary btnEnterCard" type="button" data-enter="${escapeHtml(p.id)}">
+              ${escapeHtml(t("openFile"))}
+            </button>
+          </div>
+
           ${renderProfileMeta(p)}
+
           <h2 style="margin-top:10px;">${escapeHtml(txt(p.name))}</h2>
           <div class="portraitMeta mono">${escapeHtml(t("personFile"))}</div>
         </div>
@@ -2301,8 +2250,18 @@ function renderInterrogationRoom(pack, sec){
 
   wireBack();
 
+  /* Entire card remains clickable */
   $("peopleGrid").querySelectorAll(".card").forEach(el => {
     makeClickable(el, () => { goPersonFile(el.dataset.person); });
+  });
+
+  /* Fix #2: button explicitly enters, and does not rely on the card click being discovered */
+  $("peopleGrid").querySelectorAll("button[data-enter]").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      goPersonFile(btn.dataset.enter);
+    });
   });
 }
 
@@ -2519,7 +2478,6 @@ function renderPerson(){
     return;
   }
 
-  // Mark both parts as read as soon as the player opens the package
   if (pkg.docId) markRead(pkg.docId);
   if (pkg.vidId) markRead(pkg.vidId);
 
@@ -2537,7 +2495,9 @@ function renderPerson(){
           <span style="color:var(--muted);font-size:12px;" class="mono">${escapeHtml(t("packageMeta"))}</span>
         </div>
         <div class="content">
-          <img class="portraitImg" src="${escapeHtml(p.image)}" alt="${escapeHtml(txt(p.name))}" />
+          <div class="portraitImgWrap">
+            <img class="portraitImg" src="${escapeHtml(p.image)}" alt="${escapeHtml(txt(p.name))}" />
+          </div>
           ${renderProfileMeta(p)}
           <div style="margin-top:10px;color:var(--muted);font-size:12px;" class="mono">
             ${escapeHtml(isRead(pkg.docId) && isRead(pkg.vidId) ? t("viewed") : "")}
@@ -2603,7 +2563,6 @@ function renderPerson(){
   if (videoEl){
     const vidId = pkg.vidId;
     videoEl.addEventListener("timeupdate", () => {
-      // Consider "viewed" once the player reaches 15% of the video
       const d = videoEl.duration || 0;
       const c = videoEl.currentTime || 0;
       if (d > 0 && (c / d) > 0.15){
@@ -2644,10 +2603,6 @@ function render(){
   </script>
 </body>
 </html>
-
-
-
-
 
 
 
